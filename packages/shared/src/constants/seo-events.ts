@@ -1,0 +1,12 @@
+/**
+ * Prompt 23 — named audit-action-string-per-domain, same pattern as
+ * ANALYTICS_AUDIT_ACTIONS (Prompt 22) / COUPON_AUDIT_ACTIONS (Prompt 19).
+ */
+export const SEO_AUDIT_ACTIONS = {
+  SEO_CONFIG_CHANGED: 'SEO_CONFIG_CHANGED',
+  SEO_FEATURE_ENABLED: 'SEO_FEATURE_ENABLED',
+  SEO_FEATURE_DISABLED: 'SEO_FEATURE_DISABLED',
+  PRODUCT_SEO_UPDATED: 'PRODUCT_SEO_UPDATED',
+  CATEGORY_SEO_UPDATED: 'CATEGORY_SEO_UPDATED',
+} as const;
+export type SeoAuditAction = (typeof SEO_AUDIT_ACTIONS)[keyof typeof SEO_AUDIT_ACTIONS];

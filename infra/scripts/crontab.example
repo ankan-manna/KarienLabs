@@ -1,0 +1,21 @@
+# Host-level scheduled jobs (spec: "Backup Jobs", "Cleanup Jobs" under
+# Background Jobs / Automation). App-internal jobs (low-stock alerts, expiry
+# alerts, weekly sales report email, stale-record cleanup, notification
+# dispatch) already run inside the "worker" container via BullMQ — see
+# apps/api/src/queues/queue.ts's scheduleMaintenanceJobs(). This crontab is
+# only for jobs that must run on the HOST, outside the app process, because
+# they touch things a container shouldn't (raw disk backups, Docker itself).
+#
+# Install: crontab -e   (as the deploy user, with docker + aws-cli on PATH)
+#          then paste the lines below, adjusting paths for your server.
+
+# Nightly MongoDB backup at 02:00 server time.
+0 2 * * * cd /opt/medcommerce && MONGO_URI=$(grep MONGO_URI .env.production | cut -d= -f2-) BACKUP_S3_BUCKET=medcommerce-backups-prod ./infra/scripts/backup-mongo.sh /var/backups/medcommerce/mongo >> /var/log/medcommerce/backup.log 2>&1
+
+# Weekly Docker housekeeping, Sunday 03:00.
+0 3 * * 0 cd /opt/medcommerce && ./infra/scripts/cleanup-docker.sh >> /var/log/medcommerce/cleanup.log 2>&1
+
+# Health check every 5 minutes — alerts (via the script's non-zero exit,
+# piped to your monitoring/alerting tool of choice, e.g. a simple mail(1)
+# call or a healthchecks.io ping) if the stack goes down between deploys.
+*/5 * * * * cd /opt/medcommerce && BASE_URL=https://medcommerce.example.com HEALTHCHECK_ATTEMPTS=1 ./infra/scripts/healthcheck.sh || echo "MedCommerce healthcheck failed at $(date)" | mail -s "MedCommerce DOWN" ops@medcommerce.example.com

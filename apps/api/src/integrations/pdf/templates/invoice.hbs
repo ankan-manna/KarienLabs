@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; font-size: 11px; margin: 40px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .brand { font-size: 20px; font-weight: 700; }
+  .muted { color: #666; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 6px; border-bottom: 1px solid #e5e5e5; }
+  th { background: #f7f7f7; font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em; }
+  td.num, th.num { text-align: right; }
+  .bundle-row td { padding-left: 20px; font-size: 10px; color: #555; background: #fafafa; }
+  .totals { margin-top: 16px; width: 300px; margin-left: auto; }
+  .totals td { border: none; padding: 3px 8px; }
+  .totals .grand { font-weight: 700; font-size: 14px; border-top: 2px solid #1a1a1a; }
+  .addresses { display: flex; gap: 24px; margin-top: 12px; }
+  .addresses > div { flex: 1; }
+  .logo { max-height: 48px; max-width: 200px; margin-bottom: 8px; }
+  .payment-details { margin-top: 16px; }
+  .terms { margin-top: 24px; font-size: 9px; color: #666; }
+  .terms strong { display: block; margin-bottom: 4px; color: #333; }
+  .footer { margin-top: 20px; font-size: 9px; color: #999; }
+  .tax-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; background: #eef2ff; color: #3730a3; font-size: 9px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      {{#if store.logoUrl}}
+      <img class="logo" src="{{store.logoUrl}}" alt="{{store.name}}" />
+      {{/if}}
+      <div class="brand">{{store.name}}</div>
+      {{#if store.address}}<div class="muted">{{store.address}}</div>{{/if}}
+      <div class="muted">GSTIN: {{store.gstin}}</div>
+      {{#if store.drugLicense}}<div class="muted">Drug License: {{store.drugLicense}}</div>{{/if}}
+      {{#if warehouse.name}}
+      <div class="muted">Dispatched from: {{warehouse.name}} (State code {{warehouse.stateCode}})</div>
+      {{/if}}
+    </div>
+    <div>
+      <div><strong>Invoice #</strong> {{invoice.number}}</div>
+      <div class="muted">Date: {{invoice.date}}</div>
+      <div class="muted">Order #{{order.number}}</div>
+    </div>
+  </div>
+
+  <div class="addresses">
+    <div>
+      <strong>Billed To</strong>
+      <div>{{customer.name}}</div>
+      <div class="muted">{{customer.address}}</div>
+      <div class="muted">{{customer.email}} · {{customer.phone}}</div>
+      {{#if customer.shippingState}}<div class="muted">Shipping state: {{customer.shippingState}}</div>{{/if}}
+    </div>
+    <div>
+      <strong>{{#if billingAddress.distinct}}Billing Address{{else}}Billing Address (same as shipping){{/if}}</strong>
+      <div>{{billingAddress.name}}</div>
+      <div class="muted">{{billingAddress.address}}</div>
+      <div class="muted">{{billingAddress.phone}}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>HSN</th>
+        <th>Batch</th>
+        <th class="num">MRP</th>
+        <th class="num">Qty</th>
+        <th class="num">Unit Price</th>
+        <th class="num">Taxable</th>
+        <th class="num">CGST</th>
+        <th class="num">SGST</th>
+        <th class="num">IGST</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td>{{name}}{{#if bundleComponents}} <span class="tax-badge">Bundle</span>{{/if}}</td>
+        <td>{{hsnCode}}</td>
+        <td>{{batchNumber}}</td>
+        <td class="num">{{#if mrp}}₹{{mrp}}{{else}}—{{/if}}</td>
+        <td class="num">{{quantity}}</td>
+        <td class="num">₹{{unitPrice}}</td>
+        <td class="num">₹{{taxableAmount}}</td>
+        <td class="num">{{#if cgstAmount}}₹{{cgstAmount}} ({{cgstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">{{#if sgstAmount}}₹{{sgstAmount}} ({{sgstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">{{#if igstAmount}}₹{{igstAmount}} ({{igstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">₹{{amount}}</td>
+      </tr>
+      {{#if bundleComponents}}
+      {{#each bundleComponents}}
+      <tr class="bundle-row">
+        <td colspan="2">↳ {{name}} ({{sku}})</td>
+        <td>{{hsnCode}}</td>
+        <td class="num">—</td>
+        <td class="num">{{quantity}}</td>
+        <td class="num">₹{{unitPriceShare}}</td>
+        <td class="num">₹{{taxableAmount}}</td>
+        <td class="num">{{#if cgstAmount}}₹{{cgstAmount}} ({{cgstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">{{#if sgstAmount}}₹{{sgstAmount}} ({{sgstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">{{#if igstAmount}}₹{{igstAmount}} ({{igstRate}}%){{else}}—{{/if}}</td>
+        <td class="num">—</td>
+      </tr>
+      {{/each}}
+      {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+
+  <table class="totals">
+    <tr><td>Taxable Value</td><td class="num">₹{{taxSummary.taxableAmount}}</td></tr>
+    <tr><td>CGST</td><td class="num">₹{{taxSummary.cgstAmount}}</td></tr>
+    <tr><td>SGST</td><td class="num">₹{{taxSummary.sgstAmount}}</td></tr>
+    <tr><td>IGST</td><td class="num">₹{{taxSummary.igstAmount}}</td></tr>
+    <tr><td>Shipping</td><td class="num">₹{{totals.shipping}}</td></tr>
+    <tr><td>Discount</td><td class="num">-₹{{totals.discount}}</td></tr>
+    {{#if roundOffAmount}}
+    <tr><td>Round Off</td><td class="num">₹{{roundOffAmount}}</td></tr>
+    {{/if}}
+    <tr class="grand"><td>Total</td><td class="num">₹{{finalAmount}}</td></tr>
+  </table>
+
+  {{#if payment}}
+  <div class="payment-details">
+    <strong>Payment Details</strong>
+    <div class="muted">Method: {{payment.method}}</div>
+    {{#if payment.razorpayPaymentId}}
+    <div class="muted">Razorpay Transaction ID: {{payment.razorpayPaymentId}}</div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  <div class="terms">
+    <strong>Terms &amp; Conditions</strong>
+    Goods once sold will only be taken back or exchanged as per the return policy. This is a
+    computer-generated invoice and does not require a physical signature.
+  </div>
+
+  <div class="footer">
+    This is a system-generated invoice and does not require a physical signature.
+  </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prevents the browser's default white canvas from showing through on
+   horizontal/vertical overflow in dark mode — html/body have no background
+   by default, only the app shell's inner divs do.
+
+   The text color here is the actual dark-mode fix, not just the background:
+   without an explicit default, any element that doesn't set its own color
+   utility (a dd, a hand-rolled td, a plain span) falls back to the browser's
+   UA-default black, which disappears against the dark background above.
+   Tailwind's Preflight sets color: inherit on form controls too, so this
+   cascades into raw input/textarea/select text as well — fixing the root
+   cause here instead of chasing every individual unstyled element. */
+@layer base {
+  html,
+  body {
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  }
+}
+
+@layer utilities {
+  /*
+   * Reusable themed scrollbar — currently used by the admin sidebar's
+   * hover-flyout submenu (Sidebar.tsx) so a long menu's scrollbar matches
+   * the app's own gray palette instead of the browser default, in both
+   * themes. Not hidden (Part 7 of the sidebar-scroll prompt: hiding it
+   * would hurt discoverability) — just thin and unobtrusive. Reuse this
+   * class for any other internally-scrolling panel instead of duplicating
+   * the rule.
+   */
+  .themed-scrollbar {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent; /* gray-300 */
+  }
+  .dark .themed-scrollbar {
+    scrollbar-color: #374151 transparent; /* gray-700 */
+  }
+  /* Chromium/WebKit */
+  .themed-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .themed-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .themed-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #d1d5db; /* gray-300 */
+    border-radius: 9999px;
+  }
+  .dark .themed-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #374151; /* gray-700 */
+  }
+}

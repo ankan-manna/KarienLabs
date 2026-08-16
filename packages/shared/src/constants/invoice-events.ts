@@ -1,0 +1,14 @@
+/**
+ * Prompt 13 Part 22 — named audit actions for invoice/tax admin operations,
+ * same pattern as CATALOG_AUDIT_ACTIONS (Prompt 12) and AUTH_ACTIONS (Prompt 10).
+ */
+export const INVOICE_AUDIT_ACTIONS = {
+  INVOICE_GENERATED: 'INVOICE_GENERATED',
+  INVOICE_GENERATION_FAILED: 'INVOICE_GENERATION_FAILED',
+  INVOICE_REGENERATED: 'INVOICE_REGENERATED',
+  TAX_CONFIGURATION_UPDATED: 'TAX_CONFIGURATION_UPDATED',
+  ROUND_OFF_APPLIED: 'ROUND_OFF_APPLIED',
+} as const;
+
+export type InvoiceAuditAction =
+  (typeof INVOICE_AUDIT_ACTIONS)[keyof typeof INVOICE_AUDIT_ACTIONS];

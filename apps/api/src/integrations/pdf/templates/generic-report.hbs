@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; font-size: 12px; margin: 40px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+  .brand { font-size: 20px; font-weight: 700; }
+  .muted { color: #666; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e5e5e5; }
+  th { background: #f7f7f7; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .footer { margin-top: 24px; font-size: 10px; color: #999; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">KarienLabs</div>
+      <div class="muted">{{title}}</div>
+    </div>
+    <div class="muted">Generated: {{generatedAt}}</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        {{#each columns}}
+        <th>{{this.header}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each rows}}
+      <tr>
+        {{#each ../columns}}
+        <td>{{lookup ../this this.key}}</td>
+        {{/each}}
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    This is a system-generated report from the KarienLabs admin panel.
+  </div>
+</body>
+</html>

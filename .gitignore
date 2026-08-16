@@ -1,0 +1,32 @@
+node_modules/
+dist/
+build/
+.turbo/
+coverage/
+*.log
+*.log.gz
+*.rdb
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.env
+.env.local
+.env.*.local
+.env.staging
+.env.production
+!.env.example
+!.env.*.example
+.DS_Store
+*.tsbuildinfo
+apps/web/dist/
+apps/api/dist/
+infra/docker/volumes/
+
+# TLS material and ACME challenge state must never be committed.
+infra/nginx/certs/*
+!infra/nginx/certs/.gitkeep
+infra/nginx/certbot-webroot/*
+!infra/nginx/certbot-webroot/.gitkeep
+
+# PM2/host logs (only relevant to the non-Docker deployment path).
+infra/logs/*
+!infra/logs/.gitkeep

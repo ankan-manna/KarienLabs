@@ -1,0 +1,4 @@
+# syntax=docker/dockerfile:1
+# Same image as the API, different entrypoint — keeps Puppeteer/Chromium setup in one place.
+FROM medcommerce-api:latest AS runtime
+CMD ["node", "dist/worker.js"]

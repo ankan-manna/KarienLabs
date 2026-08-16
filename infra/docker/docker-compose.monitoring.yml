@@ -1,0 +1,77 @@
+# Opt-in monitoring stack (Monitoring spec item — "Future Ready: Prometheus,
+# Grafana"). Deliberately a separate compose file rather than baked into the
+# main stack, so running the app doesn't force every deployment to also run
+# Prometheus/Grafana/cAdvisor.
+#
+# Usage (alongside the main stack):
+#   docker compose -f infra/docker/docker-compose.yml \
+#                   -f infra/docker/docker-compose.prod.yml \
+#                   -f infra/docker/docker-compose.monitoring.yml up -d
+#
+# Grafana: http://localhost:3001 (default admin/admin — change on first login).
+# Prometheus: http://localhost:9090 (internal-only in production; put it
+# behind the nginx admin-auth basic-auth block or a VPN before exposing it).
+name: medcommerce-monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    restart: unless-stopped
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    ports:
+      - "9090:9090"
+    networks: [medcommerce]
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:-admin}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3001:3000"
+    depends_on: [prometheus]
+    networks: [medcommerce]
+
+  # Host CPU/memory/disk/network — spec: "Monitor: CPU, Memory, Disk".
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    networks: [medcommerce]
+
+  # Per-container CPU/memory/network — spec: "Monitor: Containers".
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    networks: [medcommerce]
+
+networks:
+  medcommerce:
+    external: true
+    name: medcommerce_medcommerce
+
+volumes:
+  prometheus-data:
+  grafana-data:

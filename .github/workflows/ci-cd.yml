@@ -1,0 +1,269 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# Cancel superseded runs on the same branch/PR so a rapid string of pushes
+# doesn't queue up redundant builds.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  REGISTRY: ghcr.io
+  IMAGE_NAMESPACE: ${{ github.repository_owner }}/medcommerce
+
+jobs:
+  # --------------------------------------------------------------------------
+  # 1. Lint, typecheck, build — the fast-fail gate every other job depends on.
+  # --------------------------------------------------------------------------
+  build:
+    name: Lint, Typecheck & Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          retention-days: 3
+          path: |
+            apps/api/dist
+            apps/web/dist
+            packages/shared/dist
+
+  # --------------------------------------------------------------------------
+  # 2. Test — runs `npm run test` (fast, pure-unit, no external services)
+  #    across every workspace via turbo; activates automatically the moment a
+  #    workspace adds a `test` script, with zero pipeline changes.
+  # --------------------------------------------------------------------------
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run tests
+        run: npm run test
+
+  # --------------------------------------------------------------------------
+  # 2b. Integration tests — real HTTP-level tests (supertest) against the
+  #     actual Express app, a real ephemeral MongoDB replica set
+  #     (mongodb-memory-server) and a real Redis (apt-installed here; every
+  #     request goes through the app's real rate-limit/blocked-IP/maintenance
+  #     middleware, all of which hit Redis). Kept as its own job — separate
+  #     from the fast unit-test job above — specifically so a missing/slow
+  #     external dependency here can never slow down or flake the fast path.
+  #     This is what actually exercises the customer ownership boundaries
+  #     (IDOR protection) verified one-off for Prompt 21 — see
+  #     apps/api/src/integration-tests/.
+  # --------------------------------------------------------------------------
+  test-integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Install redis-server
+        run: sudo apt-get update && sudo apt-get install -y redis-server
+      - name: Run integration tests
+        run: npm run test:integration
+
+  # --------------------------------------------------------------------------
+  # 3. Security scan — dependency audit + Dockerfile/image vulnerability scan.
+  # --------------------------------------------------------------------------
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+
+      - name: npm audit (high+ severity)
+        run: npm audit --audit-level=high
+        continue-on-error: true # dependency advisories shouldn't hard-block a deploy; surfaced in the job summary instead
+
+      - name: Trivy filesystem scan (source + lockfile)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: '0' # report-only at the FS-scan stage; the image scan below is the hard gate
+          format: table
+
+  # --------------------------------------------------------------------------
+  # 4. Docker build & push — only for commits landing on main/develop (not PRs,
+  #    which only need the checks above). Pushes to GitHub Container Registry.
+  # --------------------------------------------------------------------------
+  docker:
+    name: Docker Build & Push
+    runs-on: ubuntu-latest
+    needs: [build, test, test-integration, security-scan]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      api-image: ${{ steps.meta-api.outputs.tags }}
+      web-image: ${{ steps.meta-web.outputs.tags }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (API image)
+        id: meta-api
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}-api
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+
+      - name: Build & push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          tags: ${{ steps.meta-api.outputs.tags }}
+          labels: ${{ steps.meta-api.outputs.labels }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      - name: Trivy scan — API image (hard gate)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}-api:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Extract metadata (Web image)
+        id: meta-web
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}-web
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+
+      - name: Build & push Web image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          tags: ${{ steps.meta-web.outputs.tags }}
+          labels: ${{ steps.meta-web.outputs.labels }}
+          build-args: |
+            VITE_API_BASE_URL=/api/v1
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+      - name: Trivy scan — Web image (hard gate)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}-web:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          ignore-unfixed: true
+
+  # --------------------------------------------------------------------------
+  # 5. Deploy — main branch only, requires the `production` GitHub Environment
+  #    (configure required reviewers there for manual approval-gated deploys).
+  #    SSHes into the target host and runs the same deploy.sh a human would.
+  # --------------------------------------------------------------------------
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: docker
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://medcommerce.example.com
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/medcommerce
+            git fetch origin main
+            git checkout origin/main
+            IMAGE_TAG=${{ github.sha }} ./infra/scripts/deploy.sh ${{ github.sha }}
+
+      - name: Post-deploy health check
+        run: |
+          curl -sf --retry 10 --retry-delay 5 --retry-connrefused https://medcommerce.example.com/health
+
+  # --------------------------------------------------------------------------
+  # 6. Notify — reports final pipeline status to Slack (optional; no-op if
+  #    the SLACK_WEBHOOK_URL secret isn't configured).
+  # --------------------------------------------------------------------------
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [build, test, test-integration, security-scan, docker, deploy]
+    if: always() && github.event_name == 'push'
+    steps:
+      - name: Slack notification
+        if: ${{ vars.SLACK_WEBHOOK_CONFIGURED == 'true' }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": "MedCommerce CI/CD (${{ github.ref_name }}): ${{ contains(needs.*.result, 'failure') && ':x: FAILED' || ':white_check_mark: passed' }} — ${{ github.sha }} by ${{ github.actor }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,0 +1,114 @@
+# ============================================================================
+# Production TLS termination — copy to conf.d/ssl.conf once certificates exist
+# at infra/nginx/certs/live/<domain>/{fullchain,privkey}.pem (see
+# infra/scripts/init-letsencrypt.sh), then remove the `listen 80` server block
+# from default.conf's HTTP server (or leave it as the ACME challenge +
+# HTTP->HTTPS redirect target, as done here — recommended).
+#
+# This file intentionally does NOT replace default.conf: default.conf keeps
+# working standalone for local/dev/staging-without-TLS, and this file adds
+# the production HTTPS listener + redirect on top without disturbing it.
+# ============================================================================
+
+# Replace medcommerce.example.com with your real domain before use.
+server {
+  listen 80;
+  server_name medcommerce.example.com api.medcommerce.example.com;
+
+  # Let's Encrypt HTTP-01 challenge path — certbot writes here during renewal.
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  http2 on;
+  server_name medcommerce.example.com;
+
+  ssl_certificate     /etc/nginx/certs/live/medcommerce.example.com/fullchain.pem;
+  ssl_certificate_key /etc/nginx/certs/live/medcommerce.example.com/privkey.pem;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_ciphers HIGH:!aNULL:!MD5;
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 1d;
+  ssl_stapling on;
+  ssl_stapling_verify on;
+
+  add_header X-Content-Type-Options nosniff always;
+  add_header X-Frame-Options DENY always;
+  add_header Referrer-Policy strict-origin-when-cross-origin always;
+  add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+
+  client_max_body_size 5m;
+
+  error_page 404 /error-pages/404.html;
+  error_page 500 502 503 504 /error-pages/50x.html;
+  location ^~ /error-pages/ {
+    root /usr/share/nginx/html;
+    internal;
+  }
+
+  location ~ ^/api/v1/auth/(login|register|forgot-password|reset-password) {
+    limit_req zone=auth_limit burst=5 nodelay;
+    proxy_pass http://api_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /api/ {
+    limit_req zone=api_limit burst=20 nodelay;
+    proxy_pass http://api_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location / {
+    proxy_pass http://web_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Subdomain variant (spec: "Frontend Domain, API Subdomain, Admin Subdomain").
+# The path-based routing above (medcommerce.example.com/api/*) is what the
+# app's CORS_ORIGIN/API_BASE_URL config already assumes and is the default —
+# this block is an OPTIONAL alternative if you prefer a dedicated api.*
+# subdomain instead of a path prefix. Only enable one pattern at a time; using
+# both simultaneously means updating CORS_ORIGIN/API_BASE_URL/VITE_API_BASE_URL
+# to match whichever you pick.
+# ---------------------------------------------------------------------------
+# server {
+#   listen 443 ssl;
+#   http2 on;
+#   server_name api.medcommerce.example.com;
+#   ssl_certificate     /etc/nginx/certs/live/api.medcommerce.example.com/fullchain.pem;
+#   ssl_certificate_key /etc/nginx/certs/live/api.medcommerce.example.com/privkey.pem;
+#   location / {
+#     limit_req zone=api_limit burst=20 nodelay;
+#     proxy_pass http://api_upstream;
+#     proxy_http_version 1.1;
+#     proxy_set_header Connection "";
+#     proxy_set_header Host $host;
+#     proxy_set_header X-Real-IP $remote_addr;
+#     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#     proxy_set_header X-Forwarded-Proto $scheme;
+#   }
+# }

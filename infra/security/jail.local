@@ -1,0 +1,37 @@
+# Fail2Ban jail config (spec: "Production Server: ... Fail2Ban").
+# Install: sudo cp infra/security/jail.local /etc/fail2ban/jail.local
+#          sudo systemctl restart fail2ban
+#
+# Bans an IP after repeated failed SSH attempts and, once nginx access logs
+# are mounted to a host path (see the `volumes:` note in docker-compose.prod.yml
+# — add a bind mount for /var/log/nginx if you want this jail active), after
+# repeated 401/403 responses from nginx (defends the edge on top of the app's
+# own login-lockout from Prompt 8's Security Center and nginx's auth_limit
+# rate-limit zone — three independent layers against credential stuffing).
+
+[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+backend  = systemd
+
+[sshd]
+enabled = true
+port    = ssh
+filter  = sshd
+maxretry = 4
+bantime  = 24h
+
+[nginx-http-auth]
+enabled  = true
+filter   = nginx-http-auth
+logpath  = /var/log/medcommerce/nginx/error.log
+maxretry = 6
+
+[nginx-limit-req]
+enabled  = true
+filter   = nginx-limit-req
+logpath  = /var/log/medcommerce/nginx/error.log
+maxretry = 10
+findtime = 5m
+bantime  = 2h
