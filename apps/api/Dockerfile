@@ -12,6 +12,8 @@ RUN npm ci --workspace=@medcommerce/shared --workspace=@medcommerce/api --includ
 FROM node:20-slim AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./package.json
+COPY --from=deps /app/package-lock.json ./package-lock.json
 COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/api apps/api
@@ -31,9 +33,14 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./package.json
+COPY --from=deps /app/package-lock.json ./package-lock.json
 COPY --from=build /app/packages/shared ./packages/shared
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY apps/api/package.json ./apps/api/package.json
+
+# Create application log directory and give it to the non-root runtime user
+RUN mkdir -p /app/apps/api/logs && chown -R node:node /app/apps/api
 
 USER node
 WORKDIR /app/apps/api
