@@ -3,10 +3,16 @@ import { createCrudApi } from './createCrudApi';
 export interface Banner {
   _id: string;
   title: string;
+  subtitle: string;
   imageUrl: string;
+  imagePublicId: string | null;
   linkUrl: string;
+  ctaText: string;
   placement: 'hero' | 'category' | 'checkout';
   order: number;
+  startsAt: string | null;
+  endsAt: string | null;
+  slideDurationMs: number | null;
   isActive: boolean;
 }
 

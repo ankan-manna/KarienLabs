@@ -47,6 +47,21 @@ interface CrudRouterOptions<T> {
    * traceable to an actor). Any other CRUD resource can opt in the same way.
    */
   auditActions?: { created?: AuditAction; updated?: AuditAction; deleted?: AuditAction };
+  /**
+   * Website Design (Storefront Management) — opt-in side effects that need
+   * the PRE-update/delete document, e.g. destroying a now-orphaned
+   * Cloudinary asset only after the DB write that removed its last
+   * reference has actually committed (the same ordering
+   * `product.service.ts`'s bespoke image-mutation functions already use).
+   * Purely additive: every existing consumer that doesn't pass these is
+   * completely unaffected, and the extra `findById` this requires only
+   * runs when a hook is actually provided. Each hook owns its own error
+   * handling (log-and-swallow, matching `product.service.ts`'s own
+   * convention) — a hook failure must never fail the request, since the DB
+   * write it's reacting to has already succeeded.
+   */
+  afterUpdate?: (before: T, after: T, ctx: { user?: { id: string } }) => Promise<void> | void;
+  afterDelete?: (before: T, ctx: { user?: { id: string } }) => Promise<void> | void;
 }
 
 const bulkPatchSchema = z.object({
@@ -195,11 +210,17 @@ export function createCrudRouter<T>(opts: CrudRouterOptions<T>): Router {
     asyncHandler(async (req, res) => {
       let input: Record<string, unknown> = { ...(req.body as Record<string, unknown>) };
       if (opts.transformInput) input = opts.transformInput(input, { user: req.user, isCreate: false });
+      // Only fetched when a hook actually needs a "before" snapshot — no
+      // extra query for the many CRUD entities that don't pass `afterUpdate`.
+      const before = opts.afterUpdate ? await repository.findById(req.params.id) : null;
       const updated = await repository.updateById(req.params.id, {
         ...input,
         updatedBy: req.user!.id,
       });
       if (!updated) throw new NotFoundError(label);
+      if (opts.afterUpdate && before) {
+        await opts.afterUpdate(before as unknown as T, updated, { user: req.user });
+      }
       if (opts.auditActions?.updated) {
         await recordAudit({
           actorId: req.user!.id,
@@ -217,8 +238,10 @@ export function createCrudRouter<T>(opts: CrudRouterOptions<T>): Router {
     '/:id',
     canDelete,
     asyncHandler(async (req, res) => {
+      const before = opts.afterDelete ? await repository.findById(req.params.id) : null;
       const deleted = await repository.softDeleteById(req.params.id, req.user!.id);
       if (!deleted) throw new NotFoundError(label);
+      if (opts.afterDelete && before) await opts.afterDelete(before as unknown as T, { user: req.user });
       if (opts.auditActions?.deleted) {
         await recordAudit({
           actorId: req.user!.id,

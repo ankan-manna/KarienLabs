@@ -6,10 +6,13 @@ import type { ListQueryParams, PaginatedMeta } from './types';
 export interface PublicBanner {
   _id: string;
   title: string;
+  subtitle: string;
   imageUrl: string;
   linkUrl: string;
+  ctaText: string;
   placement: 'hero' | 'category' | 'checkout';
   order: number;
+  slideDurationMs: number | null;
 }
 
 export interface PublicHomeSection {

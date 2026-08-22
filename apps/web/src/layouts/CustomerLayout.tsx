@@ -14,7 +14,10 @@ export function CustomerLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    // Same scroll-containment fix as AdminLayout.tsx — see its comment for
+    // why `h-screen overflow-hidden` + `min-h-0` on the inner column is
+    // what makes `<main>` the only scrolling region.
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
       <Sidebar
         title="My Account"
         sections={[{ items: CUSTOMER_ACCOUNT_MENU }]}
@@ -22,7 +25,7 @@ export function CustomerLayout() {
         onCloseMobile={() => setMobileNavOpen(false)}
         logoHref="/"
       />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <Topbar onOpenMobileNav={() => setMobileNavOpen(true)} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

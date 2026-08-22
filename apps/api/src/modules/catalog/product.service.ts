@@ -265,12 +265,36 @@ export async function listProducts(query: ListQuery) {
   });
 
   const productIds = result.items.map((item) => String((item as { _id: unknown })._id));
-  const availabilityMap = await resolveProductAvailability(productIds);
-  const items = result.items.map((item) => ({
-    ...item,
-    ...deriveProductImageView((item as { images?: ProductImage[] }).images),
-    inStock: (availabilityMap.get(String((item as { _id: unknown })._id)) ?? 0) > 0,
-  }));
+  // Storefront redesign — product cards show the brand name ("Brand if
+  // available"), which the list endpoint never resolved before (only the
+  // single-product detail endpoint did, via `getPublicProductDetail`
+  // above). Batched the SAME way `resolveProductAvailability` already
+  // batches stock for this whole page in one query, rather than one
+  // `BrandModel.findById` per row.
+  const brandIds = [
+    ...new Set(
+      result.items
+        .map((item) => (item as { brandId?: unknown }).brandId)
+        .filter((id): id is NonNullable<typeof id> => Boolean(id))
+        .map((id) => String(id)),
+    ),
+  ];
+  const [availabilityMap, brands] = await Promise.all([
+    resolveProductAvailability(productIds),
+    brandIds.length > 0
+      ? BrandModel.find({ _id: { $in: brandIds } }).select('name').lean()
+      : Promise.resolve([]),
+  ]);
+  const brandNameById = new Map(brands.map((b) => [String(b._id), b.name]));
+  const items = result.items.map((item) => {
+    const brandId = (item as { brandId?: unknown }).brandId;
+    return {
+      ...item,
+      ...deriveProductImageView((item as { images?: ProductImage[] }).images),
+      inStock: (availabilityMap.get(String((item as { _id: unknown })._id)) ?? 0) > 0,
+      brandName: brandId ? (brandNameById.get(String(brandId)) ?? null) : null,
+    };
+  });
 
   return { ...result, items };
 }

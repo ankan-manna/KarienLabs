@@ -29,6 +29,8 @@ export interface PublicProduct {
   };
   categoryId: string;
   brandId?: string | null;
+  /** Resolved server-side (batched per page) — `null` when the product has no brand. */
+  brandName?: string | null;
   isActive: boolean;
   ratingAvg?: number;
   ratingCount?: number;

@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { createCrudRouter } from '../../utils/crud-router.factory';
 import { slugify } from '../../utils/slugify';
 
+import { handleBannerDeleted, handleBannerImageReplaced } from './banner-image.service';
 import { bannerRepository } from './banner.repository';
 import { blogRepository } from './blog.repository';
 import {
@@ -37,6 +38,11 @@ cmsRouter.use(
       { header: 'Order', key: 'order', width: 10 },
       { header: 'Active', key: 'isActive', width: 10 },
     ],
+    // Website Design Part 5/17 — safe Cloudinary asset lifecycle: destroy
+    // the old image only after the DB write that stopped referencing it has
+    // committed, and only if no other live banner still points at it.
+    afterUpdate: (before, after) => handleBannerImageReplaced(before, after),
+    afterDelete: (before) => handleBannerDeleted(before),
   }),
 );
 

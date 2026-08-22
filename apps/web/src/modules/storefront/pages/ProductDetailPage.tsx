@@ -132,7 +132,7 @@ export default function ProductDetailPage() {
                   aria-current={i === activeImage}
                   className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
                     i === activeImage
-                      ? 'border-brand-500'
+                      ? 'border-healthcare-teal'
                       : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
                   }`}
                 >
@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
           {product.medicine?.prescriptionRequired && (
             <Badge tone="yellow">Prescription Required</Badge>
           )}
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{product.name}</h1>
+          <h1 className="text-2xl font-semibold text-charcoal-teal dark:text-gray-100">{product.name}</h1>
           {product.medicine?.genericName && (
             <p className="text-sm text-gray-500">Generic: {product.medicine.genericName}</p>
           )}
@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
           </Badge>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <span className="text-2xl font-bold text-charcoal-teal dark:text-gray-100">
               {formatCurrency(product.basePrice)}
             </span>
             {discountPct > 0 && (
@@ -211,7 +211,7 @@ export default function ProductDetailPage() {
               </button>
             </div>
             <Button
-              variant="gradient"
+              variant="coral"
               isLoading={add.isPending}
               disabled={!product.inStock}
               onClick={() => {
@@ -234,7 +234,7 @@ export default function ProductDetailPage() {
               <div>
                 <dt className="font-medium text-gray-700 dark:text-gray-200">Brand</dt>
                 <dd className="text-gray-500">
-                  <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-brand-600 hover:underline">
+                  <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-healthcare-teal hover:underline">
                     {product.brand.name}
                   </Link>
                 </dd>
@@ -246,7 +246,7 @@ export default function ProductDetailPage() {
                 <dd className="text-gray-500">
                   <Link
                     to={`/products?manufacturerId=${product.manufacturer._id}`}
-                    className="hover:text-brand-600 hover:underline"
+                    className="hover:text-healthcare-teal hover:underline"
                   >
                     {product.manufacturer.name}
                   </Link>
@@ -286,7 +286,7 @@ export default function ProductDetailPage() {
       {/* Prompt 23 Part 28/29 — visible FAQ content, admin-authored only (never generated); the same entries also back the FAQPage JSON-LD above. */}
       {!!product.faq?.length && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-gray-100">
             Frequently Asked Questions
           </h2>
           <dl className="flex flex-col gap-4">
@@ -302,7 +302,7 @@ export default function ProductDetailPage() {
 
       {relatedProducts.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-gray-100">
             Related Products
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
