@@ -10,7 +10,7 @@ export function GoogleSignInButton() {
   return (
     <a
       href={googleLoginUrl()}
-      className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800"
+      className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-night-border dark:bg-night-surface dark:text-night-text dark:hover:bg-night-elevated"
     >
       <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
         <path

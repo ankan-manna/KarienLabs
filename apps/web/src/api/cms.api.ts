@@ -4,10 +4,14 @@ export interface Banner {
   _id: string;
   title: string;
   subtitle: string;
+  badge: string;
   imageUrl: string;
+  imageAlt: string;
   imagePublicId: string | null;
   linkUrl: string;
   ctaText: string;
+  secondaryCtaText: string;
+  secondaryCtaLink: string;
   placement: 'hero' | 'category' | 'checkout';
   order: number;
   startsAt: string | null;

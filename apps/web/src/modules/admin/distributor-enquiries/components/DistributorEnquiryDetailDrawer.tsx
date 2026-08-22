@@ -125,43 +125,43 @@ export function DistributorEnquiryDetailDrawer({
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <p className="text-gray-500 dark:text-gray-400">Company</p>
-              <p className="text-gray-900 dark:text-gray-100">{enquiry.companyName}</p>
+              <p className="text-gray-500 dark:text-night-muted">Company</p>
+              <p className="text-gray-900 dark:text-night-text">{enquiry.companyName}</p>
             </div>
             <div>
-              <p className="text-gray-500 dark:text-gray-400">Contact Person</p>
-              <p className="text-gray-900 dark:text-gray-100">{enquiry.contactPerson}</p>
+              <p className="text-gray-500 dark:text-night-muted">Contact Person</p>
+              <p className="text-gray-900 dark:text-night-text">{enquiry.contactPerson}</p>
             </div>
             <div>
-              <p className="text-gray-500 dark:text-gray-400">Email</p>
-              <p className="text-gray-900 dark:text-gray-100">{enquiry.email}</p>
+              <p className="text-gray-500 dark:text-night-muted">Email</p>
+              <p className="text-gray-900 dark:text-night-text">{enquiry.email}</p>
             </div>
             <div>
-              <p className="text-gray-500 dark:text-gray-400">Mobile</p>
-              <p className="text-gray-900 dark:text-gray-100">{enquiry.mobile}</p>
+              <p className="text-gray-500 dark:text-night-muted">Mobile</p>
+              <p className="text-gray-900 dark:text-night-text">{enquiry.mobile}</p>
             </div>
             {enquiry.gstin && (
               <div>
-                <p className="text-gray-500 dark:text-gray-400">GSTIN</p>
-                <p className="font-mono text-gray-900 dark:text-gray-100">{enquiry.gstin}</p>
+                <p className="text-gray-500 dark:text-night-muted">GSTIN</p>
+                <p className="font-mono text-gray-900 dark:text-night-text">{enquiry.gstin}</p>
               </div>
             )}
             <div className="col-span-2">
-              <p className="text-gray-500 dark:text-gray-400">Business Address</p>
-              <p className="text-gray-900 dark:text-gray-100">
+              <p className="text-gray-500 dark:text-night-muted">Business Address</p>
+              <p className="text-gray-900 dark:text-night-text">
                 {enquiry.businessAddress}, {enquiry.city}, {enquiry.state} {enquiry.pincode}
               </p>
             </div>
             {enquiry.message && (
               <div className="col-span-2">
-                <p className="text-gray-500 dark:text-gray-400">Message</p>
-                <p className="whitespace-pre-wrap text-gray-900 dark:text-gray-100">{enquiry.message}</p>
+                <p className="text-gray-500 dark:text-night-muted">Message</p>
+                <p className="whitespace-pre-wrap text-gray-900 dark:text-night-text">{enquiry.message}</p>
               </div>
             )}
           </div>
 
           <div>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-text">
               Requested Products
             </h3>
             {enquiry.requestedProducts.length === 0 ? (
@@ -169,7 +169,7 @@ export function DistributorEnquiryDetailDrawer({
             ) : (
               <ul className="flex flex-col gap-1 text-sm">
                 {enquiry.requestedProducts.map((p, i) => (
-                  <li key={i} className="flex items-center justify-between rounded border border-gray-100 px-2 py-1 dark:border-gray-800">
+                  <li key={i} className="flex items-center justify-between rounded border border-gray-100 px-2 py-1 dark:border-night-border">
                     <span>
                       {p.nameSnapshot} <span className="font-mono text-xs text-gray-400">({p.skuSnapshot})</span>
                     </span>
@@ -187,7 +187,7 @@ export function DistributorEnquiryDetailDrawer({
               one-click shortcut once an admin has decided to. */}
           <Can I="update" a="users">
             <div>
-              <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+              <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-text">
                 Registered Account
               </h3>
               {!enquiry.userId ? (
@@ -197,10 +197,10 @@ export function DistributorEnquiryDetailDrawer({
               ) : !linkedUser ? (
                 <Skeleton className="h-10 w-full" />
               ) : (
-                <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-gray-100 p-3 dark:border-gray-800">
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded border border-gray-100 p-3 dark:border-night-border">
                   <div className="text-sm">
-                    <p className="text-gray-900 dark:text-gray-100">{linkedUser.name}</p>
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-gray-900 dark:text-night-text">{linkedUser.name}</p>
+                    <p className="text-gray-500 dark:text-night-muted">
                       {linkedUser.email} · Current role: <Badge tone="gray">{roleLabel(linkedUser.role)}</Badge>
                     </p>
                   </div>
@@ -226,8 +226,8 @@ export function DistributorEnquiryDetailDrawer({
           </Can>
 
           <Can I="update" a="distributor_enquiries">
-            <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-gray-800">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Manage</h3>
+            <div className="flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-night-border">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-night-text">Manage</h3>
 
               {nextStatuses.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -287,8 +287,8 @@ export function DistributorEnquiryDetailDrawer({
                     .slice()
                     .reverse()
                     .map((n, i) => (
-                      <li key={i} className="rounded bg-gray-50 p-2 text-sm dark:bg-gray-800">
-                        <p className="text-gray-900 dark:text-gray-100">{n.note}</p>
+                      <li key={i} className="rounded bg-gray-50 p-2 text-sm dark:bg-night-elevated">
+                        <p className="text-gray-900 dark:text-night-text">{n.note}</p>
                         <p className="mt-1 text-xs text-gray-400">
                           {n.authorName} · {formatDateTime(n.createdAt)}
                         </p>

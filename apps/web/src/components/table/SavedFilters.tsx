@@ -50,7 +50,7 @@ export function SavedFilters({ storageKey, currentSearch, onApply }: SavedFilter
       {filters.map((f) => (
         <span
           key={f.name}
-          className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+          className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-700 dark:bg-night-elevated dark:text-night-muted"
         >
           <button type="button" onClick={() => onApply(f.search)} className="hover:underline">
             {f.name}
@@ -58,7 +58,7 @@ export function SavedFilters({ storageKey, currentSearch, onApply }: SavedFilter
           <button
             type="button"
             onClick={() => remove(f.name)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-night-text"
             aria-label={`Remove saved filter ${f.name}`}
           >
             ×

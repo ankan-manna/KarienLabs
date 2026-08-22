@@ -133,7 +133,7 @@ export default function ProductDetailPage() {
                   className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
                     i === activeImage
                       ? 'border-healthcare-teal'
-                      : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
+                      : 'border-gray-200 hover:border-gray-300 dark:border-night-border dark:hover:border-gray-600'
                   }`}
                 >
                   <img
@@ -148,7 +148,7 @@ export default function ProductDetailPage() {
           <button
             type="button"
             onClick={() => current.url && setZoomOpen(true)}
-            className="order-1 flex h-80 min-w-0 flex-1 items-center justify-center overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-800 sm:h-96 md:order-2"
+            className="order-1 flex h-80 min-w-0 flex-1 items-center justify-center overflow-hidden rounded-lg bg-gray-50 dark:bg-night-elevated sm:h-96 md:order-2"
           >
             {current.url ? (
               <img
@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
           {product.medicine?.prescriptionRequired && (
             <Badge tone="yellow">Prescription Required</Badge>
           )}
-          <h1 className="text-2xl font-semibold text-charcoal-teal dark:text-gray-100">{product.name}</h1>
+          <h1 className="text-2xl font-semibold text-charcoal-teal dark:text-night-text">{product.name}</h1>
           {product.medicine?.genericName && (
             <p className="text-sm text-gray-500">Generic: {product.medicine.genericName}</p>
           )}
@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
           </Badge>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-charcoal-teal dark:text-gray-100">
+            <span className="text-2xl font-bold text-charcoal-teal dark:text-night-text">
               {formatCurrency(product.basePrice)}
             </span>
             {discountPct > 0 && (
@@ -193,12 +193,12 @@ export default function ProductDetailPage() {
             <span className="text-xs text-gray-400">incl. {product.gstRate}% GST</span>
           </div>
 
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm text-gray-600 dark:text-night-muted">
             {product.shortDescription || product.description}
           </p>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center rounded-md border border-gray-300 dark:border-gray-700">
+            <div className="flex items-center rounded-md border border-gray-300 dark:border-night-border">
               <button
                 className="px-3 py-1.5 text-gray-500"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -229,10 +229,10 @@ export default function ProductDetailPage() {
             </Button>
           </div>
 
-          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm dark:border-gray-800">
+          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm dark:border-night-border">
             {product.brand && (
               <div>
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Brand</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Brand</dt>
                 <dd className="text-gray-500">
                   <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-healthcare-teal hover:underline">
                     {product.brand.name}
@@ -242,7 +242,7 @@ export default function ProductDetailPage() {
             )}
             {product.manufacturer && (
               <div>
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Manufacturer</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Manufacturer</dt>
                 <dd className="text-gray-500">
                   <Link
                     to={`/products?manufacturerId=${product.manufacturer._id}`}
@@ -255,25 +255,25 @@ export default function ProductDetailPage() {
             )}
             {product.medicine?.composition && (
               <div className="col-span-2">
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Composition</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Composition</dt>
                 <dd className="text-gray-500">{product.medicine.composition}</dd>
               </div>
             )}
             {product.medicine?.strength && (
               <div>
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Strength</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Strength</dt>
                 <dd className="text-gray-500">{product.medicine.strength}</dd>
               </div>
             )}
             {product.medicine?.dosageForm && (
               <div>
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Form</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Form</dt>
                 <dd className="text-gray-500 capitalize">{product.medicine.dosageForm}</dd>
               </div>
             )}
             {product.medicine?.storageInstructions && (
               <div className="col-span-2">
-                <dt className="font-medium text-gray-700 dark:text-gray-200">Storage</dt>
+                <dt className="font-medium text-gray-700 dark:text-night-text">Storage</dt>
                 <dd className="text-gray-500">{product.medicine.storageInstructions}</dd>
               </div>
             )}
@@ -286,14 +286,14 @@ export default function ProductDetailPage() {
       {/* Prompt 23 Part 28/29 — visible FAQ content, admin-authored only (never generated); the same entries also back the FAQPage JSON-LD above. */}
       {!!product.faq?.length && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-gray-100">
+          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
             Frequently Asked Questions
           </h2>
           <dl className="flex flex-col gap-4">
             {product.faq.map((entry, i) => (
               <div key={i}>
-                <dt className="font-medium text-gray-800 dark:text-gray-200">{entry.question}</dt>
-                <dd className="mt-1 text-sm text-gray-600 dark:text-gray-300">{entry.answer}</dd>
+                <dt className="font-medium text-gray-800 dark:text-night-text">{entry.question}</dt>
+                <dd className="mt-1 text-sm text-gray-600 dark:text-night-muted">{entry.answer}</dd>
               </div>
             ))}
           </dl>
@@ -302,7 +302,7 @@ export default function ProductDetailPage() {
 
       {relatedProducts.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-gray-100">
+          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
             Related Products
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

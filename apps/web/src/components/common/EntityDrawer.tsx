@@ -31,12 +31,12 @@ function AuditLogRow({ entry }: { entry: AuditLogEntry }) {
   const hasDiff = entry.before != null || entry.after != null;
 
   return (
-    <li className="border-l-2 border-gray-200 pl-3 text-sm dark:border-gray-700">
+    <li className="border-l-2 border-gray-200 pl-3 text-sm dark:border-night-border">
       <div className="flex items-center gap-2">
         <Badge tone={ACTION_TONES[entry.action] ?? 'gray'}>{entry.action}</Badge>
-        <span className="text-xs text-gray-500 dark:text-gray-400">{actorLabel(entry.actorId)}</span>
+        <span className="text-xs text-gray-500 dark:text-night-muted">{actorLabel(entry.actorId)}</span>
       </div>
-      <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">{formatDateTime(entry.createdAt)}</div>
+      <div className="mt-1 text-xs text-gray-500 dark:text-night-muted">{formatDateTime(entry.createdAt)}</div>
       {hasDiff && (
         <div className="mt-1">
           <button
@@ -50,16 +50,16 @@ function AuditLogRow({ entry }: { entry: AuditLogEntry }) {
             <div className="mt-1 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {entry.before != null && (
                 <div>
-                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Before</div>
-                  <pre className="max-h-48 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-gray-800/50">
+                  <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Before</div>
+                  <pre className="max-h-48 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-night-elevated/50">
                     {JSON.stringify(entry.before, null, 2)}
                   </pre>
                 </div>
               )}
               {entry.after != null && (
                 <div>
-                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400">After</div>
-                  <pre className="max-h-48 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-gray-800/50">
+                  <div className="text-xs font-medium text-gray-500 dark:text-night-muted">After</div>
+                  <pre className="max-h-48 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-night-elevated/50">
                     {JSON.stringify(entry.after, null, 2)}
                   </pre>
                 </div>
@@ -129,8 +129,8 @@ function ActivityTimelineTab({ resource, resourceId }: { resource: string; resou
     <ul className="flex flex-col gap-3">
       {data.items.map((entry) => (
         <li key={entry._id} className="border-l-2 border-brand-200 pl-3 text-sm dark:border-brand-800">
-          <div className="text-gray-800 dark:text-gray-200">{entry.message}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">{formatDateTime(entry.createdAt)}</div>
+          <div className="text-gray-800 dark:text-night-text">{entry.message}</div>
+          <div className="text-xs text-gray-500 dark:text-night-muted">{formatDateTime(entry.createdAt)}</div>
         </li>
       ))}
     </ul>
@@ -188,7 +188,7 @@ export function EntityDrawer({
         <Tabs tabs={tabs} active={tab} onChange={setTab} />
 
         {meta && (meta.createdAt || meta.updatedAt) && (
-          <div className="grid grid-cols-2 gap-2 rounded-md bg-gray-50 p-3 text-xs text-gray-500 dark:bg-gray-800/50 dark:text-gray-400">
+          <div className="grid grid-cols-2 gap-2 rounded-md bg-gray-50 p-3 text-xs text-gray-500 dark:bg-night-elevated/50 dark:text-night-muted">
             {meta.createdAt && <div>Created {formatDateTime(meta.createdAt)}</div>}
             {meta.updatedAt && <div>Updated {formatDateTime(meta.updatedAt)}</div>}
             {meta.createdBy && <div>By {meta.createdBy}</div>}
@@ -196,7 +196,7 @@ export function EntityDrawer({
           </div>
         )}
 
-        <div className="flex flex-wrap gap-2 border-t border-gray-200 pt-3 dark:border-gray-800">
+        <div className="flex flex-wrap gap-2 border-t border-gray-200 pt-3 dark:border-night-border">
           {onEdit && (
             <Button type="button" size="sm" onClick={onEdit}>
               Edit

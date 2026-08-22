@@ -26,7 +26,7 @@ export default function BlogListPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
         Health & Wellness Blog
       </h1>
       {isLoading ? (
@@ -39,7 +39,7 @@ export default function BlogListPage() {
             {data.items.map((blog) => (
               <Link key={blog._id} to={`/blog/${blog.slug}`}>
                 <Card className="flex h-full flex-col overflow-hidden">
-                  <div className="flex h-40 items-center justify-center bg-gray-50 dark:bg-gray-800">
+                  <div className="flex h-40 items-center justify-center bg-gray-50 dark:bg-night-elevated">
                     {blog.coverImageUrl ? (
                       <img
                         src={blog.coverImageUrl}
@@ -52,10 +52,10 @@ export default function BlogListPage() {
                   </div>
                   <div className="flex flex-1 flex-col gap-1.5 p-4">
                     <span className="text-xs text-gray-400">{formatDate(blog.publishedAt)}</span>
-                    <h2 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    <h2 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-night-text">
                       {blog.title}
                     </h2>
-                    <p className="line-clamp-3 text-xs text-gray-500 dark:text-gray-400">
+                    <p className="line-clamp-3 text-xs text-gray-500 dark:text-night-muted">
                       {blog.excerpt}
                     </p>
                   </div>

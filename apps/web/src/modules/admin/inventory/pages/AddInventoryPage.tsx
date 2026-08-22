@@ -146,8 +146,8 @@ export default function AddInventoryPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add Inventory</h1>
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Add Inventory</h1>
+      <p className="text-sm text-gray-500 dark:text-night-muted">
         Select a product, choose which batch to add stock to, and enter the quantity received.
       </p>
 
@@ -170,7 +170,7 @@ export default function AddInventoryPage() {
               onChange={(e) => setTerm(e.target.value)}
             />
             {debouncedTerm.trim().length >= 2 && term.trim().length >= 2 && (
-              <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+              <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-night-border dark:bg-night-surface">
                 {searching ? (
                   <div className="p-3 text-sm text-gray-500">Searching…</div>
                 ) : !productResults || productResults.items.length === 0 ? (
@@ -182,7 +182,7 @@ export default function AddInventoryPage() {
                         <button
                           type="button"
                           onClick={() => selectProduct(product)}
-                          className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+                          className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-night-elevated"
                         >
                           <span>
                             {product.name} <span className="text-gray-400">({product.sku})</span>
@@ -197,16 +197,16 @@ export default function AddInventoryPage() {
           </div>
 
           {selectedProduct && (
-            <div className="flex flex-col gap-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+            <div className="flex flex-col gap-4 border-t border-gray-100 pt-4 dark:border-night-border">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  <p className="text-sm font-medium text-gray-900 dark:text-night-text">
                     {selectedProduct.name}{' '}
                     <span className="font-mono text-xs text-gray-400">({selectedProduct.sku})</span>
                   </p>
                   <p className="text-xs text-gray-500">
                     Current stock (all batches):{' '}
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+                    <span className="font-semibold text-gray-900 dark:text-night-text">
                       {currentTotalStock}
                     </span>
                   </p>
@@ -226,7 +226,7 @@ export default function AddInventoryPage() {
                       description="This is manufactured stock — create a batch and add quantity directly below. No Purchase Order / GRN is required."
                     />
                   ) : (
-                    <div className="flex gap-4 border-b border-gray-100 pb-2 text-sm dark:border-gray-800">
+                    <div className="flex gap-4 border-b border-gray-100 pb-2 text-sm dark:border-night-border">
                       <button
                         type="button"
                         onClick={() => setAddMode('existing')}
@@ -270,13 +270,13 @@ export default function AddInventoryPage() {
                           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                             <div>
                               <p className="text-xs text-gray-500">Warehouse</p>
-                              <p className="text-sm text-gray-900 dark:text-gray-100">
+                              <p className="text-sm text-gray-900 dark:text-night-text">
                                 {warehouseNameById.get(selectedBatch.warehouseId) ?? selectedBatch.warehouseId}
                               </p>
                             </div>
                             <div>
                               <p className="text-xs text-gray-500">Current Stock (this batch)</p>
-                              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                              <p className="text-sm font-semibold text-gray-900 dark:text-night-text">
                                 {selectedBatch.quantityAvailable}
                               </p>
                             </div>

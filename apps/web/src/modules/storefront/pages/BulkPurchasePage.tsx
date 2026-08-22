@@ -62,7 +62,7 @@ function ProductPicker({
         onChange={(e) => setTerm(e.target.value)}
       />
       {debouncedTerm.trim().length >= 2 && (
-        <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900">
+        <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-night-border dark:bg-night-surface">
           {isFetching ? (
             <div className="p-3 text-sm text-gray-500">Searching…</div>
           ) : !data || data.items.length === 0 ? (
@@ -78,7 +78,7 @@ function ProductPicker({
                       onAdd(product);
                       setTerm('');
                     }}
-                    className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-gray-800"
+                    className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-night-elevated"
                   >
                     <span>
                       {product.name} <span className="text-gray-400">({product.sku})</span>
@@ -234,7 +234,7 @@ export default function BulkPurchasePage() {
     return (
       <Card className="mx-auto max-w-lg p-6 text-center">
         <Badge tone="green">Enquiry received</Badge>
-        <h1 className="mt-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h1 className="mt-3 text-lg font-semibold text-gray-900 dark:text-night-text">
           Thank you for your enquiry
         </h1>
         <p className="mt-2 text-sm text-gray-500">
@@ -267,7 +267,7 @@ export default function BulkPurchasePage() {
         onSubmit={handleOtpSubmit(onSubmitOtp)}
         className="mx-auto flex max-w-md flex-col gap-4"
       >
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Verify your email</h1>
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-night-text">Verify your email</h1>
         <p className="text-sm text-gray-500">
           We sent a verification code to <span className="font-medium">{otpChallenge.maskedContact}</span>.
           Enter it below to submit your enquiry.
@@ -316,10 +316,10 @@ export default function BulkPurchasePage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-night-text">
           Distributor &amp; Bulk Purchase Enquiry
         </h1>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+        <p className="mt-2 text-sm text-gray-600 dark:text-night-muted">
           Looking to buy medicines or healthcare products in bulk for your pharmacy, clinic, or
           distribution business? Tell us what you need below and our business team will reach out
           with availability, pricing, and next steps. This form is for wholesale/business enquiries
@@ -373,7 +373,7 @@ export default function BulkPurchasePage() {
           </div>
 
           <div>
-            <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">
+            <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-text">
               Products / SKUs of Interest (optional)
             </h2>
             <ProductPicker selected={selectedProducts} onAdd={addProduct} />
@@ -382,7 +382,7 @@ export default function BulkPurchasePage() {
                 {selectedProducts.map((p) => (
                   <li
                     key={p.productId}
-                    className="flex items-center justify-between gap-3 rounded-md border border-gray-200 p-2 text-sm dark:border-gray-800"
+                    className="flex items-center justify-between gap-3 rounded-md border border-gray-200 p-2 text-sm dark:border-night-border"
                   >
                     <span className="truncate">
                       {p.name} <span className="text-gray-400">({p.sku})</span>
@@ -394,7 +394,7 @@ export default function BulkPurchasePage() {
                         max={1_000_000}
                         value={p.requestedQuantity}
                         onChange={(e) => updateQuantity(p.productId, Math.max(1, Number(e.target.value) || 1))}
-                        className="w-24 rounded-md border border-gray-300 px-2 py-1 text-right text-sm dark:border-gray-700 dark:bg-gray-800"
+                        className="w-24 rounded-md border border-gray-300 px-2 py-1 text-right text-sm dark:border-night-border dark:bg-night-elevated"
                         aria-label={`Quantity for ${p.name}`}
                       />
                       <button

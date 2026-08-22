@@ -146,11 +146,11 @@ export default function FeatureFlagsPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Feature Flags</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Feature Flags</h1>
         <Button onClick={openCreateModal}>New Flag</Button>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
+      <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-night-border">
         {isLoading ? (
           <div className="p-4">
             <SkeletonRows rows={4} columns={3} />
@@ -159,18 +159,18 @@ export default function FeatureFlagsPage() {
           <EmptyState title="No feature flags yet" />
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Key</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Scope</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Rollout</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Enabled</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Key</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Scope</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Rollout</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Enabled</th>
                 <th className="px-4 py-2" />
               </tr>
             </thead>
             <tbody>
               {flags.map((flag) => (
-                <tr key={flag.key} className="border-t border-gray-100 dark:border-gray-800">
+                <tr key={flag.key} className="border-t border-gray-100 dark:border-night-border">
                   <td className="px-4 py-2 font-mono text-xs">{flag.key}</td>
                   <td className="px-4 py-2">
                     <Badge>{flag.scope}</Badge>
@@ -247,7 +247,7 @@ export default function FeatureFlagsPage() {
 
           {scope === 'role' && (
             <div>
-              <p className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <p className="mb-1 block text-sm font-medium text-gray-700 dark:text-night-muted">
                 Target roles
               </p>
               <div className="flex flex-col gap-1">

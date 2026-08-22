@@ -4,10 +4,25 @@ import { BannerImageFields } from '../components/BannerImageFields';
 import { bannerHooks } from '../hooks/useCms';
 
 const fields: ConfigField[] = [
+  { name: 'badge', label: 'Badge (eyebrow text)', type: 'text', required: false, showInTable: false },
   { name: 'title', label: 'Title', type: 'text' },
   { name: 'subtitle', label: 'Subtitle / description', type: 'textarea', required: false, showInTable: false },
   { name: 'ctaText', label: 'CTA button text', type: 'text', required: false, showInTable: false },
   { name: 'linkUrl', label: 'Link URL', type: 'text', required: false },
+  {
+    name: 'secondaryCtaText',
+    label: 'Secondary CTA text (optional)',
+    type: 'text',
+    required: false,
+    showInTable: false,
+  },
+  {
+    name: 'secondaryCtaLink',
+    label: 'Secondary CTA link (optional)',
+    type: 'text',
+    required: false,
+    showInTable: false,
+  },
   {
     name: 'placement',
     label: 'Placement',
@@ -49,6 +64,7 @@ export default function BannersPage() {
       renderExtraFields={() => <BannerImageFields />}
       extraDefaultValues={(banner) => ({
         imageUrl: banner?.imageUrl ?? '',
+        imageAlt: banner?.imageAlt ?? '',
         imagePublicId: banner?.imagePublicId ?? null,
         startsAt: toDatetimeLocal(banner?.startsAt),
         endsAt: toDatetimeLocal(banner?.endsAt),

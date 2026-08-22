@@ -72,16 +72,16 @@ function DiffCell({ entry }: { entry: AuditLogEntry }) {
         <div className="mt-1 grid max-w-md grid-cols-1 gap-2 sm:grid-cols-2">
           {entry.before != null && (
             <div>
-              <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Before</div>
-              <pre className="max-h-40 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-gray-800/50">
+              <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Before</div>
+              <pre className="max-h-40 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-night-elevated/50">
                 {JSON.stringify(entry.before, null, 2)}
               </pre>
             </div>
           )}
           {entry.after != null && (
             <div>
-              <div className="text-xs font-medium text-gray-500 dark:text-gray-400">After</div>
-              <pre className="max-h-40 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-gray-800/50">
+              <div className="text-xs font-medium text-gray-500 dark:text-night-muted">After</div>
+              <pre className="max-h-40 overflow-auto rounded bg-gray-50 p-2 text-xs dark:bg-night-elevated/50">
                 {JSON.stringify(entry.after, null, 2)}
               </pre>
             </div>
@@ -195,7 +195,7 @@ export default function AuditCenterPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Audit Center</h1>
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Audit Center</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Select

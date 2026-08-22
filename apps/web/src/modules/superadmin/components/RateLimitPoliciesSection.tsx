@@ -84,10 +84,10 @@ export function RateLimitPoliciesSection() {
   return (
     <Card className="flex flex-col gap-4 p-4">
       <div>
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-night-text">
           Rate Limit Configuration
         </h2>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-xs text-gray-500 dark:text-night-muted">
           Super Admin only. Changes apply to live traffic immediately — no server restart or
           deploy required.
         </p>
@@ -140,9 +140,9 @@ export function RateLimitPoliciesSection() {
             </Button>
           </Can>
 
-          <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-gray-800">
+          <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-night-border">
             <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+              <thead className="bg-gray-50 text-xs uppercase text-gray-500 dark:bg-night-surface dark:text-night-muted">
                 <tr>
                   <th className="px-3 py-2">Feature</th>
                   <th className="px-3 py-2">Window</th>
@@ -154,11 +154,11 @@ export function RateLimitPoliciesSection() {
                   const cfg = data?.[p.id];
                   return (
                     <tr key={p.id}>
-                      <td className="px-3 py-2 text-gray-900 dark:text-gray-100">{p.label}</td>
-                      <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
+                      <td className="px-3 py-2 text-gray-900 dark:text-night-text">{p.label}</td>
+                      <td className="px-3 py-2 text-gray-600 dark:text-night-muted">
                         {cfg ? `${cfg.windowMinutes} min` : '—'}
                       </td>
-                      <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
+                      <td className="px-3 py-2 text-gray-600 dark:text-night-muted">
                         {cfg ? cfg.limit : '—'}
                       </td>
                     </tr>

@@ -14,7 +14,7 @@ export function ColumnVisibilityMenu<T>({ table }: { table: Table<T> }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 dark:border-night-border dark:text-night-muted dark:hover:bg-night-elevated"
       >
         Columns
       </button>
@@ -24,13 +24,13 @@ export function ColumnVisibilityMenu<T>({ table }: { table: Table<T> }) {
           <div
             className={cn(
               'absolute right-0 z-20 mt-1 w-48 rounded-md border border-gray-200 bg-white p-2 shadow-lg',
-              'dark:border-gray-700 dark:bg-gray-900',
+              'dark:border-night-border dark:bg-night-surface',
             )}
           >
             {columns.map((column) => (
               <label
                 key={column.id}
-                className="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-night-text dark:hover:bg-night-elevated"
               >
                 <input
                   type="checkbox"

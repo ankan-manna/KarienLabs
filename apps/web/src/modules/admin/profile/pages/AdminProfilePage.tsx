@@ -69,10 +69,10 @@ export default function AdminProfilePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">My Profile</h1>
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">My Profile</h1>
 
       <Card className="p-5">
-        <h2 className="mb-3 text-base font-semibold text-gray-800 dark:text-gray-200">Account</h2>
+        <h2 className="mb-3 text-base font-semibold text-gray-800 dark:text-night-text">Account</h2>
         <dl className="grid grid-cols-2 gap-3 text-sm">
           <dt className="text-gray-500">Name</dt>
           <dd>{user?.name}</dd>
@@ -114,7 +114,7 @@ export default function AdminProfilePage() {
       </Card>
 
       <Card className="p-5">
-        <h2 className="mb-3 text-base font-semibold text-gray-800 dark:text-gray-200">
+        <h2 className="mb-3 text-base font-semibold text-gray-800 dark:text-night-text">
           Change Password
         </h2>
         <form
@@ -146,7 +146,7 @@ export default function AdminProfilePage() {
       </Card>
 
       <Card className="p-5">
-        <h2 className="mb-1 text-base font-semibold text-gray-800 dark:text-gray-200">
+        <h2 className="mb-1 text-base font-semibold text-gray-800 dark:text-night-text">
           Login History &amp; Devices
         </h2>
         <p className="mb-3 text-sm text-gray-500">
@@ -158,18 +158,18 @@ export default function AdminProfilePage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] text-left text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+              <thead className="bg-gray-50 dark:bg-night-surface">
                 <tr>
-                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Device</th>
-                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">IP</th>
-                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Signed in</th>
-                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Status</th>
+                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Device</th>
+                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">IP</th>
+                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Signed in</th>
+                  <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Status</th>
                   <th className="px-3 py-2" />
                 </tr>
               </thead>
               <tbody>
                 {(sessions ?? []).map((s) => (
-                  <tr key={s.id} className="border-t border-gray-100 dark:border-gray-800/60">
+                  <tr key={s.id} className="border-t border-gray-100 dark:border-night-border/60">
                     <td className="max-w-xs truncate px-3 py-2">{s.deviceInfo || 'Unknown device'}</td>
                     <td className="px-3 py-2">{s.ip}</td>
                     <td className="px-3 py-2">{formatDateTime(s.createdAt)}</td>

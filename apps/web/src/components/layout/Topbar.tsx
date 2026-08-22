@@ -16,13 +16,13 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
   const isStaff = isStaffRole(user?.role);
 
   return (
-    <header className="flex h-16 items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-900 sm:px-6">
+    <header className="flex h-16 items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 dark:border-night-border dark:bg-night-surface sm:px-6">
       <div className="flex min-w-0 items-center gap-3">
         {onOpenMobileNav && (
           <button
             onClick={onOpenMobileNav}
             aria-label="Open navigation"
-            className="rounded p-1.5 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
+            className="rounded p-1.5 text-gray-500 hover:bg-gray-100 dark:text-night-muted dark:hover:bg-night-elevated lg:hidden"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
               <path
@@ -42,10 +42,10 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
         <div className="relative">
           <button
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-night-elevated"
           >
             <Avatar name={user?.name ?? '?'} size="sm" />
-            <span className="hidden text-sm text-gray-700 dark:text-gray-200 sm:inline">
+            <span className="hidden text-sm text-gray-700 dark:text-night-text sm:inline">
               {user?.name}
             </span>
           </button>
@@ -53,15 +53,15 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-              <div className="absolute right-0 z-20 mt-1 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
-                <div className="border-b border-gray-100 px-3 py-2 text-xs text-gray-500 dark:border-gray-800">
+              <div className="absolute right-0 z-20 mt-1 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-night-border dark:bg-night-surface">
+                <div className="border-b border-gray-100 px-3 py-2 text-xs text-gray-500 dark:border-night-border">
                   {user?.email} · <span>{roleLabel(user?.role)}</span>
                 </div>
                 {!isStaff && (
                   <Link
                     to="/"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-night-text dark:hover:bg-night-elevated"
                   >
                     Home
                   </Link>
@@ -70,7 +70,7 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
                   <Link
                     to="/admin/dashboard"
                     onClick={() => setMenuOpen(false)}
-                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-night-text dark:hover:bg-night-elevated"
                   >
                     Control Panel
                   </Link>
@@ -78,7 +78,7 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
                 <Link
                   to={profilePath}
                   onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:text-night-text dark:hover:bg-night-elevated"
                 >
                   Profile
                 </Link>

@@ -136,7 +136,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Analytics</h1>
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Analytics</h1>
 
       {/* KPI stat cards */}
       <section>
@@ -148,9 +148,9 @@ export default function AnalyticsPage() {
             <Card key={stat.key} className="p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-gray-400">{stat.label}</p>
               {snapshotLoading || !snapshot ? (
-                <div className="mt-2 h-7 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-800" />
+                <div className="mt-2 h-7 w-16 animate-pulse rounded bg-gray-200 dark:bg-night-elevated" />
               ) : (
-                <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                   {stat.format(snapshot[stat.key])}
                 </p>
               )}
@@ -211,7 +211,7 @@ export default function AnalyticsPage() {
       {/* Top medicines & top suppliers */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="p-4">
-          <h3 className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          <h3 className="mb-3 text-sm font-semibold text-gray-700 dark:text-night-text">
             Top 10 Medicines (by Revenue)
           </h3>
           {medicinesLoading ? (
@@ -221,10 +221,10 @@ export default function AnalyticsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[420px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Product', 'SKU', 'Units Sold', 'Revenue'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -232,7 +232,7 @@ export default function AnalyticsPage() {
                 </thead>
                 <tbody>
                   {topMedicines.map((m) => (
-                    <tr key={m.productId} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={m.productId} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2">{m.productName}</td>
                       <td className="px-3 py-2 font-mono text-xs">{m.sku}</td>
                       <td className="px-3 py-2">{m.unitsSold}</td>
@@ -246,7 +246,7 @@ export default function AnalyticsPage() {
         </Card>
 
         <Card className="p-4">
-          <h3 className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          <h3 className="mb-3 text-sm font-semibold text-gray-700 dark:text-night-text">
             Top 10 Suppliers (by PO Value)
           </h3>
           {suppliersLoading ? (
@@ -256,10 +256,10 @@ export default function AnalyticsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[380px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Supplier', 'Orders', 'Total Value'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -267,7 +267,7 @@ export default function AnalyticsPage() {
                 </thead>
                 <tbody>
                   {topSuppliers.map((s) => (
-                    <tr key={s.supplierId} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={s.supplierId} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2">{s.supplierName}</td>
                       <td className="px-3 py-2">{s.totalOrders}</td>
                       <td className="px-3 py-2 font-medium">{formatCurrency(s.totalValue)}</td>
@@ -295,7 +295,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     New Customers This Month
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {customerInsights.newCustomersThisMonth}
                   </p>
                 </div>
@@ -303,7 +303,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     Repeat Purchase Rate
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {customerInsights.repeatPurchaseRate.toFixed(1)}%
                   </p>
                 </div>
@@ -311,7 +311,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     Total Customers
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {customerInsights.totalCustomers}
                   </p>
                 </div>
@@ -319,12 +319,12 @@ export default function AnalyticsPage() {
               {!customerInsights.topCustomers.length ? (
                 <EmptyState title="No customer spend yet" />
               ) : (
-                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
                   <table className="w-full min-w-[420px] text-left text-sm">
-                    <thead className="bg-gray-50 dark:bg-gray-900">
+                    <thead className="bg-gray-50 dark:bg-night-surface">
                       <tr>
                         {['Customer', 'Email', 'Lifetime Spend'].map((h) => (
-                          <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                          <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                             {h}
                           </th>
                         ))}
@@ -332,7 +332,7 @@ export default function AnalyticsPage() {
                     </thead>
                     <tbody>
                       {customerInsights.topCustomers.map((c) => (
-                        <tr key={c.customerId} className="border-t border-gray-100 dark:border-gray-800/60">
+                        <tr key={c.customerId} className="border-t border-gray-100 dark:border-night-border/60">
                           <td className="px-3 py-2">{c.name}</td>
                           <td className="px-3 py-2 text-gray-500">{c.email}</td>
                           <td className="px-3 py-2 font-medium">{formatCurrency(c.totalSpent)}</td>
@@ -374,7 +374,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     Total Enquiries
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {distributorSummary.totalEnquiries}
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     Conversion Rate
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {distributorSummary.conversionRatePercent.toFixed(1)}%
                   </p>
                 </div>
@@ -390,7 +390,7 @@ export default function AnalyticsPage() {
                   <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
                     Converted
                   </p>
-                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                  <p className="mt-1 text-xl font-semibold text-gray-900 dark:text-night-text">
                     {distributorSummary.statusBreakdown.converted ?? 0}
                   </p>
                 </div>
@@ -407,12 +407,12 @@ export default function AnalyticsPage() {
               {!distributorSummary.topRequestedSkus.length ? (
                 <EmptyState title="No requested products in this range" />
               ) : (
-                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+                <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
                   <table className="w-full min-w-[420px] text-left text-sm">
-                    <thead className="bg-gray-50 dark:bg-gray-900">
+                    <thead className="bg-gray-50 dark:bg-night-surface">
                       <tr>
                         {['SKU', 'Product', 'Requested Qty', 'Enquiries'].map((h) => (
-                          <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                          <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                             {h}
                           </th>
                         ))}
@@ -420,7 +420,7 @@ export default function AnalyticsPage() {
                     </thead>
                     <tbody>
                       {distributorSummary.topRequestedSkus.map((row) => (
-                        <tr key={row.sku} className="border-t border-gray-100 dark:border-gray-800/60">
+                        <tr key={row.sku} className="border-t border-gray-100 dark:border-night-border/60">
                           <td className="px-3 py-2 font-mono text-xs">{row.sku}</td>
                           <td className="px-3 py-2">{row.productName}</td>
                           <td className="px-3 py-2">{row.totalRequestedQuantity}</td>
@@ -449,10 +449,10 @@ export default function AnalyticsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[520px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Product', 'Warehouse', 'Qty Available', 'Reorder Level'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -462,7 +462,7 @@ export default function AnalyticsPage() {
                   {lowStock.map((row) => (
                     <tr
                       key={`${row.productId}-${row.warehouseId}`}
-                      className="border-t border-gray-100 dark:border-gray-800/60"
+                      className="border-t border-gray-100 dark:border-night-border/60"
                     >
                       <td className="px-3 py-2">{row.productName}</td>
                       <td className="px-3 py-2">{warehouseNameById.get(row.warehouseId) ?? row.warehouseId}</td>

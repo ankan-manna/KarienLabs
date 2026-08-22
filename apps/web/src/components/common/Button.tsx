@@ -21,9 +21,9 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   gradient:
     'bg-gradient-to-r from-brand-500 to-brand-gradient-end text-white hover:brightness-95 focus-visible:ring-brand-500',
   secondary:
-    'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700',
+    'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-night-elevated dark:text-night-text dark:hover:bg-night-elevated',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
-  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800',
+  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100 dark:text-night-text dark:hover:bg-night-elevated',
   // Secondary action: brand-colored border/text on a plain background (Part
   // 5's spec) — used pervasively as "the" secondary/tertiary action across
   // admin (Cancel, Export, ...), so this stays a thin outline rather than a
@@ -57,6 +57,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:cursor-not-allowed disabled:opacity-50',
+          // Subtle tap feedback (Part 31) — CSS-only, so it costs nothing and
+          // applies everywhere Button is used; `motion-safe:` makes Tailwind
+          // itself skip it under `prefers-reduced-motion: reduce`.
+          'motion-safe:active:scale-[0.97] motion-safe:transition-transform',
           VARIANT_CLASSES[variant],
           SIZE_CLASSES[size],
           className,

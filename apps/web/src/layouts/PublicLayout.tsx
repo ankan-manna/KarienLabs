@@ -8,7 +8,7 @@ export function PublicLayout() {
   useInventoryEvents();
 
   return (
-    <div className="flex min-h-screen flex-col bg-soft-mint dark:bg-gray-950">
+    <div className="flex min-h-screen flex-col bg-soft-mint dark:bg-night">
       <Header />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">

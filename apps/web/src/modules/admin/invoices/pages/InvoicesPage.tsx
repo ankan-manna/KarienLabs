@@ -35,7 +35,7 @@ const TAX_TYPE_TONE: Record<AdminInvoice['taxType'], 'green' | 'blue' | 'yellow'
 function InvoiceLineRow({ line }: { line: InvoiceLine }) {
   return (
     <>
-      <tr className="border-t border-gray-100 dark:border-gray-800">
+      <tr className="border-t border-gray-100 dark:border-night-border">
         <td className="py-1.5">
           {line.name}
           {line.bundleComponents && (
@@ -62,7 +62,7 @@ function InvoiceLineRow({ line }: { line: InvoiceLine }) {
         <td className="py-1.5 text-right font-medium">{formatCurrency(line.amount)}</td>
       </tr>
       {line.bundleComponents?.map((comp) => (
-        <tr key={comp.productId} className="bg-gray-50 text-xs text-gray-500 dark:bg-gray-800/40">
+        <tr key={comp.productId} className="bg-gray-50 text-xs text-gray-500 dark:bg-night-elevated/40">
           <td className="py-1 pl-6" colSpan={2}>
             ↳ {comp.name} ({comp.sku})
           </td>
@@ -107,23 +107,23 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
     <div className="flex flex-col gap-4 text-sm">
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Invoice Number</div>
+          <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Invoice Number</div>
           <div className="font-mono">{invoice.invoiceNumber}</div>
         </div>
         <div>
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Invoice Date</div>
+          <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Invoice Date</div>
           <div>{invoice.invoiceDate ? formatDate(invoice.invoiceDate) : '—'}</div>
         </div>
         <div>
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Tax Type</div>
+          <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Tax Type</div>
           <Badge tone={TAX_TYPE_TONE[invoice.taxType]}>{TAX_TYPE_LABEL[invoice.taxType]}</Badge>
         </div>
         <div>
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</div>
+          <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Status</div>
           <Badge tone={invoice.status === 'generated' ? 'green' : 'gray'}>{invoice.status}</Badge>
         </div>
         <div>
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Document Storage</div>
+          <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Document Storage</div>
           <div className="flex items-center gap-2">
             <Badge tone="gray">{invoice.storageProvider === 's3' ? 'S3' : 'Cloudinary'}</Badge>
             <Badge
@@ -141,7 +141,7 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
             </Badge>
           </div>
           {invoice.documentStatus === 'expired' && (
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-xs text-gray-500 dark:text-night-muted">
               The stored PDF passed its retention window — it will be regenerated automatically from the
               original order data on the next download.
             </p>
@@ -149,9 +149,9 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
         </div>
       </div>
 
-      <div className="rounded-md border border-gray-200 p-3 dark:border-gray-800">
-        <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">Seller</h3>
-        <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-300">
+      <div className="rounded-md border border-gray-200 p-3 dark:border-night-border">
+        <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-night-text">Seller</h3>
+        <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-night-muted">
           <div>Legal Name: {invoice.sellerNameSnapshot || '—'}</div>
           <div>GSTIN: {invoice.sellerGstinSnapshot || '—'}</div>
           <div>Address: {invoice.sellerAddressSnapshot || '—'}</div>
@@ -159,11 +159,11 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
         </div>
       </div>
 
-      <div className="rounded-md border border-gray-200 p-3 dark:border-gray-800">
-        <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+      <div className="rounded-md border border-gray-200 p-3 dark:border-night-border">
+        <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-night-text">
           Warehouse &amp; Jurisdiction
         </h3>
-        <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-300">
+        <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-night-muted">
           <div>Warehouse: {invoice.warehouseNameSnapshot || '—'}</div>
           <div>Warehouse GSTIN: {invoice.warehouseGstinSnapshot || '—'}</div>
           <div>Warehouse State Code: {invoice.warehouseStateCodeSnapshot || '—'}</div>
@@ -171,7 +171,7 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-gray-800">
+      <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-night-border">
         <table className="w-full min-w-[900px] text-left text-xs">
           <thead>
             <tr className="text-gray-500">
@@ -227,7 +227,7 @@ function InvoiceDetail({ invoice }: { invoice: AdminInvoice }) {
             <span>{formatCurrency(invoice.roundOffAmount)}</span>
           </div>
         )}
-        <div className="flex justify-between border-t border-gray-200 pt-1 text-sm font-semibold dark:border-gray-800">
+        <div className="flex justify-between border-t border-gray-200 pt-1 text-sm font-semibold dark:border-night-border">
           <span>Final Total</span>
           <span>{formatCurrency(invoice.finalAmount || invoice.totals.grandTotal)}</span>
         </div>
@@ -323,7 +323,7 @@ export default function AdminInvoicesPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Invoices</h1>
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Invoices</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Select

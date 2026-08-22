@@ -37,7 +37,7 @@ export function AdminLayout() {
     // engages. Sidebar/Topbar need no `sticky`/`fixed` positioning at all:
     // as plain flex siblings of a capped, non-scrolling ancestor, they
     // simply never move — a single scroll region, no double scrollbars.
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <div className="flex h-screen overflow-hidden bg-soft-mint dark:bg-night">
       <Sidebar
         title="KarienLabs Admin"
         mobileOpen={mobileNavOpen}

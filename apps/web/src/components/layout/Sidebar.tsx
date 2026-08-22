@@ -83,7 +83,7 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
       )}
       <aside
         className={cn(
-          'flex flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900',
+          'flex flex-col border-r border-gray-200 bg-white dark:border-night-border dark:bg-night-surface',
           treatAsDesktop
             ? cn('h-screen transition-all', collapsed ? 'w-16' : 'w-64')
             : cn(
@@ -92,13 +92,13 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
               ),
         )}
       >
-        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4 dark:border-gray-800">
+        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4 dark:border-night-border">
           {(() => {
             const logo =
               collapsed && treatAsDesktop ? (
                 <img src="/logo.jpg" alt="KarienLabs" className="h-6 w-6 rounded object-cover" />
               ) : (
-                <span className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                <span className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-night-text">
                   <img src="/logo.jpg" alt="" className="h-6 w-auto rounded" />
                   {title}
                 </span>
@@ -115,7 +115,7 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
             <button
               onClick={() => setCollapsed((c) => !c)}
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-night-elevated"
             >
               {collapsed ? '»' : '«'}
             </button>
@@ -123,7 +123,7 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
             <button
               onClick={onCloseMobile}
               aria-label="Close navigation"
-              className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-night-elevated"
             >
               ✕
             </button>
@@ -207,7 +207,7 @@ const NavItemLink = forwardRef<
           'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
           isActive
             ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400'
-            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+            : 'text-gray-600 hover:bg-gray-100 dark:text-night-muted dark:hover:bg-night-elevated',
         )
       }
     >
@@ -313,7 +313,7 @@ function NavCategory({
           'flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium transition-colors',
           isActiveCategory
             ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400'
-            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+            : 'text-gray-600 hover:bg-gray-100 dark:text-night-muted dark:hover:bg-night-elevated',
         )}
       >
         <span className="truncate">{collapsed ? label.slice(0, 1) : label}</span>
@@ -331,7 +331,7 @@ function NavCategory({
 
       {/* Inline accordion — a normal sibling in the document flow, directly under its parent, on every screen size. */}
       {isOpen && (
-        <ul id={menuId} className="mt-0.5 space-y-0.5 border-l border-gray-100 pl-3 dark:border-gray-800">
+        <ul id={menuId} className="mt-0.5 space-y-0.5 border-l border-gray-100 pl-3 dark:border-night-border">
           {items.map((item) => {
             const active = isItemActive(pathname, item);
             return (

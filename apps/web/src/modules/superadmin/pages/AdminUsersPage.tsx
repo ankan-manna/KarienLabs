@@ -176,7 +176,7 @@ export default function AdminUsersPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Admin Users</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Admin Users</h1>
         <div className="flex items-center gap-3">
           <div className="w-40">
             <Select
@@ -200,27 +200,27 @@ export default function AdminUsersPage() {
           mobile gap, found while verifying the new Change Role control
           across breakpoints, fixed here since it directly blocks that
           control on mobile. */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
         {isLoading ? (
           <div className="p-4">
             <SkeletonRows rows={5} columns={4} />
           </div>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Name</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Email</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Role</th>
-                <th className="px-4 py-2 font-medium text-gray-600 dark:text-gray-300">Status</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Name</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Email</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Role</th>
+                <th className="px-4 py-2 font-medium text-gray-600 dark:text-night-muted">Status</th>
                 <th className="px-4 py-2" />
               </tr>
             </thead>
             <tbody>
               {data?.data.map((user) => (
-                <tr key={user._id} className="border-t border-gray-100 dark:border-gray-800">
-                  <td className="px-4 py-2 text-gray-900 dark:text-gray-100">{user.name}</td>
-                  <td className="px-4 py-2 text-gray-500 dark:text-gray-400">{user.email}</td>
+                <tr key={user._id} className="border-t border-gray-100 dark:border-night-border">
+                  <td className="px-4 py-2 text-gray-900 dark:text-night-text">{user.name}</td>
+                  <td className="px-4 py-2 text-gray-500 dark:text-night-muted">{user.email}</td>
                   <td className="px-4 py-2">
                     <Badge tone={ROLE_BADGE_TONE[user.role] ?? 'gray'}>{roleLabel(user.role)}</Badge>
                   </td>
@@ -266,7 +266,7 @@ export default function AdminUsersPage() {
                         )}
                         <button
                           onClick={() => setResetPasswordTarget(user)}
-                          className="text-xs text-gray-600 hover:underline dark:text-gray-300"
+                          className="text-xs text-gray-600 hover:underline dark:text-night-muted"
                         >
                           Reset Password
                         </button>

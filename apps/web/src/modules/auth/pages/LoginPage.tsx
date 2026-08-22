@@ -122,7 +122,7 @@ export default function LoginPage() {
   if (otpStep) {
     return (
       <form onSubmit={handleOtpSubmit(onSubmitOtp)} className="flex flex-col gap-4">
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Verify your identity</h1>
+        <h1 className="text-lg font-semibold text-gray-900 dark:text-night-text">Verify your identity</h1>
         <p className="text-sm text-gray-500">
           We sent a verification code to <span className="font-medium">{otpStep.maskedContact}</span>.
         </p>
@@ -176,7 +176,7 @@ export default function LoginPage() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Sign in</h1>
+      <h1 className="text-lg font-semibold text-gray-900 dark:text-night-text">Sign in</h1>
 
       {googleError && (
         <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20">
@@ -218,9 +218,9 @@ export default function LoginPage() {
       {googleAdminLoginEnabled && (
         <>
           <div className="flex items-center gap-3 text-xs text-gray-400">
-            <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+            <div className="h-px flex-1 bg-gray-200 dark:bg-night-elevated" />
             <span>Admin sign-in</span>
-            <div className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+            <div className="h-px flex-1 bg-gray-200 dark:bg-night-elevated" />
           </div>
           <GoogleSignInButton />
         </>

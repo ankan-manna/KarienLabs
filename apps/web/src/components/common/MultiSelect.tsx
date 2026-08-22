@@ -75,7 +75,7 @@ export function MultiSelect({
   return (
     <div className="w-full" ref={containerRef}>
       {label && (
-        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
+        <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-night-muted">{label}</label>
       )}
       <div className="relative">
         <input
@@ -91,15 +91,15 @@ export function MultiSelect({
           placeholder={placeholder}
           className={cn(
             'w-full rounded-md border bg-white px-3 py-2 text-sm shadow-sm transition-colors',
-            'text-gray-900 placeholder:text-gray-400 dark:bg-gray-900 dark:text-gray-100',
+            'text-gray-900 placeholder:text-gray-400 dark:bg-night-surface dark:text-night-text',
             'focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500',
-            error ? 'border-red-400' : 'border-gray-300 dark:border-gray-700',
+            error ? 'border-red-400' : 'border-gray-300 dark:border-night-border',
             disabled && 'cursor-not-allowed opacity-60',
           )}
           aria-invalid={!!error}
         />
         {isOpen && !disabled && (
-          <div className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+          <div className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-night-border dark:bg-night-surface">
             {isLoading ? (
               <p className="px-3 py-2 text-xs text-gray-400">Loading…</p>
             ) : visibleOptions.length === 0 ? (
@@ -108,15 +108,15 @@ export function MultiSelect({
               visibleOptions.map((opt) => (
                 <label
                   key={opt.value}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-night-elevated"
                 >
                   <input
                     type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600"
+                    className="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-night-border"
                     checked={value.includes(opt.value)}
                     onChange={() => toggle(opt.value)}
                   />
-                  <span className="text-gray-900 dark:text-gray-100">{opt.label}</span>
+                  <span className="text-gray-900 dark:text-night-text">{opt.label}</span>
                 </label>
               ))
             )}

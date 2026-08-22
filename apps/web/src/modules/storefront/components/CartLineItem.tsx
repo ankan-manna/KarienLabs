@@ -19,8 +19,8 @@ export function CartLineItem({ item }: { item: CartItem }) {
   const image = product.images.find((img) => img.isPrimary) ?? product.images[0];
 
   return (
-    <div className="flex items-center gap-4 border-b border-gray-100 py-4 last:border-0 dark:border-gray-800">
-      <div className="h-16 w-16 flex-shrink-0 rounded-md bg-gray-50 dark:bg-gray-800">
+    <div className="flex items-center gap-4 border-b border-gray-100 py-4 last:border-0 dark:border-night-border">
+      <div className="h-16 w-16 flex-shrink-0 rounded-md bg-gray-50 dark:bg-night-elevated">
         {image && (
           <img
             src={image.url}
@@ -30,10 +30,10 @@ export function CartLineItem({ item }: { item: CartItem }) {
         )}
       </div>
       <div className="flex-1">
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
+        <p className="text-sm font-medium text-gray-900 dark:text-night-text">{product.name}</p>
         <p className="text-sm text-gray-500">{formatCurrency(item.priceAtAdd)} each</p>
       </div>
-      <div className="flex items-center rounded-md border border-gray-300 dark:border-gray-700">
+      <div className="flex items-center rounded-md border border-gray-300 dark:border-night-border">
         <button
           className="px-2.5 py-1 text-gray-500"
           onClick={() =>
@@ -52,7 +52,7 @@ export function CartLineItem({ item }: { item: CartItem }) {
           +
         </button>
       </div>
-      <p className="w-20 text-right text-sm font-medium text-gray-900 dark:text-gray-100">
+      <p className="w-20 text-right text-sm font-medium text-gray-900 dark:text-night-text">
         {formatCurrency(item.priceAtAdd * item.quantity)}
       </p>
       <button

@@ -40,6 +40,19 @@ export default {
         'charcoal-teal': '#183D42', // primary text
         'slate-teal': '#6B8587', // muted text
         'pale-sage': '#D9E7E3', // borders
+
+        // Dark-mode counterparts to the palette above. Deliberately a deep,
+        // desaturated GREEN rather than near-black (`gray-950`) — dark mode
+        // must still read as "the same healthcare brand", not a generic
+        // dark-SaaS shell. `deep-teal`/`healthcare-teal`/`coral` above are
+        // reused as-is for dark-mode chrome/CTA (they're already dark/vivid
+        // enough); these four are the ones with no light-mode equivalent.
+        night: '#071F22', // dark page background (NOT pure black)
+        'night-surface': '#102A2E', // dark card/section surface
+        'night-elevated': '#15353A', // dark elevated surface (modals, popovers, hovered rows)
+        'night-border': '#285054', // dark borders/dividers
+        'night-text': '#F3FAF8', // dark-mode primary text
+        'night-muted': '#A9BFBD', // dark-mode muted/secondary text
       },
     },
   },

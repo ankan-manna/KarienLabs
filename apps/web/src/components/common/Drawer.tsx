@@ -36,17 +36,17 @@ export function Drawer({ isOpen, onClose, title, children, width = 'md' }: Drawe
         aria-modal="true"
         aria-label={title}
         className={cn(
-          'relative z-10 flex h-full w-full flex-col bg-white shadow-xl dark:bg-gray-900',
+          'relative z-10 flex h-full w-full flex-col bg-white shadow-xl dark:bg-night-surface',
           WIDTH_CLASSES[width],
         )}
       >
         {title && (
-          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-gray-800">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-night-border">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-night-text">{title}</h2>
             <button
               onClick={onClose}
               aria-label="Close"
-              className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
+              className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-night-elevated"
             >
               ✕
             </button>

@@ -126,12 +126,12 @@ function SalesReportTab() {
               </BarChart>
             </ResponsiveContainer>
           </Card>
-          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+          <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-900">
+              <thead className="bg-gray-50 dark:bg-night-surface">
                 <tr>
                   {['Date', 'Orders', 'Subtotal', 'GST', 'Discount', 'Shipping', 'Revenue'].map((h) => (
-                    <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                    <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                       {h}
                     </th>
                   ))}
@@ -139,7 +139,7 @@ function SalesReportTab() {
               </thead>
               <tbody>
                 {(data ?? []).map((row) => (
-                  <tr key={row.date} className="border-t border-gray-100 dark:border-gray-800/60">
+                  <tr key={row.date} className="border-t border-gray-100 dark:border-night-border/60">
                     <td className="px-3 py-2">{row.date}</td>
                     <td className="px-3 py-2">{row.orders}</td>
                     <td className="px-3 py-2">{formatCurrency(row.subtotal)}</td>
@@ -168,21 +168,21 @@ function InventoryReportTab() {
   return (
     <div className="flex flex-col gap-5">
       <section>
-        <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">
           Stock Valuation by Warehouse
         </h3>
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
           <table className="w-full min-w-[480px] text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
-                <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Warehouse</th>
-                <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Quantity</th>
-                <th className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">Value</th>
+                <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Warehouse</th>
+                <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Quantity</th>
+                <th className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">Value</th>
               </tr>
             </thead>
             <tbody>
               {data.valuation.map((v) => (
-                <tr key={v.warehouseId} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={v.warehouseId} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-3 py-2">{v.warehouseName}</td>
                   <td className="px-3 py-2">{v.totalQuantity}</td>
                   <td className="px-3 py-2">{formatCurrency(v.totalValue)}</td>
@@ -194,11 +194,11 @@ function InventoryReportTab() {
       </section>
       <section className="grid grid-cols-2 gap-4">
         <Card className="p-4">
-          <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Low Stock</h3>
+          <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-night-muted">Low Stock</h3>
           <p className="text-2xl font-semibold">{data.lowStock.length}</p>
         </Card>
         <Card className="p-4">
-          <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Near Expiry</h3>
+          <h3 className="mb-1 text-sm font-semibold text-gray-700 dark:text-night-muted">Near Expiry</h3>
           <p className="text-2xl font-semibold">{data.nearExpiry.length}</p>
         </Card>
       </section>
@@ -247,12 +247,12 @@ function GstReportTab() {
       {isLoading ? (
         <SkeletonRows rows={4} columns={4} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
           <table className="w-full min-w-[520px] text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
                 {['GST Rate', 'Taxable Amount', 'GST Collected', 'Units Sold'].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                     {h}
                   </th>
                 ))}
@@ -260,7 +260,7 @@ function GstReportTab() {
             </thead>
             <tbody>
               {(data ?? []).map((row) => (
-                <tr key={row.gstRate} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={row.gstRate} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-3 py-2">{row.gstRate}%</td>
                   <td className="px-3 py-2">{formatCurrency(row.taxableAmount)}</td>
                   <td className="px-3 py-2">{formatCurrency(row.gstCollected)}</td>
@@ -316,12 +316,12 @@ function CouponReportTab() {
   const { data, isLoading } = useQuery({ queryKey: ['report-coupons'], queryFn: fetchCouponReport });
   if (isLoading) return <SkeletonRows rows={5} columns={5} />;
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+    <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
       <table className="w-full min-w-[560px] text-left text-sm">
-        <thead className="bg-gray-50 dark:bg-gray-900">
+        <thead className="bg-gray-50 dark:bg-night-surface">
           <tr>
             {['Code', 'Type', 'Value', 'Used', 'Limit', 'Active'].map((h) => (
-              <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+              <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                 {h}
               </th>
             ))}
@@ -329,7 +329,7 @@ function CouponReportTab() {
         </thead>
         <tbody>
           {(data ?? []).map((c) => (
-            <tr key={c.code} className="border-t border-gray-100 dark:border-gray-800/60">
+            <tr key={c.code} className="border-t border-gray-100 dark:border-night-border/60">
               <td className="px-3 py-2 font-medium">{c.code}</td>
               <td className="px-3 py-2">{c.type}</td>
               <td className="px-3 py-2">{c.value}</td>
@@ -381,12 +381,12 @@ function WarehouseReportTab() {
       {isLoading ? (
         <SkeletonRows rows={5} columns={6} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
           <table className="w-full min-w-[760px] text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
                 {['Warehouse', 'Code', 'Batches', 'Stock Value', 'Low Stock', 'Near Expiry'].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                     {h}
                   </th>
                 ))}
@@ -394,7 +394,7 @@ function WarehouseReportTab() {
             </thead>
             <tbody>
               {(data ?? []).map((row) => (
-                <tr key={row.warehouseId} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={row.warehouseId} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-3 py-2 font-medium">{row.warehouseName}</td>
                   <td className="px-3 py-2">{row.warehouseCode}</td>
                   <td className="px-3 py-2">{row.totalBatches}</td>
@@ -440,19 +440,19 @@ function PurchaseReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">
               Top 10 Products by Quantity Purchased
             </h3>
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[520px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Product', 'SKU', 'Quantity Purchased'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -460,7 +460,7 @@ function PurchaseReportTab() {
                 </thead>
                 <tbody>
                   {data.topProducts.map((p) => (
-                    <tr key={p.productId} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={p.productId} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2 font-medium">{p.productName}</td>
                       <td className="px-3 py-2">{p.sku}</td>
                       <td className="px-3 py-2">{p.quantityPurchased}</td>
@@ -503,12 +503,12 @@ function SupplierReportTab() {
       {isLoading ? (
         <SkeletonRows rows={5} columns={4} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
                 {['Supplier', 'Total Orders', 'Total Value', 'Performance Rating'].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                     {h}
                   </th>
                 ))}
@@ -516,7 +516,7 @@ function SupplierReportTab() {
             </thead>
             <tbody>
               {(data ?? []).map((row) => (
-                <tr key={row.supplierId} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={row.supplierId} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-3 py-2 font-medium">{row.supplierName}</td>
                   <td className="px-3 py-2">{row.totalOrders}</td>
                   <td className="px-3 py-2">{formatCurrency(row.totalValue)}</td>
@@ -558,15 +558,15 @@ function ExpiryReportTab() {
             <p className="text-2xl font-semibold">{formatCurrency(data.totalValueAtRisk)}</p>
           </Card>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">
               Expired Batches ({data.expired.length})
             </h3>
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[560px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Product', 'Warehouse', 'Quantity', 'Value'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -576,7 +576,7 @@ function ExpiryReportTab() {
                   {data.expired.map((row, i) => (
                     <tr
                       key={`${row.productId}-${row.warehouseId}-${i}`}
-                      className="border-t border-gray-100 dark:border-gray-800/60"
+                      className="border-t border-gray-100 dark:border-night-border/60"
                     >
                       <td className="px-3 py-2 font-medium">{row.productName}</td>
                       <td className="px-3 py-2">{row.warehouseName}</td>
@@ -589,15 +589,15 @@ function ExpiryReportTab() {
             </div>
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">
               Near-Expiry Batches ({data.nearExpiry.length})
             </h3>
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[640px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Product', 'Warehouse', 'Quantity', 'Value', 'Nearest Expiry'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -607,7 +607,7 @@ function ExpiryReportTab() {
                   {data.nearExpiry.map((row, i) => (
                     <tr
                       key={`${row.productId}-${row.warehouseId}-${i}`}
-                      className="border-t border-gray-100 dark:border-gray-800/60"
+                      className="border-t border-gray-100 dark:border-night-border/60"
                     >
                       <td className="px-3 py-2 font-medium">{row.productName}</td>
                       <td className="px-3 py-2">{row.warehouseName}</td>
@@ -655,7 +655,7 @@ function OrderReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <Card className="p-4">
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart
@@ -675,7 +675,7 @@ function OrderReportTab() {
             </Card>
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Daily Orders & Revenue</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Daily Orders & Revenue</h3>
             <Card className="p-4">
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={data.timeSeries}>
@@ -723,7 +723,7 @@ function InvoiceReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
         </>
@@ -757,7 +757,7 @@ function RefundReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
         </>
@@ -799,17 +799,17 @@ function ReturnReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Top Return Reasons</h3>
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Top Return Reasons</h3>
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[400px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Reason', 'Count'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -817,7 +817,7 @@ function ReturnReportTab() {
                 </thead>
                 <tbody>
                   {data.topReasons.map((r) => (
-                    <tr key={r.reason} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={r.reason} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2 font-medium">{r.reason}</td>
                       <td className="px-3 py-2">{r.count}</td>
                     </tr>
@@ -858,7 +858,7 @@ function PrescriptionReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
         </>
@@ -903,7 +903,7 @@ function ShipmentReportTab() {
             </Card>
           </div>
           <section>
-            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Status Breakdown</h3>
+            <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Status Breakdown</h3>
             <StatusBreakdownGrid breakdown={data.statusBreakdown} />
           </section>
         </>
@@ -926,12 +926,12 @@ function CategoryReportTab() {
       {isLoading ? (
         <SkeletonRows rows={6} columns={4} />
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900">
+            <thead className="bg-gray-50 dark:bg-night-surface">
               <tr>
                 {['Category', 'Revenue', 'Units Sold', 'Orders'].map((h) => (
-                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                  <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                     {h}
                   </th>
                 ))}
@@ -939,7 +939,7 @@ function CategoryReportTab() {
             </thead>
             <tbody>
               {(data ?? []).map((row) => (
-                <tr key={row.categoryId ?? 'uncategorized'} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={row.categoryId ?? 'uncategorized'} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-3 py-2 font-medium">{row.categoryName}</td>
                   <td className="px-3 py-2">{formatCurrency(row.revenue)}</td>
                   <td className="px-3 py-2">{row.unitsSold}</td>
@@ -980,7 +980,7 @@ export default function ReportsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Reports</h1>
+      <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Reports</h1>
       <Tabs tabs={tabs} active={tab} onChange={setTab} />
     </div>
   );

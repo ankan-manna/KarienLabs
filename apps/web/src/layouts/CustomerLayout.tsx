@@ -17,7 +17,7 @@ export function CustomerLayout() {
     // Same scroll-containment fix as AdminLayout.tsx — see its comment for
     // why `h-screen overflow-hidden` + `min-h-0` on the inner column is
     // what makes `<main>` the only scrolling region.
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <div className="flex h-screen overflow-hidden bg-soft-mint dark:bg-night">
       <Sidebar
         title="My Account"
         sections={[{ items: CUSTOMER_ACCOUNT_MENU }]}

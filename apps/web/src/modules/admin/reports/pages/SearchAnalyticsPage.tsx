@@ -54,7 +54,7 @@ export default function SearchAnalyticsPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Search Analytics</h1>
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">Search Analytics</h1>
         <div className="w-48">
           <Select
             label=""
@@ -85,7 +85,7 @@ export default function SearchAnalyticsPage() {
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Daily Search Volume</h2>
+        <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Daily Search Volume</h2>
         <Card className="p-4">
           {trendLoading ? (
             <SkeletonRows rows={1} columns={1} />
@@ -110,16 +110,16 @@ export default function SearchAnalyticsPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Popular Searches</h2>
+          <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">Popular Searches</h2>
           {popularLoading ? (
             <SkeletonRows rows={6} columns={3} />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[360px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Query', 'Searches', 'Avg. Results'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -127,7 +127,7 @@ export default function SearchAnalyticsPage() {
                 </thead>
                 <tbody>
                   {(popular ?? []).map((row) => (
-                    <tr key={row.query} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={row.query} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2 font-medium">{row.query}</td>
                       <td className="px-3 py-2">{row.count}</td>
                       <td className="px-3 py-2">
@@ -146,18 +146,18 @@ export default function SearchAnalyticsPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+          <h2 className="mb-2 text-sm font-semibold text-gray-700 dark:text-night-muted">
             Zero-Result Searches
           </h2>
           {zeroResultLoading ? (
             <SkeletonRows rows={6} columns={3} />
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
               <table className="w-full min-w-[360px] text-left text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+                <thead className="bg-gray-50 dark:bg-night-surface">
                   <tr>
                     {['Query', 'Count', 'Last Seen'].map((h) => (
-                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-gray-300">
+                      <th key={h} className="px-3 py-2 font-medium text-gray-600 dark:text-night-muted">
                         {h}
                       </th>
                     ))}
@@ -165,7 +165,7 @@ export default function SearchAnalyticsPage() {
                 </thead>
                 <tbody>
                   {(zeroResult ?? []).map((row) => (
-                    <tr key={row.query} className="border-t border-gray-100 dark:border-gray-800/60">
+                    <tr key={row.query} className="border-t border-gray-100 dark:border-night-border/60">
                       <td className="px-3 py-2 font-medium">{row.query}</td>
                       <td className="px-3 py-2">{row.count}</td>
                       <td className="px-3 py-2">{new Date(row.lastSeenAt).toLocaleDateString()}</td>

@@ -48,7 +48,7 @@ function NotificationTemplatePreview({ template }: { template: NotificationTempl
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-night-muted">
           Renders this template with safe, generic mock data — never real customer or order data.
         </p>
         <Button type="button" size="sm" variant="outline" onClick={() => mutation.mutate()} isLoading={mutation.isPending}>
@@ -61,18 +61,18 @@ function NotificationTemplatePreview({ template }: { template: NotificationTempl
       {result && (
         <div className="flex flex-col gap-3">
           <div>
-            <div className="text-xs font-medium text-gray-500 dark:text-gray-400">Subject</div>
-            <div className="rounded-md border border-gray-200 bg-gray-50 p-2 text-sm dark:border-gray-800 dark:bg-gray-800/50">
+            <div className="text-xs font-medium text-gray-500 dark:text-night-muted">Subject</div>
+            <div className="rounded-md border border-gray-200 bg-gray-50 p-2 text-sm dark:border-night-border dark:bg-night-elevated/50">
               {result.subject || <span className="text-gray-400">(no subject)</span>}
             </div>
           </div>
           <div>
-            <div className="mb-1 text-xs font-medium text-gray-500 dark:text-gray-400">Body</div>
+            <div className="mb-1 text-xs font-medium text-gray-500 dark:text-night-muted">Body</div>
             <iframe
               title="Rendered template body"
               srcDoc={result.body}
               sandbox=""
-              className="h-96 w-full rounded-md border border-gray-200 bg-white dark:border-gray-800"
+              className="h-96 w-full rounded-md border border-gray-200 bg-white dark:border-night-border"
             />
           </div>
         </div>

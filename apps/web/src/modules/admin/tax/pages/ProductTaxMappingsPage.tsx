@@ -56,7 +56,7 @@ export default function ProductTaxMappingsPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">
           Product Tax Mappings
         </h1>
         <Can I="update" a="tax">
@@ -64,15 +64,15 @@ export default function ProductTaxMappingsPage() {
         </Can>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
         <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-900">
+          <thead className="bg-gray-50 dark:bg-night-surface">
             <tr>
-              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-gray-300">Product ID</th>
-              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-gray-300">HSN Code</th>
-              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-gray-300">GST Rate</th>
-              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-gray-300">Effective From</th>
-              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-gray-300">Effective To</th>
+              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-night-muted">Product ID</th>
+              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-night-muted">HSN Code</th>
+              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-night-muted">GST Rate</th>
+              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-night-muted">Effective From</th>
+              <th className="px-4 py-2.5 font-medium text-gray-600 dark:text-night-muted">Effective To</th>
             </tr>
           </thead>
           <tbody>
@@ -90,7 +90,7 @@ export default function ProductTaxMappingsPage() {
               </tr>
             ) : (
               data.map((m) => (
-                <tr key={m._id} className="border-t border-gray-100 dark:border-gray-800/60">
+                <tr key={m._id} className="border-t border-gray-100 dark:border-night-border/60">
                   <td className="px-4 py-2.5 font-mono text-xs">{m.productId}</td>
                   <td className="px-4 py-2.5">{m.hsnCode}</td>
                   <td className="px-4 py-2.5">{m.gstRate}%</td>

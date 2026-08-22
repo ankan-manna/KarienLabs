@@ -19,7 +19,7 @@ export default function BrandsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
         Shop by Brand
       </h1>
       {isLoading ? (
@@ -32,7 +32,7 @@ export default function BrandsPage() {
             <Link
               key={brand._id}
               to={`/products?brandId=${brand._id}`}
-              className="flex flex-col items-center gap-2 rounded-lg border border-gray-100 bg-white p-4 text-center hover:border-brand-300 dark:border-gray-800 dark:bg-gray-900"
+              className="flex flex-col items-center gap-2 rounded-lg border border-gray-100 bg-white p-4 text-center hover:border-brand-300 dark:border-night-border dark:bg-night-surface"
             >
               {brand.logoUrl ? (
                 <img src={brand.logoUrl} alt={brand.name} className="h-12 w-12 object-contain" />
@@ -41,7 +41,7 @@ export default function BrandsPage() {
                   🏷️
                 </div>
               )}
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+              <span className="text-sm font-medium text-gray-700 dark:text-night-text">
                 {brand.name}
               </span>
             </Link>

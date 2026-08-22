@@ -46,6 +46,12 @@ export function BannerImageFields() {
         />
       </div>
 
+      <Input
+        label="Image alt text (optional)"
+        hint="Describes the image for screen readers. Falls back to the title if left blank."
+        {...register('imageAlt')}
+      />
+
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Input
           type="datetime-local"

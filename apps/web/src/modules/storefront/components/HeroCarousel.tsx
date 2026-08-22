@@ -1,93 +1,190 @@
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { PublicBanner } from '../../../api/public-cms.api';
 import { Button } from '../../../components/common/Button';
 import { cn } from '../../../utils/cn';
 
-const DEFAULT_SLIDE_DURATION_MS = 5000;
+const DEFAULT_SLIDE_DURATION_MS = 6000;
+const TRANSITION_DURATION_S = 0.7;
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '60%' : '-60%',
+    opacity: 0,
+    scale: 0.95,
+  }),
+  center: { x: 0, opacity: 1, scale: 1 },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-60%' : '60%',
+    opacity: 0,
+    scale: 0.95,
+  }),
+};
+
+const textContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
+};
+
+const textItemVariants = {
+  hidden: { opacity: 0, y: 16, filter: 'blur(4px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.5, ease: 'easeOut' as const },
+  },
+};
 
 /**
- * Website Design (Storefront Management) Part 3/7 — admin-controlled,
- * auto-advancing hero carousel. Previously the homepage only ever showed
- * `banners[0]` as a single static image; this renders ALL active
- * `placement: 'hero'` banners (already fetched, sorted by `order`, and
- * scheduling-window-filtered server-side — see `HomePage.tsx`'s
- * `HeroBanner`), auto-advancing on a per-slide timer (falls back to
- * `DEFAULT_SLIDE_DURATION_MS` when a banner's own `slideDurationMs` is
- * unset), with prev/next controls, pagination dots, and a pause on
- * hover/focus so an admin's carefully-written copy isn't yanked away
- * mid-read. Pure CSS opacity-crossfade (`transition-opacity`) — no
- * animation library, no layout shift (the slide area is a fixed-height
- * box regardless of each image's real dimensions).
+ * Website Design (Storefront Management) — admin-controlled, auto-advancing
+ * hero carousel. Renders ALL active `placement: 'hero'` banners (fetched,
+ * sorted by `order`, and scheduling-window-filtered server-side — see
+ * `HomePage.tsx`'s `HeroBanner`), auto-advancing every 6s by default (or a
+ * banner's own `slideDurationMs` override), with prev/next controls,
+ * clickable pagination dots, keyboard arrow-key navigation, and a pause on
+ * hover/focus. Manual navigation (dot/arrow/keyboard) resets the auto timer
+ * since it re-triggers the same `useEffect` that drives it. Framer Motion
+ * powers the slide/fade/scale transition (~0.7s) and a staggered
+ * fade+y+blur-to-sharp entrance for the badge/title/description/CTAs;
+ * `useReducedMotion` collapses both to a plain, instant crossfade when the
+ * visitor has requested reduced motion.
  */
 export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
   const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
   const count = banners.length;
+  const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
 
   // Clamp in case the banner list itself changes (e.g. a banner gets
   // deactivated by an admin while a visitor's tab is open) and the current
   // index would otherwise point past the end.
   const safeIndex = index % count;
+  const active = banners[safeIndex];
 
   useEffect(() => {
+    // A single active slide needs no timer at all — nothing to rotate to.
     if (paused || count <= 1) return undefined;
-    const current = banners[safeIndex];
     const duration =
-      current.slideDurationMs && current.slideDurationMs > 0
-        ? current.slideDurationMs
+      active.slideDurationMs && active.slideDurationMs > 0
+        ? active.slideDurationMs
         : DEFAULT_SLIDE_DURATION_MS;
-    const timer = setTimeout(() => setIndex((i) => (i + 1) % count), duration);
+    const timer = setTimeout(() => {
+      setDirection(1);
+      setIndex((i) => (i + 1) % count);
+    }, duration);
     return () => clearTimeout(timer);
-  }, [safeIndex, paused, banners, count]);
+  }, [safeIndex, paused, active, count]);
 
   function goTo(i: number) {
-    setIndex(((i % count) + count) % count);
+    const next = ((i % count) + count) % count;
+    setDirection(next > safeIndex || (safeIndex === count - 1 && next === 0) ? 1 : -1);
+    setIndex(next);
   }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
+    if (count <= 1) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goTo(safeIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      goTo(safeIndex + 1);
+    }
+  }
+
+  const transition = prefersReducedMotion
+    ? { duration: 0.2 }
+    : { duration: TRANSITION_DURATION_S, ease: [0.4, 0, 0.2, 1] as const };
 
   return (
     <section
-      className="relative overflow-hidden rounded-2xl bg-deep-teal"
+      ref={sectionRef}
+      className="relative overflow-hidden rounded-2xl bg-deep-teal outline-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
       aria-roledescription="carousel"
       aria-label="Featured promotions"
     >
       <div className="relative h-64 sm:h-80 md:h-[26rem]">
-        {banners.map((banner, i) => (
-          <div
-            key={banner._id}
-            className={cn(
-              'absolute inset-0 transition-opacity duration-700 ease-in-out',
-              i === safeIndex ? 'opacity-100' : 'pointer-events-none opacity-0',
-            )}
-            aria-hidden={i !== safeIndex}
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.div
+            key={active._id}
+            custom={direction}
+            variants={prefersReducedMotion ? undefined : slideVariants}
+            initial={prefersReducedMotion ? { opacity: 0 } : 'enter'}
+            animate={prefersReducedMotion ? { opacity: 1 } : 'center'}
+            exit={prefersReducedMotion ? { opacity: 0 } : 'exit'}
+            transition={transition}
+            className="absolute inset-0"
           >
-            <img
-              src={banner.imageUrl}
-              alt={banner.title}
+            <motion.img
+              src={active.imageUrl}
+              alt={active.imageAlt || active.title}
               className="h-full w-full object-cover"
-              loading={i === 0 ? 'eager' : 'lazy'}
+              loading={safeIndex === 0 ? 'eager' : 'lazy'}
+              initial={prefersReducedMotion ? false : { scale: 1.08 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-deep-teal/85 via-deep-teal/25 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
-              <h2 className="max-w-xl text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-                {banner.title}
-              </h2>
-              {banner.subtitle && (
-                <p className="mt-2 max-w-md text-sm text-white/90 sm:text-base">{banner.subtitle}</p>
+            <motion.div
+              className="absolute inset-x-0 bottom-0 p-6 sm:p-10"
+              variants={prefersReducedMotion ? undefined : textContainerVariants}
+              initial={prefersReducedMotion ? false : 'hidden'}
+              animate="visible"
+            >
+              {active.badge && (
+                <motion.span
+                  variants={prefersReducedMotion ? undefined : textItemVariants}
+                  className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm"
+                >
+                  {active.badge}
+                </motion.span>
               )}
-              <Link to={banner.linkUrl || '/products'}>
-                <Button variant="coral" className="mt-4">
-                  {banner.ctaText || 'Shop Now'}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        ))}
+              <motion.h2
+                variants={prefersReducedMotion ? undefined : textItemVariants}
+                className="max-w-xl text-2xl font-bold text-white sm:text-3xl md:text-4xl"
+              >
+                {active.title}
+              </motion.h2>
+              {active.subtitle && (
+                <motion.p
+                  variants={prefersReducedMotion ? undefined : textItemVariants}
+                  className="mt-2 max-w-md text-sm text-white/90 sm:text-base"
+                >
+                  {active.subtitle}
+                </motion.p>
+              )}
+              <motion.div
+                variants={prefersReducedMotion ? undefined : textItemVariants}
+                className="mt-4 flex flex-wrap gap-3"
+              >
+                <Link to={active.linkUrl || '/products'}>
+                  <Button variant="coral">{active.ctaText || 'Shop Now'}</Button>
+                </Link>
+                {active.secondaryCtaText && (
+                  <Link to={active.secondaryCtaLink || '/products'}>
+                    <Button
+                      variant="ghost"
+                      className="border border-white/40 text-white hover:bg-white/10"
+                    >
+                      {active.secondaryCtaText}
+                    </Button>
+                  </Link>
+                )}
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {count > 1 && (

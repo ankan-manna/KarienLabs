@@ -26,7 +26,7 @@ function RatingBar({ star, count, total }: { star: number; count: number; total:
   return (
     <div className="flex items-center gap-2 text-xs text-gray-500">
       <span className="w-8">{star}★</span>
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-night-elevated">
         <div className="h-full bg-yellow-400" style={{ width: `${pct}%` }} />
       </div>
       <span className="w-8 text-right">{count}</span>
@@ -76,7 +76,7 @@ export function ProductReviews({ productId }: { productId: string }) {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-night-text">
           Reviews & Ratings
         </h2>
         {isAuthenticated && (
@@ -88,8 +88,8 @@ export function ProductReviews({ productId }: { productId: string }) {
 
       {summary && summary.count > 0 && (
         <Card className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
-          <div className="flex flex-col items-center gap-1 sm:border-r sm:border-gray-100 sm:pr-4 sm:dark:border-gray-800">
-            <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          <div className="flex flex-col items-center gap-1 sm:border-r sm:border-gray-100 sm:pr-4 sm:dark:border-night-border">
+            <span className="text-3xl font-bold text-gray-900 dark:text-night-text">
               {summary.average.toFixed(1)}
             </span>
             <RatingStars value={summary.average} />
@@ -112,11 +112,11 @@ export function ProductReviews({ productId }: { productId: string }) {
         <Card className="p-4">
           <form onSubmit={handleSubmit((v) => createMutation.mutate(v))} className="flex flex-col gap-3">
             <div>
-              <p className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">Your rating</p>
+              <p className="mb-1 text-sm font-medium text-gray-700 dark:text-night-text">Your rating</p>
               <RatingStars value={rating} size="lg" onChange={(r) => setValue('rating', r)} />
               {errors.rating && <p className="mt-1 text-xs text-red-500">{errors.rating.message}</p>}
             </div>
-            <input type="text" placeholder="Title (optional)" {...register('title')} className="rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800" />
+            <input type="text" placeholder="Title (optional)" {...register('title')} className="rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-night-border dark:bg-night-elevated" />
             <Textarea placeholder="Share your experience with this product…" error={errors.comment?.message} {...register('comment')} />
             <Button type="submit" isLoading={isSubmitting} className="self-start">
               Submit review
@@ -141,11 +141,11 @@ export function ProductReviews({ productId }: { productId: string }) {
                 <span className="text-xs text-gray-400">{formatDate(review.createdAt)}</span>
               </div>
               {review.title && (
-                <p className="mt-1 text-sm font-medium text-gray-900 dark:text-gray-100">
+                <p className="mt-1 text-sm font-medium text-gray-900 dark:text-night-text">
                   {review.title}
                 </p>
               )}
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{review.comment}</p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-night-muted">{review.comment}</p>
             </li>
           ))}
         </ul>

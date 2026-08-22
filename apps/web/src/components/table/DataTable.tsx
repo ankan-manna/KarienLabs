@@ -117,9 +117,9 @@ export function DataTable<T>({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-night-border">
         <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-900">
+          <thead className="sticky top-0 z-10 bg-gray-50 dark:bg-night-surface">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -127,7 +127,7 @@ export function DataTable<T>({
                   return (
                     <th
                       key={header.id}
-                      className="whitespace-nowrap border-b border-gray-200 px-4 py-2.5 font-medium text-gray-600 dark:border-gray-800 dark:text-gray-300"
+                      className="whitespace-nowrap border-b border-gray-200 px-4 py-2.5 font-medium text-gray-600 dark:border-night-border dark:text-night-muted"
                     >
                       {header.isPlaceholder ? null : (
                         <button
@@ -168,11 +168,11 @@ export function DataTable<T>({
                 <tr
                   key={row.id}
                   onClick={() => onRowClick?.(row.original)}
-                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50 dark:border-gray-800/60 dark:hover:bg-gray-800/40"
+                  className="border-b border-gray-100 last:border-0 hover:bg-gray-50 dark:border-night-border/60 dark:hover:bg-night-elevated/40"
                   style={{ cursor: onRowClick ? 'pointer' : undefined }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-2.5 text-gray-700 dark:text-gray-200">
+                    <td key={cell.id} className="px-4 py-2.5 text-gray-700 dark:text-night-text">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}

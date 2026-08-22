@@ -19,7 +19,7 @@ export default function ManufacturersPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
         Shop by Manufacturer
       </h1>
       {isLoading ? (
@@ -32,12 +32,12 @@ export default function ManufacturersPage() {
             <Link
               key={manufacturer._id}
               to={`/products?manufacturerId=${manufacturer._id}`}
-              className="flex flex-col items-center gap-2 rounded-lg border border-gray-100 bg-white p-4 text-center hover:border-brand-300 dark:border-gray-800 dark:bg-gray-900"
+              className="flex flex-col items-center gap-2 rounded-lg border border-gray-100 bg-white p-4 text-center hover:border-brand-300 dark:border-night-border dark:bg-night-surface"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-lg dark:bg-brand-500/10">
                 🏭
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+              <span className="text-sm font-medium text-gray-700 dark:text-night-text">
                 {manufacturer.name}
               </span>
             </Link>

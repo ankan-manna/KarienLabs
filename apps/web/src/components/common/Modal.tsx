@@ -36,17 +36,17 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', footer }:
         aria-modal="true"
         aria-label={title}
         className={cn(
-          'relative z-10 w-full rounded-lg bg-white shadow-xl dark:bg-gray-900',
+          'relative z-10 w-full rounded-lg bg-white shadow-xl dark:bg-night-surface',
           SIZE_CLASSES[size],
         )}
       >
         {title && (
-          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3 dark:border-gray-800">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">{title}</h2>
+          <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3 dark:border-night-border">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-night-text">{title}</h2>
             <button
               onClick={onClose}
               aria-label="Close"
-              className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800"
+              className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-night-elevated"
             >
               ✕
             </button>
@@ -54,7 +54,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', footer }:
         )}
         <div className="max-h-[70vh] overflow-y-auto px-5 py-4">{children}</div>
         {footer && (
-          <div className="flex justify-end gap-2 border-t border-gray-200 px-5 py-3 dark:border-gray-800">
+          <div className="flex justify-end gap-2 border-t border-gray-200 px-5 py-3 dark:border-night-border">
             {footer}
           </div>
         )}

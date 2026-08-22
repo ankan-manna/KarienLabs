@@ -5,7 +5,7 @@ import { cn } from '../../utils/cn';
 type Tone = 'gray' | 'green' | 'red' | 'yellow' | 'blue';
 
 const TONE_CLASSES: Record<Tone, string> = {
-  gray: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+  gray: 'bg-gray-100 text-gray-700 dark:bg-night-elevated dark:text-night-muted',
   green: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
   red: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
   yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',

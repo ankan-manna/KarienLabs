@@ -7,9 +7,13 @@ export interface PublicBanner {
   _id: string;
   title: string;
   subtitle: string;
+  badge: string;
   imageUrl: string;
+  imageAlt: string;
   linkUrl: string;
   ctaText: string;
+  secondaryCtaText: string;
+  secondaryCtaLink: string;
   placement: 'hero' | 'category' | 'checkout';
   order: number;
   slideDurationMs: number | null;
@@ -104,7 +108,13 @@ export async function getPublicBlog(slug: string): Promise<PublicBlog> {
 export interface SiteSettings {
   footer?: {
     companyDescription?: string;
-    socialLinks?: { facebook?: string; twitter?: string; instagram?: string; linkedin?: string };
+    socialLinks?: {
+      facebook?: string;
+      twitter?: string;
+      instagram?: string;
+      linkedin?: string;
+      youtube?: string;
+    };
     quickLinks?: { label: string; path: string }[];
   };
   seo?: {
