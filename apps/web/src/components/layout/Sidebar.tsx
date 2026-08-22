@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 
 import type { MenuItem } from '../../constants/menu';
@@ -25,19 +25,30 @@ interface SidebarProps {
 }
 
 /**
- * Prompt 33 — categorized navigation shell. Each `section` (already the
- * project's existing grouping decision — see layouts/AdminLayout.tsx, one
- * `label` per RBAC-documented module group) renders as ONE of:
+ * Prompt 33, revised by the Admin Control Panel + Sidebar Navigation prompt
+ * — categorized navigation shell. Each `section` (already the project's
+ * existing grouping decision — see layouts/AdminLayout.tsx, one `label` per
+ * RBAC-documented module group) renders as ONE of:
  *   - a flat single link, when it has no label (Dashboard) or collapses to
  *     exactly one visible item after permission filtering (Part 21 — never
  *     a pointless one-item dropdown)
- *   - a hover/click/keyboard category with a submenu (NavCategory below)
- * Desktop: hover or click opens a flyout; mobile/tablet: tap expands an
- * inline accordion (Part 13). No new navigation/routing system — every
- * link is a real `NavLink` to the SAME route it always was.
+ *   - a click-to-expand/collapse category with an inline accordion submenu
+ *     (NavCategory below)
+ * Desktop AND mobile/tablet now use the SAME click-to-expand inline
+ * accordion — the submenu renders directly under its parent, inside the
+ * sidebar's normal document flow, never as a floating/fixed-position
+ * flyout. No new navigation/routing system — every link is a real
+ * `NavLink` to the SAME route it always was.
  */
 export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, logoHref }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  // Clicking a category while the sidebar is in icon-only collapsed mode
+  // expands the whole sidebar first — there's no room to render a readable
+  // inline accordion inside a 4rem-wide rail, and the old fix for that was
+  // exactly the hover flyout this refactor removes. Expanding the sidebar
+  // keeps everything in normal layout flow instead of resurrecting a
+  // floating panel.
+  const expandFromCollapsed = () => setCollapsed(false);
   const rawIsDesktop = useIsDesktop();
   const hasMobileDrawer = onCloseMobile !== undefined;
   // Only a caller that opted into the mobile drawer (AdminLayout) ever sees
@@ -126,8 +137,8 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
               label={section.label}
               items={section.items}
               collapsed={collapsed && treatAsDesktop}
-              isDesktop={treatAsDesktop}
               onNavigate={onCloseMobile}
+              onExpandCollapsedSidebar={expandFromCollapsed}
             />
           ))}
         </nav>
@@ -145,14 +156,14 @@ function NavSection({
   label,
   items,
   collapsed,
-  isDesktop,
   onNavigate,
+  onExpandCollapsedSidebar,
 }: {
   label?: string;
   items: MenuItem[];
   collapsed: boolean;
-  isDesktop: boolean;
   onNavigate?: () => void;
+  onExpandCollapsedSidebar: () => void;
 }) {
   const visibleItems = useVisibleMenu(items);
   // Part 20 — a category with zero visible children (every item filtered
@@ -176,23 +187,19 @@ function NavSection({
       label={label}
       items={visibleItems}
       collapsed={collapsed}
-      isDesktop={isDesktop}
       onNavigate={onNavigate}
+      onExpandCollapsedSidebar={onExpandCollapsedSidebar}
     />
   );
 }
 
-function NavItemLink({
-  item,
-  collapsed,
-  onNavigate,
-}: {
-  item: MenuItem;
-  collapsed: boolean;
-  onNavigate?: () => void;
-}) {
+const NavItemLink = forwardRef<
+  HTMLAnchorElement,
+  { item: MenuItem; collapsed: boolean; onNavigate?: () => void }
+>(function NavItemLink({ item, collapsed, onNavigate }, ref) {
   return (
     <NavLink
+      ref={ref}
       to={item.path}
       onClick={onNavigate}
       className={({ isActive }) =>
@@ -207,7 +214,7 @@ function NavItemLink({
       {collapsed ? item.label.slice(0, 1) : item.label}
     </NavLink>
   );
-}
+});
 
 const CHEVRON_PATH =
   'M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z';
@@ -215,167 +222,92 @@ const CHEVRON_PATH =
 let idSeq = 0;
 
 /**
- * A single category: label + submenu of real routes.
- *  - Desktop: opens on hover OR click OR keyboard focus; a short close-delay
- *    (Part 27) absorbs the cursor crossing the gap between the trigger and
- *    the flyout panel. The flyout itself is `position: fixed` (computed
- *    from the trigger's own bounding rect), which — since neither this
- *    component nor any of its ancestors sets a CSS `transform` on desktop —
- *    escapes the sidebar `<nav>`'s `overflow-y-auto` clipping without
- *    needing a portal (Part 14), and because it stays a normal DOM child
- *    right after the trigger button, natural Tab order is preserved
- *    (Part 26) — a portal would have detached it to the end of `<body>`.
- *  - Mobile/tablet: tap toggles an inline accordion instead (no hover).
+ * A single category: label + click-to-expand/collapse inline accordion
+ * submenu. Renders identically on desktop and mobile/tablet — no hover, no
+ * `position: fixed`/`position: absolute` flyout, no portal. The submenu is
+ * a plain sibling `<ul>` right after the trigger button, so it participates
+ * in the sidebar `<nav>`'s normal document flow and its own
+ * `overflow-y-auto` scrolling — it can never render outside the viewport,
+ * clip, or float above unrelated content, and natural Tab order is
+ * preserved automatically (no portal to detach it to the end of `<body>`).
+ *
+ * Each category owns its own independent `isOpen` — sibling categories are
+ * NOT mutually exclusive (matching this component's own pre-existing
+ * mobile-accordion behavior: multiple could already be open at once there).
+ * A category auto-expands the first time it becomes the one containing the
+ * active route (direct URL load or in-app navigation into it), so an admin
+ * never has to manually open the parent to see where they are — see the
+ * `isActiveCategory` effect below.
  */
 function NavCategory({
   label,
   items,
   collapsed,
-  isDesktop,
   onNavigate,
+  onExpandCollapsedSidebar,
 }: {
   label: string;
   items: MenuItem[];
   collapsed: boolean;
-  isDesktop: boolean;
   onNavigate?: () => void;
+  onExpandCollapsedSidebar: () => void;
 }) {
   const { pathname } = useLocation();
   const isActiveCategory = items.some((item) => isItemActive(pathname, item));
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [flyoutPos, setFlyoutPos] = useState<{ top: number; left: number; maxHeight: number } | null>(
-    null,
-  );
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(isActiveCategory);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const flyoutRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLAnchorElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [menuId] = useState(() => `nav-category-${++idSeq}`);
 
-  const clearCloseTimer = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-  };
-
-  // Viewport-edge margin — keeps the flyout from touching the browser
-  // chrome, matching the existing "+4" gap already used for the left offset.
-  const VIEWPORT_MARGIN = 8;
-
-  const openNow = () => {
-    clearCloseTimer();
-    if (isDesktop && triggerRef.current) {
-      // Part 3/4 — never a hardcoded pixel height. Pick whichever side of
-      // the trigger (above vs below) has more room in the CURRENT viewport
-      // and use ALL of that room as the flyout's max-height; a short
-      // submenu just renders at its natural height within that budget, a
-      // tall one scrolls (Part 3's overflow-y). When there's genuinely more
-      // room above (trigger sits low in the viewport — Part 4's "opens near
-      // the bottom" case), anchor the flyout's bottom to the trigger's
-      // bottom instead of its top, i.e. open upward, rather than letting it
-      // run off the bottom edge.
-      const rect = triggerRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.top - VIEWPORT_MARGIN;
-      const spaceAbove = rect.bottom - VIEWPORT_MARGIN;
-
-      if (spaceBelow >= spaceAbove) {
-        setFlyoutPos({ top: rect.top, left: rect.right + 4, maxHeight: spaceBelow });
-      } else {
-        const maxHeight = spaceAbove;
-        setFlyoutPos({
-          top: Math.max(VIEWPORT_MARGIN, rect.bottom - maxHeight),
-          left: rect.right + 4,
-          maxHeight,
-        });
-      }
-    }
-    setIsOpen(true);
-  };
-
-  const scheduleClose = () => {
-    clearCloseTimer();
-    closeTimer.current = setTimeout(() => setIsOpen(false), 150);
-  };
-
-  const closeNow = () => {
-    clearCloseTimer();
-    setIsOpen(false);
-  };
-
-  useEffect(() => clearCloseTimer, []);
-
-  // Desktop-only safety nets: close if the sidebar itself scrolls (the
-  // flyout's position was computed at open time — Part 15) or the admin
-  // clicks anywhere outside this category (covers a keyboard-focus-opened
-  // menu that the mouse then clicks away from without crossing scheduleClose).
+  // Auto-expand when this category BECOMES the one holding the active
+  // route (a value transition, not "every render while active") — so
+  // navigating straight to a child route, or navigating into this category
+  // from elsewhere, always reveals it without fighting an admin who
+  // deliberately collapsed a category they're still inside.
   useEffect(() => {
-    if (!isDesktop || !isOpen) return undefined;
-    const navEl = triggerRef.current?.closest('nav');
-    const handleScroll = () => closeNow();
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) closeNow();
-    };
-    navEl?.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      navEl?.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDesktop, isOpen]);
+    if (isActiveCategory) setIsOpen(true);
+  }, [isActiveCategory]);
 
-  // Part 8 — when the flyout opens, make sure the currently-active child (if
-  // any) is visible, without being "aggressive": `block: 'nearest'` is a
-  // no-op if it's already in view, and this only runs once per open (not on
-  // every hover/scroll), so it never fights a manual scroll the admin is
-  // mid-way through.
+  // A collapsed icon-only rail and an open inline accordion can't coexist
+  // legibly — there's no room for the full-text item list next to a 4rem
+  // rail. `toggle()` below already expands the sidebar the moment a
+  // collapsed category is CLICKED open; this covers every other way the
+  // two could end up true together (the sidebar getting collapsed while
+  // this category was already open, or mounting collapsed on this
+  // category's own active route) by just always winning the sidebar back
+  // open rather than rendering the cramped combination.
   useEffect(() => {
-    if (isDesktop && isOpen) activeItemRef.current?.scrollIntoView({ block: 'nearest' });
-  }, [isDesktop, isOpen]);
+    if (collapsed && isOpen) onExpandCollapsedSidebar();
+  }, [collapsed, isOpen, onExpandCollapsedSidebar]);
+
+  // Keep the active child in view once the accordion opens — `block:
+  // 'nearest'` is a no-op if it's already visible, and this only runs on
+  // open, so it never fights a scroll the admin is mid-way through.
+  useEffect(() => {
+    if (isOpen) activeItemRef.current?.scrollIntoView({ block: 'nearest' });
+  }, [isOpen]);
+
+  function toggle() {
+    setIsOpen((wasOpen) => !wasOpen);
+  }
 
   function handleTriggerKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
-    if (e.key === 'Escape') {
-      closeNow();
+    if (e.key === 'Escape' && isOpen) {
+      setIsOpen(false);
       triggerRef.current?.focus();
-    } else if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && isDesktop) {
-      e.preventDefault();
-      openNow();
     }
   }
 
-  const showFlyout = isDesktop && isOpen && flyoutPos;
-
   return (
-    <div
-      ref={containerRef}
-      className="relative mb-1"
-      onMouseEnter={isDesktop ? openNow : undefined}
-      onMouseLeave={isDesktop ? scheduleClose : undefined}
-      onBlur={
-        isDesktop
-          ? (e: React.FocusEvent<HTMLDivElement>) => {
-              // The flyout is a plain DOM sibling of the trigger (deliberately
-              // not a portal — see the component doc comment), so a keyboard
-              // user Tabbing straight through it never leaves this container
-              // until they Tab past its last link — only THEN does closing
-              // make sense, not on every intermediate blur within the group.
-              if (!containerRef.current?.contains(e.relatedTarget as Node | null)) closeNow();
-            }
-          : undefined
-      }
-    >
+    <div className="mb-1">
       <button
         ref={triggerRef}
         type="button"
-        aria-haspopup="true"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        onClick={() => setIsOpen((o) => !o)}
+        onClick={toggle}
         onKeyDown={handleTriggerKeyDown}
-        onFocus={isDesktop ? openNow : undefined}
         title={collapsed ? label : undefined}
         className={cn(
           'flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium transition-colors',
@@ -389,10 +321,7 @@ function NavCategory({
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"
-            className={cn(
-              'ml-2 h-4 w-4 flex-shrink-0 transition-transform',
-              isOpen ? (isDesktop ? '-rotate-90' : 'rotate-180') : '',
-            )}
+            className={cn('ml-2 h-4 w-4 flex-shrink-0 transition-transform', isOpen ? 'rotate-180' : '')}
             fill="currentColor"
           >
             <path fillRule="evenodd" d={CHEVRON_PATH} clipRule="evenodd" />
@@ -400,67 +329,23 @@ function NavCategory({
         )}
       </button>
 
-      {/* Mobile/tablet — inline accordion, no hover, no fixed positioning. */}
-      {!isDesktop && isOpen && (
+      {/* Inline accordion — a normal sibling in the document flow, directly under its parent, on every screen size. */}
+      {isOpen && (
         <ul id={menuId} className="mt-0.5 space-y-0.5 border-l border-gray-100 pl-3 dark:border-gray-800">
-          {items.map((item) => (
-            <li key={item.key}>
-              <NavItemLink item={item} collapsed={false} onNavigate={onNavigate} />
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* Desktop — fixed-position flyout (see component doc comment for why this deliberately isn't a portal). */}
-      {showFlyout && (
-        <div
-          ref={flyoutRef}
-          id={menuId}
-          role="menu"
-          aria-label={label}
-          style={{ top: flyoutPos.top, left: flyoutPos.left, maxHeight: flyoutPos.maxHeight }}
-          // Part 3/6/7 — scrollable with a themed (not hidden) scrollbar once
-          // content exceeds `maxHeight`; `overscroll-contain` stops the
-          // scroll from "chaining" into the sidebar's own nav list or the
-          // page once this panel's own scroll hits its end (Part 2/6: the
-          // admin page must not scroll because of the submenu).
-          className="themed-scrollbar fixed z-50 min-w-[14rem] max-w-xs overflow-y-auto overflow-x-hidden overscroll-contain rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
-          onMouseEnter={clearCloseTimer}
-          onMouseLeave={scheduleClose}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              closeNow();
-              triggerRef.current?.focus();
-            }
-          }}
-        >
-          <p className="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-            {label}
-          </p>
           {items.map((item) => {
             const active = isItemActive(pathname, item);
             return (
-              <NavLink
-                key={item.key}
-                ref={active ? activeItemRef : undefined}
-                to={item.path}
-                role="menuitem"
-                onClick={() => {
-                  closeNow();
-                  onNavigate?.();
-                }}
-                className={cn(
-                  'block px-3 py-2 text-sm',
-                  active
-                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400'
-                    : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800',
-                )}
-              >
-                {item.label}
-              </NavLink>
+              <li key={item.key}>
+                <NavItemLink
+                  ref={active ? activeItemRef : undefined}
+                  item={item}
+                  collapsed={false}
+                  onNavigate={onNavigate}
+                />
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );
