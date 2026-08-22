@@ -2,12 +2,16 @@ import { z } from 'zod';
 
 export const createBannerSchema = z.object({
   title: z.string().min(1),
+  subtitle: z.string().optional(),
   imageUrl: z.string().min(1),
+  imagePublicId: z.string().nullable().optional(),
   linkUrl: z.string().optional(),
+  ctaText: z.string().optional(),
   placement: z.enum(['hero', 'category', 'checkout']).optional(),
   order: z.number().optional(),
-  startsAt: z.string().optional(),
-  endsAt: z.string().optional(),
+  startsAt: z.string().nullable().optional(),
+  endsAt: z.string().nullable().optional(),
+  slideDurationMs: z.number().nullable().optional(),
   isActive: z.boolean().optional(),
 });
 

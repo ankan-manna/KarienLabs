@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn';
 
 import { Spinner } from './Spinner';
 
-type Variant = 'primary' | 'gradient' | 'secondary' | 'danger' | 'ghost' | 'outline';
+type Variant = 'primary' | 'gradient' | 'secondary' | 'danger' | 'ghost' | 'outline' | 'coral' | 'teal';
 type Size = 'sm' | 'md' | 'lg';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -30,6 +30,12 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   // filled color to preserve visual hierarchy against `primary`/`gradient`.
   outline:
     'border border-brand-500 text-brand-600 hover:bg-brand-50 dark:border-brand-500 dark:text-brand-400 dark:hover:bg-brand-500/10',
+  // KarienLabs storefront design system — coral is the CTA accent
+  // ("primarily used for important CTAs, highlights and selected
+  // interactive states", spec Part 1). Admin never references this variant
+  // string, so it has no effect on the Admin Control Panel's theme.
+  coral: 'bg-coral text-white hover:brightness-95 focus-visible:ring-coral',
+  teal: 'bg-deep-teal text-white hover:bg-healthcare-teal focus-visible:ring-healthcare-teal',
 };
 
 const SIZE_CLASSES: Record<Size, string> = {

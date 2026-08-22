@@ -58,11 +58,11 @@ function NewsletterForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@example.com"
-        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+        className="w-full rounded-md border-0 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-coral"
       />
       <button
         type="submit"
-        className="whitespace-nowrap rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+        className="whitespace-nowrap rounded-md bg-coral px-4 py-2 text-sm font-medium text-white hover:brightness-95"
       >
         Subscribe
       </button>
@@ -106,14 +106,14 @@ export function Footer() {
   }));
 
   return (
-    <footer className="border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    <footer className="bg-deep-teal">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" aria-label="KarienLabs" className="inline-flex items-center">
               <img src="/logo.jpg" alt="KarienLabs" className="h-8 w-auto rounded" />
             </Link>
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{companyDescription}</p>
+            <p className="mt-2 text-xs text-white/60">{companyDescription}</p>
             <div className="mt-3 flex gap-3">
               {resolvedSocialLinks.map((s) => (
                 <a
@@ -131,13 +131,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-white/50">
               Quick Links
             </h3>
             <ul className="mt-3 space-y-2 text-sm">
               {quickLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-gray-600 hover:text-brand-600 dark:text-gray-300">
+                  <Link to={l.to} className="text-white/75 hover:text-coral">
                     {l.label}
                   </Link>
                 </li>
@@ -146,13 +146,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-white/50">
               Policies
             </h3>
             <ul className="mt-3 space-y-2 text-sm">
               {POLICY_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-gray-600 hover:text-brand-600 dark:text-gray-300">
+                  <Link to={l.to} className="text-white/75 hover:text-coral">
                     {l.label}
                   </Link>
                 </li>
@@ -161,10 +161,10 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-white/50">
               Stay Updated
             </h3>
-            <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-3 text-xs text-white/60">
               Subscribe for offers and health tips.
             </p>
             <div className="mt-2">
@@ -173,7 +173,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-100 pt-6 text-center text-xs text-gray-400 dark:border-gray-800">
+        <div className="mt-8 border-t border-white/10 pt-6 text-center text-xs text-white/50">
           © {new Date().getFullYear()} KarienLabs. All rights reserved.
         </div>
       </div>
