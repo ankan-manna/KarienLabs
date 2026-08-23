@@ -39,6 +39,7 @@ import { PaymentModel } from '../payments/models/payment.model';
 import { RefundModel } from '../payments/models/refund.model';
 import { getConfiguration } from '../platform/configuration.service';
 import { publishInventoryUpdate } from '../realtime/inventory-events';
+import { escapeRegexLiteral } from '../search/search-normalize.util';
 import { SellerModel } from '../sellers/models/seller.model';
 
 import { OrderModel, type OrderDocument } from './models/order.model';
@@ -1037,9 +1038,21 @@ export function listMyOrders(userId: string, query: ListQuery) {
 
 export function listOrders(query: ListQuery) {
   const skip = (query.page - 1) * query.limit;
+  const filter: Record<string, unknown> = { ...query.filter };
+  if (query.search) {
+    const safeSearch = escapeRegexLiteral(query.search.trim());
+    const searchRegex = new RegExp(safeSearch, 'i');
+    filter.$or = [
+      { orderNumber: searchRegex },
+      { 'shippingAddress.name': searchRegex },
+      { 'shippingAddress.phone': searchRegex },
+      { 'items.name': searchRegex },
+      { 'items.sku': searchRegex },
+    ];
+  }
   return Promise.all([
-    OrderModel.find(query.filter).sort({ createdAt: -1 }).skip(skip).limit(query.limit).lean(),
-    OrderModel.countDocuments(query.filter),
+    OrderModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(query.limit).lean(),
+    OrderModel.countDocuments(filter),
   ]).then(([items, total]) => ({
     items,
     meta: {
