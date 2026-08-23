@@ -20,7 +20,6 @@ export const envSchema = z.object({
   JWT_REFRESH_EXPIRES_IN_DAYS: z.coerce.number().default(30),
   REFRESH_TOKEN_COOKIE_NAME: z.string().default('mc_refresh_token'),
 
-  // Prompt 24 Part 29 — encrypts specific sensitive field NAMES (keySecret,
   // webhookSecret, apiSecret, smtpPassword, ...) within admin-configurable
   // Configuration documents (apps/api/src/utils/field-encryption.util.ts) —
   // third-party credentials an admin sets via the DB-backed Configuration
@@ -51,7 +50,7 @@ export const envSchema = z.object({
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(60000),
   RATE_LIMIT_MAX: z.coerce.number().default(100),
 
-  // Prompt 10 — Admin "Continue with Google". Left empty/optional so existing
+ 
   // deployments boot unchanged; the feature self-disables (see
   // apps/api/src/modules/auth/google-auth.service.ts) whenever the client
   // id/secret aren't set, regardless of the `googleAdminLogin.enabled` config flag.
@@ -59,7 +58,7 @@ export const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string().optional().default(''),
   GOOGLE_CALLBACK_URL: z.string().optional().default(''),
 
-  // Prompt 14 — Shiprocket courier integration. Left empty/optional (same
+
   // self-disabling pattern as Google OAuth above and Razorpay before it) so
   // existing deployments boot unchanged; the integration reports itself as
   // "not configured" (see integrations/shiprocket/shiprocket.client.ts)
@@ -71,7 +70,7 @@ export const envSchema = z.object({
   SHIPROCKET_PICKUP_LOCATION: z.string().optional().default(''),
   SHIPROCKET_WEBHOOK_TOKEN: z.string().optional().default(''),
 
-  // Prompt 15 — centralized S3 document/log storage. Same self-disabling
+
   // pattern as Shiprocket/Google/Razorpay above: left empty/optional so
   // existing deployments boot unchanged; invoice/label uploads fall back to
   // the pre-existing Cloudinary path (see storage.service.ts) until these
@@ -93,14 +92,14 @@ export const envSchema = z.object({
   // a safety net (see storage.service.ts's configureLogLifecycleRule /
   // log-retention.worker.ts). Does NOT apply to invoices/labels/audit.
   AWS_S3_LOG_RETENTION_DAYS: z.coerce.number().optional().default(20),
-  // Prompt 27 — invoice/shipping-label PDFs are deleted from S3 after this
+
   // many days (the DB Invoice/Shipment/Document records are NEVER deleted —
   // see document-retention-sweep.job.ts); overridable at runtime via the
   // `s3` Configuration namespace's `documentRetentionDays`, same pattern as
   // AWS_S3_LOG_RETENTION_DAYS/logRetentionDays above.
   AWS_S3_DOCUMENT_RETENTION_DAYS: z.coerce.number().optional().default(30),
 
-  // Prompt 18 — production-grade logging infrastructure config. These are
+
   // INFRASTRUCTURE/deployment settings (Part 26), never Admin business
   // configuration — they live here in env, not in the Configuration engine.
   // Default rotation stays 6 hours and default retention stays 20 days

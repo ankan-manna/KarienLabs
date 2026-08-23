@@ -86,7 +86,7 @@ export class BaseRepository<TSchema> {
   }
 
   /**
-   * Prompt 23 Part 14/21 — SEO-friendly product/category URLs need to resolve
+   * Part 14/21 — SEO-friendly product/category URLs need to resolve
    * by `slug`, while every pre-existing bookmark/internal link still uses the
    * raw Mongo `_id`. Rather than adding a second route (which would fragment
    * "how do I look up a product" across the codebase), this ONE lookup tries

@@ -16,8 +16,8 @@ import {
 import { getSeoConfig, setSeoConfig, type SeoConfig } from './seo-config.service';
 
 /**
- * Prompt 23 Part 33/34/35/36/51 — read-only admin search analytics (reusing
- * `RESOURCES.REPORTS`, the exact same permission Prompt 22's report/
+ * Part 33/34/35/36/51 — read-only admin search analytics (reusing
+ * `RESOURCES.REPORTS`, the exact same permission  22's report/
  * analytics endpoints already gate on) + the search-tunables slice of SEO
  * Configuration (min/max query length, result caps, suggestion limit, cache
  * duration — Part 36), exposed under `/admin/search/*` since that's the

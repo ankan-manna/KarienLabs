@@ -51,7 +51,7 @@ interface WithUpdatedAt {
 }
 
 const SITEMAP_CACHE_KEY = 'sitemap:xml:v2';
-// Prompt 23 Part 24 — regenerating a multi-thousand-URL sitemap on EVERY
+// Part 24 — regenerating a multi-thousand-URL sitemap on EVERY
 // crawler request (which was the previous behavior) is wasted DB load;
 // crawlers themselves only re-fetch a sitemap every few hours at most, so a
 // 1-hour cache is generous headroom without meaningfully delaying a new
@@ -63,7 +63,7 @@ async function buildSitemapXml(): Promise<string> {
   const base = resolveCanonicalBase(config);
 
   const [products, categories, blogs, pages] = (await Promise.all([
-    // Prompt 23 Part 14/23 — slug-based URLs (previously `_id`-based, which
+    // Part 14/23 — slug-based URLs (previously `_id`-based, which
     // is neither stable-looking nor SEO-friendly); `findByIdOrSlug` on the
     // detail route still resolves old bookmarked ID URLs too.
     ProductModel.find({ isActive: true, deletedAt: null }).select('slug updatedAt').limit(5000).lean(),

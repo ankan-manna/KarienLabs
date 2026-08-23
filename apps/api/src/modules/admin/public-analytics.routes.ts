@@ -6,7 +6,7 @@ import { asyncHandler } from '../../utils/async-handler';
 import { getPublicAnalyticsConfig } from './analytics-config.service';
 
 /**
- * Prompt 34 Part 13/14/19 — anonymous-readable so the storefront's GA4
+ * Part 13/14/19 — anonymous-readable so the storefront's GA4
  * loader (apps/web/src/lib/analytics.ts) can check, before the customer
  * has logged in at all, whether a Super Admin has actually turned Google
  * Analytics on server-side. Same pattern as public-cms.routes.ts: a

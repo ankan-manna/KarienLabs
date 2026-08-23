@@ -1,5 +1,5 @@
 /**
- * Prompt 18 Part 22/23 — centralized, RECURSIVE sensitive-data masking.
+ * Part 22/23 — centralized, RECURSIVE sensitive-data masking.
  *
  * `config/logger.ts`'s pino `redact` option (kept, unchanged) only matches
  * a small number of FIXED/shallow path shapes reliably. This module is the

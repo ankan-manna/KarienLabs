@@ -9,7 +9,7 @@ import { ConfigurationModel } from '../../modules/platform/models/configuration.
 import { enqueueOrderFulfillmentAutomation } from '../queue';
 
 /**
- * Prompt 27 Part 25/29 — deliberately a SEPARATE Configuration namespace
+ * Part 25/29 — deliberately a SEPARATE Configuration namespace
  * from the admin-editable `fulfillment` one (fulfillment-config.service.ts).
  * `fulfillment`'s value shape is strictly whitelisted (fulfillment-config.util.ts)
  * and replaced wholesale on every admin save — internal bookkeeping like
@@ -64,7 +64,7 @@ async function markSweepCompleted(orderCount: number): Promise<void> {
 }
 
 /**
- * Prompt 27 Part 2/3/24/25 — runs frequently (every 15 min, see queue.ts's
+ * Part 2/3/24/25 — runs frequently (every 15 min, see queue.ts's
  * MAINTENANCE_JOB_NAMES comment) but only does real work once the
  * Configuration-driven ~6-hour/±30-min window has actually elapsed
  * (tryClaimSweep above). When due, walks PLACED+CAPTURED orders in

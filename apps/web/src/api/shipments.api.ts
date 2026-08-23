@@ -34,7 +34,7 @@ export interface Shipment {
   deliveryNotes: string | null;
   trackingEvents: ShipmentTrackingEvent[];
   createdAt: string;
-  // Prompt 14 — Shiprocket fulfillment fields.
+   // Shiprocket fulfillment fields.
   sellerId?: string | null;
   warehouseId?: string | null;
   invoiceId?: string | null;
@@ -45,7 +45,7 @@ export interface Shipment {
   courierName?: string;
   awbCode?: string;
   labelUrl?: string;
-  // Prompt 15 — for S3-backed labels this is the private object key, not a
+  // for S3-backed labels this is the private object key, not a
   // directly-fetchable URL; downloadShipmentLabel() below always resolves
   // an actual (presigned, when applicable) link server-side.
   storageProvider?: 'cloudinary' | 's3';
@@ -139,7 +139,7 @@ export async function getDeliveryReport(): Promise<DeliveryReport> {
   return data.data;
 }
 
-// --- Prompt 14: Shiprocket fulfillment actions ---
+// ---  14: Shiprocket fulfillment actions ---
 
 export async function createShiprocketShipment(orderId: string): Promise<Shipment> {
   const { data } = await httpClient.post<ApiResponse<Shipment>>(`/shipments/order/${orderId}/shiprocket`);

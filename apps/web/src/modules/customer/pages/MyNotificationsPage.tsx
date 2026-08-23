@@ -21,7 +21,7 @@ const STATUS_TONE: Record<string, 'gray' | 'green' | 'red' | 'yellow'> = {
   cancelled: 'gray',
 };
 
-/** Prompt 20 Part 53/54 — the in-app notification center: read/unread state, mark-as-read on click, mark-all-read. */
+/** Part 53/54 — the in-app notification center: read/unread state, mark-as-read on click, mark-all-read. */
 export default function MyNotificationsPage() {
   const queryClient = useQueryClient();
   const { data: notifications, isLoading } = useQuery({

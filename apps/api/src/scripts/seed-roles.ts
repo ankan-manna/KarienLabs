@@ -18,11 +18,11 @@ const SEED_ROLES = [
     key: ROLES.ADMIN,
     name: 'Admin',
     isSystem: true,
-    // Everything the Platform Admin Panel (Prompt 5) covers except the Super-Admin-only
+    // Everything the Platform Admin Panel ( 5) covers except the Super-Admin-only
     // platform config surface (roles, users/admins, feature flags, raw configuration).
     permissions: [
       RESOURCES.PRODUCTS,
-      // Prompt 12 — bundle/combo-pack admin CRUD; the admin role that already
+      // bundle/combo-pack admin CRUD; the admin role that already
       // manages Products also manages Bundles (a bundle IS a product SKU).
       RESOURCES.BUNDLES,
       RESOURCES.CATEGORIES,
@@ -31,7 +31,7 @@ const SEED_ROLES = [
       RESOURCES.ORDERS,
       RESOURCES.INVENTORY,
       RESOURCES.WAREHOUSES,
-      // Prompt 11 — sellers own warehouses, so the admin role that already
+      // sellers own warehouses, so the admin role that already
       // manages warehouses also manages sellers; Super Admin gets it
       // automatically via the "every resource" list above.
       RESOURCES.SELLERS,
@@ -50,17 +50,17 @@ const SEED_ROLES = [
       RESOURCES.NOTIFICATIONS,
       RESOURCES.AUDIT_LOGS,
       RESOURCES.FILES,
-      // Prompt 16 — Return/Replacement/Refund workflow (its own resource as
-      // of this prompt; previously piggybacked on RESOURCES.ORDERS).
+      // Return/Replacement/Refund workflow (its own resource as
+      // of this ; previously piggybacked on RESOURCES.ORDERS).
       RESOURCES.RETURNS,
-      // Prompt 17 — Prescription review + configuration workflow (its own
-      // resource as of this prompt; previously piggybacked on
+      // Prescription review + configuration workflow (its own
+      // resource as of this ; previously piggybacked on
       // RESOURCES.CUSTOMERS). Super Admin can still restrict a specific
       // Platform Admin's `prescriptions:update` (configuration) grant
       // independently via the existing Roles page (Part 42) — this seed is
       // only the default starting grant, same precedent as RETURNS above.
       RESOURCES.PRESCRIPTIONS,
-      // Prompt 32 — Distributor/Bulk Purchase enquiry management (its own
+      // Distributor/Bulk Purchase enquiry management (its own
       // resource from the start, same precedent as RETURNS/PRESCRIPTIONS
       // above). Super Admin can still restrict a specific Platform Admin's
       // grant independently via the existing Roles page — this seed is only

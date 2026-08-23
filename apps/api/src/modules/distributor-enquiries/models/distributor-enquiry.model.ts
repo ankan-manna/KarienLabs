@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * Prompt 32 — a business ENQUIRY/LEAD, deliberately its own domain: never
+ * a business ENQUIRY/LEAD, deliberately its own domain: never
  * references Order/Payment/Shipment/Invoice, and nothing in this module
  * writes to Product/Batch/Inventory. See distributor-enquiry.service.ts's
  * doc comment for the full list of what submitting one must NOT do.
@@ -41,7 +41,7 @@ const internalNoteSchema = new Schema(
 const distributorEnquirySchema = new Schema({
   enquiryNumber: { type: String, required: true, unique: true }, // e.g. DBE-2026-000123 (generateSequenceNumber)
 
-  // Prompt 32 Part 9 — set ONLY from the authenticated session (never trusts
+  // Part 9 — set ONLY from the authenticated session (never trusts
   // a client-submitted userId); null for a guest submission.
   userId: { type: Schema.Types.ObjectId, ref: 'User', default: null, index: true },
 
@@ -62,7 +62,7 @@ const distributorEnquirySchema = new Schema({
 
   requestedProducts: { type: [requestedProductSchema], default: [] },
 
-  // Prompt 32 Part 10/11 — whether the submitted email was OTP-verified
+  // Part 10/11 — whether the submitted email was OTP-verified
   // before this enquiry was created. Always `false` when
   // `distributor_enquiry.otpRequired` was off at submission time (never
   // retroactively implied true).

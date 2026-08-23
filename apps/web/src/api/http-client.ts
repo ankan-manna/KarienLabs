@@ -4,7 +4,7 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 /**
  * The access token lives only in memory (module-scoped variable), never
  * localStorage/sessionStorage — reduces the XSS token-theft blast radius per the
- * Prompt 1 auth architecture. It's lost on hard refresh by design; `bootstrapAuth()`
+ * auth architecture. It's lost on hard refresh by design; `bootstrapAuth()`
  * (called once on app mount) silently calls /auth/refresh using the httpOnly cookie
  * to re-establish it.
  */

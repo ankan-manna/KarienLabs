@@ -1,7 +1,4 @@
 /**
- * Prompt 14 — named audit actions for the Shiprocket/shipment fulfillment
- * layer, mirroring INVOICE_AUDIT_ACTIONS (Prompt 13) / CATALOG_AUDIT_ACTIONS
- * (Prompt 12): specific, meaningful action strings recorded via the existing
  * `recordAudit()` (audit.service.ts) actor-context pipeline rather than the
  * older generic 'create'/'update'/'delete' verbs.
  */

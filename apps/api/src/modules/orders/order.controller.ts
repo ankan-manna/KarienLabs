@@ -8,7 +8,7 @@ import type { ListQuery } from '../../utils/pagination';
 import { getFulfillmentConfig, setFulfillmentConfig } from './fulfillment-config.service';
 import * as orderService from './order.service';
 
-// Prompt 2 (prepaid-only redesign) — `POST /orders/checkout` (and its
+// (prepaid-only redesign) — `POST /orders/checkout` (and its
 // `checkoutHandler`) is deliberately REMOVED, not just left unused: it used
 // to create an Order + deduct inventory immediately, before any payment.
 // That is exactly the bug this redesign eliminates. Checkout now starts at
@@ -51,7 +51,7 @@ export const cancelOrderHandler = asyncHandler(async (req: Request, res) => {
   );
 });
 
-// Prompt 27 Part 30/39/42 — Super Admin / permitted Platform Admin
+// Part 30/39/42 — Super Admin / permitted Platform Admin
 // configuration surface for the automated post-payment fulfillment sweep,
 // same pattern as prescription.routes.ts's `/config` pair (a validated,
 // defaults-merged endpoint, not the raw generic Configuration one).

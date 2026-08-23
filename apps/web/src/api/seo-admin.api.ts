@@ -2,7 +2,7 @@ import type { ApiResponse } from '@medcommerce/shared';
 
 import { httpClient } from './http-client';
 
-/** Prompt 23 Part 16/17/19/36 — the `seo` Configuration namespace shape, mirrored from apps/api/src/modules/search/seo-config.util.ts. */
+/** Part 16/17/19/36 — the `seo` Configuration namespace shape, mirrored from apps/api/src/modules/search/seo-config.util.ts. */
 export interface SeoConfig {
   seoEnabled: boolean;
   productSeoEnabled: boolean;

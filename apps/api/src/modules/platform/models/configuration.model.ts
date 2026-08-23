@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * One flexible, namespaced settings store — matches Prompt 1's "Configuration
+ * One flexible, namespaced settings store — matches  1's "Configuration
  * Driven Architecture" (a single `configurations` collection, Redis-cached,
  * admin-editable) rather than nine near-identical *Settings collections
  * (Global/Business/Invoice/Payment/Shipping/Email/SMS/Razorpay/Cloudinary).

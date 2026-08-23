@@ -15,7 +15,7 @@ interface InventoryUpdatedBatch {
 }
 
 /**
- * Prompt 3 (inventory lifecycle) — subscribes to the backend's SSE stream
+ * (inventory lifecycle) — subscribes to the backend's SSE stream
  * (`inventory-events.routes.ts`, itself relayed off the ONE `inventory:updates`
  * Redis channel `order.service.ts` publishes to right after a payment-triggered
  * stock commit). Mounted once at the storefront root (`PublicLayout`) so every

@@ -1,5 +1,5 @@
 /**
- * Prompt 20 — coarse notification CATEGORIES, distinct from `templateKey`
+ * coarse notification CATEGORIES, distinct from `templateKey`
  * (which identifies the specific message, e.g. `order_status_changed`).
  * Categories are what Configuration-level enable/disable toggles gate
  * (Part 14/15/47) and what `NotificationConfig` reasons about — a business

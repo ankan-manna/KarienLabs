@@ -4,7 +4,7 @@ import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
  * Admin-configurable catalog of attribute types (e.g. "Dosage Form", "Pack Size")
- * driving the dynamic product form (Prompt 1's Dynamic Form Configuration) — the
+ * driving the dynamic product form ( 1's Dynamic Form Configuration) — the
  * actual values per product live inline on Product.specifications, not here.
  */
 const attributeDefinitionSchema = new Schema({

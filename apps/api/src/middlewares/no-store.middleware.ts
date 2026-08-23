@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 
 /**
- * Prompt 24 Part 62 — "sensitive responses must not be cached by browsers/
+ * Part 62 — "sensitive responses must not be cached by browsers/
  * proxies." Rather than hand-picking which of the ~150 routes in this API
  * count as "sensitive" (auth, payments, admin, prescriptions, invoices...
  * — in practice nearly everything), this applies `Cache-Control: no-store`

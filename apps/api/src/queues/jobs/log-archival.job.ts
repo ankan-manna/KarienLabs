@@ -8,7 +8,7 @@ import { ACTOR_TYPES, STORAGE_AUDIT_ACTIONS } from '@medcommerce/shared';
 import { env } from '../../config/env';
 import { LOG_DIR, logger } from '../../config/logger';
 import { runWithJobContext } from '../../config/request-context';
-import { isS3Configured } from '../../integrations/s3/s3.client';
+import { isS3Configured, shouldUploadLogsToS3 } from '../../integrations/s3/s3.client';
 import { uploadDocument } from '../../integrations/s3/storage.service';
 import { buildLogObjectKey } from '../../integrations/s3/storage.util';
 import { recordAudit } from '../../modules/audit/audit.service';
@@ -22,7 +22,7 @@ import {
 } from './log-archival.util';
 
 /**
- * Prompt 18 Part 8/9/14/15/16/17/35/36/37/38/40 — the full local -> S3
+ * Part 8/9/14/15/16/17/35/36/37/38/40 — the full local -> S3
  * archival pipeline for EVERY rotated log category (application,
  * third-party-api, pool-stats — all three write bucket-named `.log` files
  * via the SAME RotatingLogDestination shape, see log-rotation.ts), so this
@@ -40,7 +40,7 @@ import {
  * Runs on a schedule (queue.ts), never inline with a request (Part 6/17).
  * A process restart needs no special recovery code (Part 38) — the next
  * scheduled run just re-scans LOG_DIR and finds whatever was left, exactly
- * like Prompt 15's original log-upload.job.ts did for uncompressed files.
+ * like  15's original log-upload.job.ts did for uncompressed files.
  */
 
 const STATE_FILE = '.archival-state.json';
@@ -153,7 +153,12 @@ async function runOnce(): Promise<RunSummary> {
   }
 
   // --- Stage 2: upload .gz archives ---
-  const archivalEnabled = env.LOG_S3_ARCHIVAL_ENABLED && (await isS3Configured());
+  // Three independent gates: the env-level kill switch, S3 actually being
+  // configured, and the admin-facing "Upload Logs to S3" Control Panel
+  // toggle (Website Design -> Storage & Retention) — any one of them being
+  // off means archives stay local-only (still rotated/compressed/retained).
+  const archivalEnabled =
+    env.LOG_S3_ARCHIVAL_ENABLED && (await isS3Configured()) && (await shouldUploadLogsToS3());
   if (archivalEnabled) {
     const refreshedGzFiles = fs.readdirSync(LOG_DIR).filter((f) => f.endsWith('.log.gz'));
     for (const gzFile of refreshedGzFiles) {

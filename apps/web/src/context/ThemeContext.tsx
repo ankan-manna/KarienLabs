@@ -12,10 +12,19 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+/**
+ * Deliberately NOT `prefers-color-scheme`-driven: many OSes auto-switch
+ * that media query on a sunset/sunrise schedule, which previously made a
+ * storage-less first visit (fresh browser, private window, cleared cache)
+ * render whichever theme the OS happened to be in at that moment — the
+ * exact "looks right by day, changes at night" bug this fixes. The theme
+ * must only ever change via an explicit user toggle, so any missing/invalid
+ * stored value falls back to a single fixed default instead of the OS
+ * setting.
+ */
 function getInitialTheme(): Theme {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === 'light' || stored === 'dark') return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return stored === 'light' || stored === 'dark' ? stored : 'light';
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

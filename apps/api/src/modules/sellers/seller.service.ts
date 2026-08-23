@@ -18,7 +18,7 @@ interface Actor {
   role?: Role;
 }
 
-/** Small wrapper so every seller-management audit row consistently carries actor-context (Prompt 10 Part 4/Prompt 11 Part 14) without every call site re-deriving `actorType`. */
+/** Small wrapper so every seller-management audit row consistently carries actor-context ( 10 Part 4/ 11 Part 14) without every call site re-deriving `actorType`. */
 function auditSellerChange(
   actor: Actor,
   action: 'create' | 'update' | 'delete',

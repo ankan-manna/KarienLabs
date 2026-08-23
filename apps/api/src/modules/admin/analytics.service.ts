@@ -10,13 +10,13 @@ import { ReturnModel } from '../orders/models/return.model';
 import { dateRangeMatchStage, type ResolvedDateRange } from './analytics-date-range.util';
 import { distributorEnquiryReport } from './reports.service';
 
-/** Prompt 22 Part 4/5 — see reports.service.ts's identical comment; same shared resolver, no more locally-duplicated date logic. */
+/** Part 4/5 — see reports.service.ts's identical comment; same shared resolver, no more locally-duplicated date logic. */
 type DateRange = ResolvedDateRange;
 
 const dateMatch = dateRangeMatchStage;
 
 /**
- * Prompt 22 Part 5 — explicit UTC "now" boundaries, replacing the previous
+ * Part 5 — explicit UTC "now" boundaries, replacing the previous
  * local-server-timezone `setHours(0,0,0,0)`/`setDate(1)` calls (a real bug:
  * those disagreed with the UTC-implicit `$dateToString` grouping used
  * elsewhere in this same file whenever the Node process wasn't running in
@@ -215,7 +215,7 @@ export async function customerInsights() {
 }
 
 /**
- * Prompt 34 Part 22/40 — dashboard-card-sized Distributor/Bulk Purchase
+ * Part 22/40 — dashboard-card-sized Distributor/Bulk Purchase
  * enquiry summary for the Analytics page. Reuses reports.service.ts's
  * `distributorEnquiryReport` aggregation rather than duplicating it (Part
  * 49's "avoid duplicate logic"), but strips the per-enquiry `rows` (which

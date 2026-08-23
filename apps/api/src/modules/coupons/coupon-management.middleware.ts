@@ -6,7 +6,7 @@ import { AppError } from '../../utils/app-error';
 import { isCouponManagementEnabled } from './coupon-config.service';
 
 /**
- * Prompt 19 Part 8/9/10/54 — backend enforcement of the coupon-management
+ * Part 8/9/10/54 — backend enforcement of the coupon-management
  * feature flag on the admin CRUD/analytics surface. Super Admin always
  * retains access regardless of the flag (otherwise there'd be no way to
  * turn it back on once disabled — the `/coupons/config` routes themselves

@@ -42,7 +42,7 @@ const DOMAIN_TOGGLES: { key: keyof AnalyticsConfig; label: string; description?:
 ];
 
 /**
- * Prompt 22 Part 2/3/38/46 — the dedicated Super Admin / permitted Platform
+ * Part 2/3/38/46 — the dedicated Super Admin / permitted Platform
  * Admin "Analytics Settings" configuration page, same pattern as
  * CouponSettingsPage/NotificationSettingsPage: its own page (not a namespace
  * on the generic ConfigurationPage) because writes must go through the

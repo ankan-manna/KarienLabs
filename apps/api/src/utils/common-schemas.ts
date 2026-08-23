@@ -43,7 +43,7 @@ export const passwordSchema = z
 /**
  * Standard 15-character Indian GSTIN format: 2-digit state code, 10-char PAN,
  * 1-digit entity number, 'Z' by default, 1 checksum char. Shared by Seller
- * (Prompt 11) and Warehouse (CAT-02) — both need the same validation, and the
+ * ( 11) and Warehouse (CAT-02) — both need the same validation, and the
  * later GST engine (TAX-01) will reuse it again rather than each module
  * re-deriving its own regex.
  */

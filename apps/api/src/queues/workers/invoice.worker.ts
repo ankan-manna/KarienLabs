@@ -20,7 +20,7 @@ export function startInvoiceWorker(): Worker<GenerateInvoiceJobData> {
         logger.info({ jobId: job.id, orderId: job.data.orderId }, 'Generating invoice PDF');
         await generateInvoiceForOrder(job.data.orderId);
 
-        // Prompt 14 — the documented Invoice Generated -> Shiprocket Order
+        // the documented Invoice Generated -> Shiprocket Order
         // dependency (Part 12/14): shipment creation is only ever kicked off
         // AFTER the authoritative invoice exists, never before/instead of it.
         // Failures here (e.g. Shiprocket not configured) don't roll back the

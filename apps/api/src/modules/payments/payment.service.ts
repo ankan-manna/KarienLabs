@@ -25,7 +25,7 @@ import { PaymentLogModel } from './models/payment-log.model';
 import { PaymentModel, type PaymentDocument } from './models/payment.model';
 
 /**
- * Prompt 20 Part 8/25/49/57 — the "payment successful" customer notification.
+ * Part 8/25/49/57 — the "payment successful" customer notification.
  * Called from `finalizePaymentIntoOrder`, the ONE shared function both the
  * client-side verify path and the Razorpay webhook funnel through — so
  * whichever path finalizes the order first "wins" and the notification is
@@ -58,13 +58,13 @@ async function notifyPaymentCaptured(
 }
 
 /**
- * Prompt 31 Part 4/28/29/32 — the mandatory pre-payment address gate. Called
+ * Part 4/28/29/32 — the mandatory pre-payment address gate. Called
  * from `createCheckoutIntent` AFTER `buildCheckoutDraft` (so it sees the
  * FRESH, just-resolved address/pincode/seller for THIS checkout attempt —
  * never a cached/stale answer from whenever the address was first saved)
  * and BEFORE `createRazorpayOrder` (so a failure here creates no Razorpay
  * order, no Payment row, nothing to reconcile — prepaid-only ordering is
- * preserved exactly as Prompt 2 established it, this only adds an earlier
+ * preserved exactly as established it, this only adds an earlier
  * exit, not a new step interleaved with order/payment creation).
  * Independently config-gated (Part 44/45): each of the three checks below
  * only runs if its own toggle is on, so a super admin can require any
@@ -140,7 +140,7 @@ async function assertAddressReadyForCheckout(draft: CheckoutDraft): Promise<void
 }
 
 /**
- * Prompt 2 (prepaid-only redesign) Part 1 — checkout Phase 1: validate the
+ * (prepaid-only redesign) Part 1 — checkout Phase 1: validate the
  * cart/address/coupon/combo/GST/shipping/prescription rules (via the
  * existing, unchanged `buildCheckoutDraft`), compute the authoritative
  * amount, create a Razorpay order for EXACTLY that amount, and persist a
@@ -176,7 +176,7 @@ export async function createCheckoutIntent(userId: string, input: CheckoutInput)
   });
 
   // Bugfix (Human-Readable API Logging) Part 14 — one of the explicit
-  // checkout/payment lifecycle events the prompt asks to be distinguishable
+  // checkout/payment lifecycle events the  asks to be distinguishable
   // in logs (checkout intent created / payment initiated / cancelled /
   // failed / successful / order created / inventory allocated). Business
   // identifiers only (paymentId, razorpayOrderId, amount) — never the full
@@ -311,7 +311,7 @@ export interface VerifyPaymentResult {
 }
 
 /**
- * Prompt 2 — the frontend-return path. The backend is authoritative for
+ * the frontend-return path. The backend is authoritative for
  * EVERYTHING here (Part 3/27): the HMAC signature is verified against our
  * own secret (never trusts the browser's claim of success), the captured
  * amount is cross-checked against Razorpay's own record of the payment
@@ -477,7 +477,7 @@ export async function handleRazorpayWebhookEvent(event: { event: string; payload
       'Payment failed',
     );
 
-    // Prompt 2 — no Order exists to fail/compensate (that's the entire
+    // no Order exists to fail/compensate (that's the entire
     // point of the prepaid-only redesign): a failed payment simply never
     // produces one. Only notifications remain.
     const draft = (payment as unknown as { checkoutSnapshot: CheckoutDraft | null }).checkoutSnapshot;

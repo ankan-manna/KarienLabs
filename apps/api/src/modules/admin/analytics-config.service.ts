@@ -14,7 +14,7 @@ import {
 export { DEFAULT_ANALYTICS_CONFIG, validateAnalyticsConfig, type AnalyticsConfig };
 
 /**
- * Prompt 22 Part 2/3/38/46 — every analytics/report/dashboard endpoint reads
+ * Part 2/3/38/46 — every analytics/report/dashboard endpoint reads
  * its enablement from HERE, never hardcoded at the call site. Uses the
  * EXISTING Configuration engine (`analytics` namespace), same as
  * coupon/notification/prescription configuration.
@@ -33,7 +33,7 @@ export async function isAnalyticsDomainEnabled(domain?: keyof AnalyticsConfig): 
 }
 
 /**
- * Prompt 34 Part 13/14/19 — narrow, anonymous-readable subset of this
+ * Part 13/14/19 — narrow, anonymous-readable subset of this
  * namespace for the storefront's GA4 loader to consult before it ever
  * calls gtag. Deliberately mirrors the `getPublicAuthConfig`/
  * `getPublicDistributorEnquiryConfig` pattern (a purpose-built endpoint

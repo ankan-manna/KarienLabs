@@ -1,10 +1,10 @@
 /**
- * Prompt 27 — named audit actions for the automated post-payment fulfillment
+ * named audit actions for the automated post-payment fulfillment
  * pipeline (the 6-hour sweep that advances an eligible paid order, plus the
  * document-retention/regeneration lifecycle), mirroring SHIPMENT_AUDIT_ACTIONS
  * / INVOICE_AUDIT_ACTIONS / STORAGE_AUDIT_ACTIONS. Most of the actual work
  * (invoice generation, Shiprocket order/AWB/label) already had its own audit
- * actions from earlier prompts and is unchanged here — these cover only the
+ * actions from earlier s and is unchanged here — these cover only the
  * NEW automation-specific events: the sweep itself, an order being advanced
  * by it, and a document being expired/regenerated.
  */

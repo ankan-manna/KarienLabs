@@ -1,7 +1,7 @@
 import { UnprocessableEntityError } from '../../utils/app-error';
 
 /**
- * Prompt 20 Part 14/15/47 — pure, DB/Redis-free config shape + validation,
+ * Part 14/15/47 — pure, DB/Redis-free config shape + validation,
  * split from notification-config.service.ts for the same reason every
  * other `*-config.util.ts` in this codebase is (prescription/coupon):
  * the Configuration service transitively imports the Redis-backed

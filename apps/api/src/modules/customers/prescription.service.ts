@@ -29,8 +29,8 @@ import { PrescriptionUploadModel, type PrescriptionUploadDocument } from './mode
 import { getPrescriptionConfig } from './prescription-config.service';
 
 /**
- * Prompt 20 Part 11/52 — prescription notifications respect
- * `prescription.managementEnabled` (the existing Prompt 17 config) as their
+ * Part 11/52 — prescription notifications respect
+ * `prescription.managementEnabled` (the existing config) as their
  * OWN gate before even reaching enqueueNotification's category toggle — a
  * disabled prescription FEATURE shouldn't fire prescription EMAILS either,
  * even if `prescriptionNotificationsEnabled` happens to still be on.

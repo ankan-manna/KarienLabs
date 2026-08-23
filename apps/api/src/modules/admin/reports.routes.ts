@@ -21,7 +21,7 @@ export const reportsRouter = Router();
 reportsRouter.use(requireAuth, authorize(permission(RESOURCES.REPORTS, ACTIONS.READ)));
 
 /**
- * Prompt 22 Part 4/5/43 — every date-ranged report resolves its window
+ * Part 4/5/43 — every date-ranged report resolves its window
  * through the ONE shared, UTC-consistent, abuse-protected resolver. A bad
  * `preset`/`from`/`to` throws an AppError(422, 'INVALID_DATE_RANGE', ...)
  * which asyncHandler forwards straight to the global error middleware.
@@ -56,7 +56,7 @@ async function respondReport<T extends Record<string, unknown>>(
     // Part 39 — bulk data extraction is the sensitive analytics-access case;
     // audited explicitly (routine JSON reads are covered by request logging
     // instead, see the mixin-based requestId/actorId auto-enrichment wired
-    // in Prompt 18's config/logger.ts, to avoid flooding the audit log with
+    // in  18's config/logger.ts, to avoid flooding the audit log with
     // every dashboard refresh).
     await recordAudit({
       actorId: req.user!.id,
@@ -305,7 +305,7 @@ reportsRouter.get(
 );
 
 /**
- * Prompt 34 Part 22/40 — Distributor/Bulk Purchase enquiry report. The
+ * Part 22/40 — Distributor/Bulk Purchase enquiry report. The
  * exportable Excel/PDF is the per-enquiry `rows` list; the JSON (no
  * `format`) response includes the full summary (statusBreakdown,
  * conversionRatePercent, topRequestedSkus) alongside `rows` for callers

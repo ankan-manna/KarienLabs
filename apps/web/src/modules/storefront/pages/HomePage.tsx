@@ -114,9 +114,9 @@ function CategoryTile({ cat }: { cat: { _id: string; name: string; imageUrl?: st
   return (
     <Link
       to={`/products?categoryId=${cat._id}`}
-      className="group flex min-w-[112px] flex-col items-center gap-2 rounded-xl border border-pale-sage bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:border-healthcare-teal hover:shadow-md dark:border-night-border dark:bg-night-surface"
+      className="group flex min-w-[112px] flex-col items-center gap-2 rounded-xl border border-pale-sage bg-white p-4 text-center transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-md dark:border-night-border dark:bg-night-surface"
     >
-      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-soft-mint text-2xl transition-colors group-hover:bg-pale-sage dark:bg-healthcare-teal/10 dark:group-hover:bg-healthcare-teal/20">
+      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-deep-teal text-2xl transition-colors group-hover:bg-pale-sage dark:bg-night-elevated dark:group-hover:bg-night-elevated">
         {cat.imageUrl ? (
           <img src={cat.imageUrl} alt="" className="h-full w-full object-cover" />
         ) : (
@@ -139,7 +139,7 @@ function CategorySlider() {
 
   return (
     <section>
-      <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+      <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
         Shop by Category
       </h2>
       <div className="themed-scrollbar flex gap-3 overflow-x-auto pb-2">
@@ -160,55 +160,24 @@ function CategorySlider() {
  * power an anonymous-visitor homepage section without a backend change —
  * banners are the existing, already-public building block for this.
  */
-/**
- * Static placeholder promo — shown only until an admin configures a
- * `'category'`-placement banner. Purely presentational; the real "Offers"
- * data (coupons, category banners) is untouched.
- */
-function OffersFallback() {
-  return (
-    <section className="overflow-hidden rounded-2xl bg-soft-mint dark:bg-night-surface">
-      <div className="grid grid-cols-1 items-center gap-6 px-6 py-8 sm:px-10 md:grid-cols-2">
-        <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-medium text-coral dark:bg-night-elevated">
-            Limited-time offer
-          </span>
-          <h2 className="mt-3 text-2xl font-bold text-charcoal-teal dark:text-night-text sm:text-3xl">
-            Up to 25% Off on Wellness Essentials
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-slate-teal dark:text-night-muted">
-            Save on vitamins, supplements and everyday health products — for a limited time only.
-          </p>
-          <Link to="/offers" className="mt-4 inline-block">
-            <Button variant="coral">Shop the Sale</Button>
-          </Link>
-        </div>
-        <div className="overflow-hidden rounded-xl">
-          <img
-            src="https://images.unsplash.com/photo-1550572017-edd951b55104?w=1000&q=80"
-            alt="Wellness supplements and vitamins on display"
-            className="h-40 w-full object-cover sm:h-48"
-            loading="lazy"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function OffersStrip() {
   const { data: banners } = useQuery({
     queryKey: ['public-banners', 'category', 'home'],
     queryFn: () => getPublicBanners('category'),
   });
 
-  if (!banners || banners.length === 0) return <OffersFallback />;
+  // No placeholder fallback here (deliberately reverted — see git history):
+  // `OffersPage.tsx` reads this SAME `getPublicBanners('category')` data and
+  // has no fallback of its own, so a fake promo here would make Home show an
+  // offer that /offers can never show, i.e. the exact "Home has it, the real
+  // page doesn't" bug this was built to fix. Real content only.
+  if (!banners || banners.length === 0) return null;
 
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-charcoal-teal dark:text-night-text">Offers & Deals</h2>
-        <Link to="/offers" className="text-sm font-medium text-healthcare-teal hover:underline">
+        <h2 className="text-lg font-semibold text-ink dark:text-night-text">Offers & Deals</h2>
+        <Link to="/offers" className="text-sm font-medium text-accent hover:underline">
           View all
         </Link>
       </div>
@@ -277,8 +246,8 @@ function PopularProducts() {
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-charcoal-teal dark:text-night-text">Popular Products</h2>
-        <Link to="/products?sort=-ratingCount" className="text-sm font-medium text-healthcare-teal hover:underline">
+        <h2 className="text-lg font-semibold text-ink dark:text-night-text">Popular Products</h2>
+        <Link to="/products?sort=-ratingCount" className="text-sm font-medium text-accent hover:underline">
           View all
         </Link>
       </div>
@@ -300,7 +269,7 @@ function PopularProducts() {
  */
 function BulkPurchaseCta() {
   return (
-    <section className="overflow-hidden rounded-2xl bg-deep-teal">
+    <section className="overflow-hidden rounded-2xl bg-ink">
       <div className="flex flex-col items-start gap-4 px-6 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-10">
         <div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
@@ -326,8 +295,8 @@ function BulkPurchaseCta() {
 
 function TrustSection() {
   return (
-    <section className="rounded-2xl bg-soft-mint px-6 py-10 dark:bg-night-surface/60 sm:px-10">
-      <h2 className="text-center text-lg font-semibold text-charcoal-teal dark:text-night-text">
+    <section className="rounded-2xl bg-deep-teal px-6 py-10 dark:bg-night-section sm:px-10">
+      <h2 className="text-center text-lg font-semibold text-ink dark:text-night-text">
         Why shop with KarienLabs
       </h2>
       <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
@@ -336,7 +305,7 @@ function TrustSection() {
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-xl shadow-sm dark:bg-night-elevated">
               <span aria-hidden="true">{point.icon}</span>
             </div>
-            <p className="text-sm font-medium text-charcoal-teal dark:text-night-text">{point.title}</p>
+            <p className="text-sm font-medium text-ink dark:text-night-text">{point.title}</p>
             <p className="text-xs text-gray-500 dark:text-night-muted">{point.description}</p>
           </div>
         ))}
@@ -359,7 +328,7 @@ function HomeSections() {
         if (section.type === 'category_grid' && section.categoryIds.length > 0) {
           return (
             <section key={section._id}>
-              <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+              <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
                 {section.title}
               </h2>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -373,7 +342,7 @@ function HomeSections() {
         if (section.productIds.length > 0) {
           return (
             <section key={section._id}>
-              <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+              <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
                 {section.title}
               </h2>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -416,8 +385,8 @@ function TopBrands() {
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-charcoal-teal dark:text-night-text">Top Brands</h2>
-        <Link to="/brands" className="text-sm font-medium text-healthcare-teal hover:underline">
+        <h2 className="text-lg font-semibold text-ink dark:text-night-text">Top Brands</h2>
+        <Link to="/brands" className="text-sm font-medium text-accent hover:underline">
           View all
         </Link>
       </div>
@@ -426,12 +395,12 @@ function TopBrands() {
           <Link
             key={brand._id}
             to={`/products?brandId=${brand._id}`}
-            className="flex min-w-[110px] flex-col items-center gap-2 rounded-lg border border-pale-sage bg-white p-3 text-center hover:border-healthcare-teal dark:border-night-border dark:bg-night-surface"
+            className="flex min-w-[110px] flex-col items-center gap-2 rounded-lg border border-pale-sage bg-white p-3 text-center hover:border-accent dark:border-night-border dark:bg-night-surface"
           >
             {brand.logoUrl ? (
               <img src={brand.logoUrl} alt={brand.name} className="h-10 w-10 object-contain" />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-soft-mint text-lg dark:bg-healthcare-teal/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-deep-teal text-lg dark:bg-night-elevated">
                 🏷️
               </div>
             )}
@@ -454,7 +423,7 @@ function CustomerReviewsStrip() {
 
   return (
     <section>
-      <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+      <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
         What Customers Say
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -462,7 +431,7 @@ function CustomerReviewsStrip() {
           <Card key={review._id} className="p-4">
             <RatingStars value={review.rating} size="sm" />
             {review.title && (
-              <p className="mt-1 text-sm font-medium text-charcoal-teal dark:text-night-text">
+              <p className="mt-1 text-sm font-medium text-ink dark:text-night-text">
                 {review.title}
               </p>
             )}
@@ -490,65 +459,22 @@ interface BlogCardData {
   date: string;
 }
 
-// Static placeholder posts — shown only until real blog posts are published.
-// Same card layout as real posts (image/category/title/excerpt/date/Read
-// More); "Read More" points at the blog listing rather than a slug that
-// doesn't exist, so nothing 404s.
-const DUMMY_BLOG_POSTS: BlogCardData[] = [
-  {
-    key: 'dummy-blog-1',
-    href: '/blog',
-    imageUrl: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80',
-    category: 'Wellness',
-    title: '5 Everyday Habits for Better Immunity',
-    excerpt: 'Small, consistent changes — hydration, sleep and diet — that add up to real immune support.',
-    date: new Date().toISOString(),
-  },
-  {
-    key: 'dummy-blog-2',
-    href: '/blog',
-    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=800&q=80',
-    category: 'Medicine Guide',
-    title: 'Understanding Your Prescription: A Quick Guide',
-    excerpt: 'How to read dosage instructions, timing and refill details on a typical prescription label.',
-    date: new Date(Date.now() - 5 * 86400000).toISOString(),
-  },
-  {
-    key: 'dummy-blog-3',
-    href: '/blog',
-    imageUrl: 'https://images.unsplash.com/photo-1512069772995-ec65ed45afd6?w=800&q=80',
-    category: 'Healthcare Tips',
-    title: 'Managing Seasonal Allergies Naturally',
-    excerpt: 'Practical, everyday steps to reduce allergy triggers at home and know when to see a doctor.',
-    date: new Date(Date.now() - 9 * 86400000).toISOString(),
-  },
-  {
-    key: 'dummy-blog-4',
-    href: '/blog',
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80',
-    category: 'Everyday Wellness',
-    title: 'Staying Active: Simple Exercises for Every Age',
-    excerpt: 'Low-impact routines that fit into a busy day and support long-term mobility and health.',
-    date: new Date(Date.now() - 14 * 86400000).toISOString(),
-  },
-];
-
 function BlogCard({ post }: { post: BlogCardData }) {
   return (
     <Link to={post.href}>
       <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
         <img src={post.imageUrl} alt="" className="h-36 w-full object-cover" loading="lazy" />
         <div className="p-4">
-          <span className="inline-block rounded-full bg-soft-mint px-2.5 py-0.5 text-[11px] font-medium text-healthcare-teal dark:bg-night-elevated dark:text-emerald-300">
+          <span className="inline-block rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-accent dark:bg-night-elevated dark:text-accent">
             {post.category}
           </span>
-          <h3 className="mt-2 line-clamp-2 text-sm font-semibold text-charcoal-teal dark:text-night-text">
+          <h3 className="mt-2 line-clamp-2 text-sm font-semibold text-ink dark:text-night-text">
             {post.title}
           </h3>
-          <p className="mt-1 line-clamp-2 text-xs text-slate-teal dark:text-night-muted">{post.excerpt}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-gray-500 dark:text-night-muted">{post.excerpt}</p>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-xs text-gray-400">{formatDate(post.date)}</span>
-            <span className="text-xs font-medium text-healthcare-teal">Read More →</span>
+            <span className="text-xs font-medium text-accent">Read More →</span>
           </div>
         </div>
       </Card>
@@ -562,24 +488,27 @@ function BlogPreview() {
     queryFn: () => listPublicBlogs({ limit: 4 }),
   });
 
-  const posts: BlogCardData[] =
-    data && data.items.length > 0
-      ? data.items.map((blog) => ({
-          key: blog._id,
-          href: `/blog/${blog.slug}`,
-          imageUrl: blog.coverImageUrl,
-          category: blog.tags[0] || 'Health & Wellness',
-          title: blog.title,
-          excerpt: blog.excerpt,
-          date: blog.publishedAt,
-        }))
-      : DUMMY_BLOG_POSTS;
+  // No placeholder fallback (deliberately reverted — see git history):
+  // `/blog` reads this SAME `listPublicBlogs` data and has no fallback of
+  // its own, so a fake preview here would make Home show posts that /blog
+  // can never show — Home and Blog must share one source of truth.
+  if (!data || data.items.length === 0) return null;
+
+  const posts: BlogCardData[] = data.items.map((blog) => ({
+    key: blog._id,
+    href: `/blog/${blog.slug}`,
+    imageUrl: blog.coverImageUrl,
+    category: blog.tags[0] || 'Health & Wellness',
+    title: blog.title,
+    excerpt: blog.excerpt,
+    date: blog.publishedAt,
+  }));
 
   return (
     <section>
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-charcoal-teal dark:text-night-text">From the Blog</h2>
-        <Link to="/blog" className="text-sm font-medium text-healthcare-teal hover:underline">
+        <h2 className="text-lg font-semibold text-ink dark:text-night-text">From the Blog</h2>
+        <Link to="/blog" className="text-sm font-medium text-accent hover:underline">
           View all
         </Link>
       </div>
@@ -601,10 +530,10 @@ function BlogPreview() {
 function NewsletterSection() {
   return (
     <section className="overflow-hidden rounded-2xl border border-pale-sage bg-white px-6 py-10 text-center dark:border-night-border dark:bg-night-surface sm:px-10">
-      <h2 className="text-xl font-bold text-charcoal-teal dark:text-night-text sm:text-2xl">
+      <h2 className="text-xl font-bold text-ink dark:text-night-text sm:text-2xl">
         Stay Updated
       </h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-slate-teal dark:text-night-muted">
+      <p className="mx-auto mt-2 max-w-md text-sm text-gray-500 dark:text-night-muted">
         Get health tips, exclusive offers and new arrivals delivered straight to your inbox.
       </p>
       <div className="mx-auto mt-5 max-w-sm">
@@ -650,8 +579,8 @@ export default function HomePage() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-charcoal-teal dark:text-night-text">New Arrivals</h2>
-          <Link to="/products" className="text-sm font-medium text-healthcare-teal hover:underline">
+          <h2 className="text-lg font-semibold text-ink dark:text-night-text">New Arrivals</h2>
+          <Link to="/products" className="text-sm font-medium text-accent hover:underline">
             View all
           </Link>
         </div>

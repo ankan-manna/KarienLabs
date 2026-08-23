@@ -16,7 +16,7 @@ const POLICY_LINKS = [
 const QUICK_LINKS = [
   { label: 'About Us', to: '/about' },
   { label: 'Contact Us', to: '/contact' },
-  // Prompt 32 — deliberately its own link, distinct from "Contact Us" above
+  // deliberately its own link, distinct from "Contact Us" above
   // (Part 3/59: a separate feature, never merged into it).
   { label: 'Bulk Purchase / Distributor Enquiry', to: '/bulk-purchase' },
   { label: 'FAQ', to: '/faq' },
@@ -27,7 +27,7 @@ const QUICK_LINKS = [
 ];
 
 // Simple, monochrome inline SVG icons (no external icon library dependency) —
-// `currentColor` so they inherit the same hover-to-coral treatment as every
+// `currentColor` so they inherit the same hover-to-accent treatment as every
 // other footer link, rather than staying a fixed emoji color regardless of
 // hover/theme state.
 function InstagramIcon() {
@@ -123,8 +123,8 @@ export function Footer() {
   }));
 
   return (
-    <footer className="bg-deep-teal">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+    <footer className="bg-ink">
+      <div className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" aria-label="KarienLabs" className="inline-flex items-center">
@@ -139,7 +139,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="text-white/70 transition-colors hover:text-coral"
+                  className="text-white/70 transition-colors hover:text-accent"
                 >
                   <s.Icon />
                 </a>
@@ -154,7 +154,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               {quickLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-white/75 hover:text-coral">
+                  <Link to={l.to} className="text-white/75 hover:text-accent">
                     {l.label}
                   </Link>
                 </li>
@@ -169,7 +169,7 @@ export function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               {POLICY_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-white/75 hover:text-coral">
+                  <Link to={l.to} className="text-white/75 hover:text-accent">
                     {l.label}
                   </Link>
                 </li>

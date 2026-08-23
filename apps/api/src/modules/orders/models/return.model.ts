@@ -10,27 +10,27 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * Prompt 16 — extends the pre-existing Return model (do not remove
+ * extends the pre-existing Return model (do not remove
  * orderId/customerId/items/status/approvedBy/refundId — real data and code
- * from before this prompt depends on them) with the inspection/reverse-
+ * from before this  depends on them) with the inspection/reverse-
  * logistics/replacement fields the extended state machine needs. Reasons
  * are captured per-item (Part 3), amounts/HSN/GST are NEVER recomputed here
  * — refund uses the ORIGINAL order item's frozen unitPrice/gstRate via
  * return-refund-calculation.util.ts, exactly like the invoice engine
- * freezes tax data once (Prompt 13's immutability pattern applied here too).
+ * freezes tax data once ( 13's immutability pattern applied here too).
  */
 const returnSchema = new Schema({
   // Human-readable, seller-scoped-ready identifier (Part 42/43) — sequence
   // via the existing generateSequenceNumber utility (see return.service.ts),
   // same mechanism Order/Invoice numbering already use. `default: null` so
-  // pre-Prompt-16 Return documents (numberless) remain valid/readable.
+  // pre--16 Return documents (numberless) remain valid/readable.
   returnNumber: { type: String, default: null, unique: true, sparse: true },
 
   orderId: { type: Schema.Types.ObjectId, ref: 'Order', required: true, index: true },
   customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   // Denormalized from Order at request time (Part 36/42) — lets seller-scoped
   // admin queries/filters avoid a join on every list/detail read, same
-  // reasoning as Shipment.sellerId (Prompt 14).
+  // reasoning as Shipment.sellerId ( 14).
   sellerId: { type: Schema.Types.ObjectId, ref: 'Seller', default: null, index: true },
   // Resolved once the return is approved (the warehouse that will receive
   // the reverse shipment / perform inspection) — Part 37.
@@ -99,7 +99,7 @@ const returnSchema = new Schema({
 
   // Part 11/12 — deliberately its OWN sub-object, never written onto the
   // forward Shipment document. Same field shape as Shipment's Shiprocket
-  // fields (Prompt 14) for consistency, but a fully separate AWB/tracking
+  // fields ( 14) for consistency, but a fully separate AWB/tracking
   // history — see return-shiprocket.service.ts.
   reverseShipment: {
     shiprocketOrderId: { type: String, default: null },

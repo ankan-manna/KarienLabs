@@ -6,7 +6,7 @@ const couponUsageSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   orderId: { type: Schema.Types.ObjectId, ref: 'Order', required: true },
   discountApplied: { type: Number, required: true, min: 0 },
-  // Prompt 19 Part 30 — the same per-line breakdown stored on the order
+  // Part 30 — the same per-line breakdown stored on the order
   // itself (order.items[].couponDiscountAmount), duplicated here purely for
   // a self-contained usage-history/analytics record. The ORDER is still the
   // authoritative source refund/return calculations read from (Part 34/35).

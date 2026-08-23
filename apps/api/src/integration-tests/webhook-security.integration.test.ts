@@ -6,7 +6,7 @@ import request from 'supertest';
 import { setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 24 Part 34/72 — regression test for the Shiprocket webhook
+ * Part 34/72 — regression test for the Shiprocket webhook
  * fail-OPEN bug found during the security audit: when
  * `SHIPROCKET_WEBHOOK_TOKEN` isn't configured, the endpoint previously
  * accepted ANY unauthenticated payload (`if (expectedToken && ...)`
@@ -14,7 +14,7 @@ import { setupTestApp, type TestAppContext } from '../test-support/test-app';
  * never sets a Shiprocket webhook token, which is exactly the
  * "unconfigured" state that must now be rejected rather than trusted.
  */
-describe('Webhook security (Prompt 24)', () => {
+describe('Webhook security', () => {
   let ctx: TestAppContext;
 
   before(async () => {

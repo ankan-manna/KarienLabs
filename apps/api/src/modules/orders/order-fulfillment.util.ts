@@ -6,8 +6,8 @@ import type { OrderDocument } from './models/order.model';
 
 /**
  * Shared fulfillment-context resolution — used by BOTH the tax/invoice engine
- * (tax-calculation.service.ts, Prompt 13) and the Shiprocket shipment engine
- * (shiprocket-fulfillment.service.ts, Prompt 14) so "which warehouse actually
+ * (tax-calculation.service.ts,  13) and the Shiprocket shipment engine
+ * (shiprocket-fulfillment.service.ts,  14) so "which warehouse actually
  * fulfilled this order" is answered exactly once, the same way, everywhere.
  */
 

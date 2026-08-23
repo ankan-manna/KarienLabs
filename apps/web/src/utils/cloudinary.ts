@@ -1,5 +1,5 @@
 /**
- * Prompt (Product Image Management) Part 29 — "Do not load every
+ *  (Product Image Management) Part 29 — "Do not load every
  * high-resolution sub-image on Home/All Products... use appropriate
  * Cloudinary transformations/resizing." Cloudinary supports URL-based
  * transformations (no SDK/API call needed) by inserting a transformation

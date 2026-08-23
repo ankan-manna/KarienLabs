@@ -12,7 +12,7 @@ export const createStockAdjustmentSchema = z.object({
   reason: z.string().trim().min(3).max(500),
 });
 
-// Prompt (Admin Inventory Management) Part 17 — a single-step "Add
+// (Admin Inventory Management) Part 17 — a single-step "Add
 // Inventory" action, always a positive addition (Part 15: stock addition is
 // the only operation this covers); `.int()` rejects decimals, `.positive()`
 // rejects zero/negative, and the upper bound rejects an obviously-mistyped
@@ -27,7 +27,7 @@ const quickAddExistingBatchSchema = z.object({
   reason: z.string().trim().max(500).optional(),
 });
 
-// Manufacturer own-stock (Prompt: "Manufacturer Inventory Model") — creates
+// Manufacturer own-stock (: "Manufacturer Inventory Model") — creates
 // the batch AND adds the quantity in one step, with no Purchase Order/GRN
 // involved (KarienLabs manufactures its own products, so there's no
 // supplier to receive goods from). Reuses the exact same Batch fields GRN

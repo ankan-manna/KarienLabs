@@ -13,16 +13,16 @@ const couponShape = {
   applicableProductIds: z.array(objectIdSchema).optional(),
   applicableCategoryIds: z.array(objectIdSchema).optional(),
   applicableUserIds: z.array(objectIdSchema).optional(),
-  // Prompt 19 Part 29 — excluded products take precedence over any
+  // Part 29 — excluded products take precedence over any
   // product/category match.
   excludedProductIds: z.array(objectIdSchema).optional(),
-  // Prompt 19 Part 14 — null = platform-wide.
+   // Part 14 — null = platform-wide.
   sellerId: objectIdSchema.nullable().optional(),
   usageLimitGlobal: z.number().int().min(1).nullable().optional(),
   usageLimitPerUser: z.number().int().min(1).optional(),
-  // Prompt 19 Part 15.
+   // Part 15.
   firstOrderOnly: z.boolean().optional(),
-  // Prompt 19 Part 28.
+   // Part 28.
   priority: z.number().int().min(0).optional(),
   validFrom: z.coerce.date(),
   validTo: z.coerce.date(),

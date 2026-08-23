@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'crypto';
 
 /**
- * Prompt 24 Part 34 — constant-time string comparison for secrets/signatures
+ * Part 34 — constant-time string comparison for secrets/signatures
  * (webhook tokens, HMAC signatures). A plain `a !== b` leaks timing
  * information proportional to how many leading characters match, which is
  * a real (if slow) attack against static shared secrets. Extracted from

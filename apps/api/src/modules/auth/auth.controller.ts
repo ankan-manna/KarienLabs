@@ -82,7 +82,7 @@ function toPublicUser(user: {
     isActive: user.isActive,
     isSuspended: user.isSuspended ?? false,
     emailVerified: user.emailVerified ?? false,
-    // Prompt (Admin Profile) Part 3 — "Created date"; falls back to `now`
+    // (Admin Profile) Part 3 — "Created date"; falls back to `now`
     // only for the type system's benefit (every real User document has
     // `createdAt` via the schema's `{ timestamps: true }`, this is never
     // actually hit in practice).
@@ -91,10 +91,10 @@ function toPublicUser(user: {
 }
 
 /**
- * Two possible response shapes, discriminated by `otpRequired` (Prompt 31,
+ * Two possible response shapes, discriminated by `otpRequired` ( 31,
  * same discriminated pattern as `loginHandler` below):
  *  - `{ otpRequired: false, user, accessToken, accessTokenExpiresAt }` — the
- *    pre-Prompt-22 shape, used when `registrationOtpEnabled` is off; the old
+ *    pre--22 shape, used when `registrationOtpEnabled` is off; the old
  *    link-based `requestEmailVerification` fires exactly as it always has.
  *  - `{ otpRequired: true, challengeToken, maskedContact, expiresAt,
  *      resendCooldownSeconds }` — no session/cookie issued yet; the frontend
@@ -152,7 +152,7 @@ export const registerResendOtpHandler = asyncHandler(async (req: Request, res) =
 /**
  * Two possible response shapes, discriminated by `otpRequired`:
  *  - `{ otpRequired: false, user, accessToken, accessTokenExpiresAt }` — same
- *    shape as before Prompt 10, when OTP login is disabled/not applicable.
+ *    shape as before  10, when OTP login is disabled/not applicable.
  *  - `{ otpRequired: true, challengeToken, maskedContact, expiresAt,
  *      resendCooldownSeconds }` — no session/cookie issued yet; the frontend
  *    must call `/auth/login/verify-otp` with the challengeToken + code.

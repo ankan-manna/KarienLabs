@@ -14,7 +14,7 @@ import { QUEUE_NAMES, type ShipmentFulfillmentJobData } from '../queue';
 
 /**
  * Drives an order through Shiprocket order-creation + AWB assignment +
- * (Prompt 27 Part 17) label fetch/store, attributed to the SYSTEM actor
+ * ( 27 Part 17) label fetch/store, attributed to the SYSTEM actor
  * (Part 27 — never the last admin who touched the order). Every step this
  * calls is independently idempotent (see shiprocket-fulfillment.service.ts),
  * so a retried/duplicate job is always safe to re-run.

@@ -43,7 +43,7 @@ shipmentRouter.get('/reports/delivery', canRead, deliveryReportHandler);
 // Customer-facing (with staff access too) — ownership is checked in the service layer.
 shipmentRouter.get('/order/:orderId', getShipmentsByOrderHandler);
 
-// Prompt 14 — Shiprocket fulfillment actions, keyed by orderId (creation/retry
+// Shiprocket fulfillment actions, keyed by orderId (creation/retry
 // happen against the ORDER, which is what identifies a shipment before one
 // necessarily exists yet) vs. by shipment :id (everything after a Shipment
 // record already exists). Same DELIVERIES permission gates as the rest of

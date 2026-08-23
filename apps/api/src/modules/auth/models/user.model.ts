@@ -5,7 +5,7 @@ const userSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
-    // Optional — no phone-based registration/verification flow exists yet (Prompt 10
+    // Optional — no phone-based registration/verification flow exists yet ( 10
     // scope is auth, not customer-profile management). Present only so the
     // config-driven OTP channel (sms/whatsapp) has somewhere real to send to;
     // when unset, OTP delivery falls back to email regardless of the configured channel.
@@ -13,7 +13,7 @@ const userSchema = new Schema(
     passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: DEFAULT_ROLES, default: ROLES.CUSTOMER, index: true },
     isActive: { type: Boolean, default: true },
-    // Admin "Continue with Google" (Prompt 10) — the Google `sub` claim only,
+    // Admin "Continue with Google" ( 10) — the Google `sub` claim only,
     // never tokens. No `default` — Mongoose then leaves the field entirely
     // absent (not `null`) when unset, so the sparse unique index actually
     // excludes non-linked users instead of colliding on `googleId: null`

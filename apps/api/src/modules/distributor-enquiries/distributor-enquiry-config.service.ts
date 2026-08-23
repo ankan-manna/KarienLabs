@@ -1,7 +1,7 @@
 import { getConfiguration } from '../platform/configuration.service';
 
 /**
- * Prompt 32 — shape of the `distributor_enquiry` Configuration namespace
+ * shape of the `distributor_enquiry` Configuration namespace
  * (Part 36), stored/edited through the EXISTING Configuration Engine
  * (superadmin ConfigurationPage -> PUT /platform/configuration/
  * distributor_enquiry), mirroring auth-config.service.ts's simple

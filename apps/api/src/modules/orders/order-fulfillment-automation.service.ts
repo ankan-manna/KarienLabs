@@ -9,7 +9,7 @@ import { isOrderFulfillmentEligible } from './order-fulfillment-eligibility.serv
 import { updateOrderStatus } from './order.service';
 
 /**
- * Prompt 27 — the per-order unit of work the automation queue drives
+ * the per-order unit of work the automation queue drives
  * (order-fulfillment.worker.ts). Called for exactly one order at a time so
  * a crash/retry/duplicate-delivery only ever affects that one order (Part
  * 5/21), never a whole batch.

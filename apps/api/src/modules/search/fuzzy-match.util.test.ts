@@ -17,7 +17,7 @@ test('empty-string edge cases', () => {
   assert.equal(levenshteinDistance('', ''), 0);
 });
 
-test('findFuzzyMatches suggests "paracetamol" for the typo "paracetmol" (Part 5 example)', () => {
+test('findFuzzyMatches suggests "paracetamol" for the typo "paracetmol" (example)', () => {
   const dictionary = ['paracetamol', 'ibuprofen', 'amoxicillin', 'cetirizine'];
   const matches = findFuzzyMatches('paracetmol', dictionary);
   assert.deepEqual(matches, ['paracetamol']);

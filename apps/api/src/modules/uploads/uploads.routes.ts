@@ -15,7 +15,7 @@ const signatureSchema = z.object({
     'prescription_secure',
     'cms_media',
     'profile_picture',
-    // Prompt 16 Part 3/33 — customer-submitted return evidence photos, via
+    // Part 3/33 — customer-submitted return evidence photos, via
     // the SAME signed-upload flow every other customer upload already uses.
     'return_evidence',
   ]),

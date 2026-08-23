@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 /**
  * Sanitizes admin-authored rich text (CMS pages, blog posts) before rendering via
  * `dangerouslySetInnerHTML`. Content originates from the admin panel's CMS module
- * (Prompt 5), not end-user input, but treating it as trusted-by-source was an
+ * ( 5), not end-user input, but treating it as trusted-by-source was an
  * assumption, not a safeguard — an admin account compromise or a future
  * "suggest an edit" feature would otherwise be a stored-XSS vector. Strips
  * scripts/event-handlers/iframes while keeping the basic formatting tags CMS

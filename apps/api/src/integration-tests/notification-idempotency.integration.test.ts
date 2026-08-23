@@ -8,7 +8,7 @@ import { createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 20 Part 25/57's guarantee — enqueueNotification() with an
+ * Part 25/57's guarantee — enqueueNotification() with an
  * `idempotencyKey` must produce exactly ONE queued notification even when two
  * callers race — exercised here via REAL concurrent HTTP requests to the
  * actual Razorpay webhook route (POST /api/v1/webhooks/razorpay), not a
@@ -18,13 +18,13 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * sometimes redeliver the same webhook event, which is exactly the race this
  * test simulates by firing the identical signed payload twice at once.
  *
- * Prompt 2 (prepaid-only redesign) update — a Payment no longer has a
+ * (prepaid-only redesign) update — a Payment no longer has a
  * pre-existing Order attached to it (that was the OLD "order created before
  * payment" flow this whole redesign eliminates). This test now seeds the
  * Payment the way `createCheckoutIntent` actually would: via a real
  * `buildCheckoutDraft()` snapshot and no `orderId`, so the webhook's
  * `payment.captured` handling exercises the REAL `finalizePaymentIntoOrder`
- * path (order finalization + notification), not a stale pre-Prompt-2 shape.
+ * path (order finalization + notification), not a stale pre--2 shape.
  */
 describe('Notification idempotency under real concurrent HTTP delivery', () => {
   let ctx: TestAppContext;
@@ -169,7 +169,7 @@ describe('Notification idempotency under real concurrent HTTP delivery', () => {
     assert.equal(resOne.status, 200);
     assert.equal(resTwo.status, 200);
 
-    // Prompt 2 — the webhook is also what finalizes the order in this test
+    // the webhook is also what finalizes the order in this test
     // (no frontend-verify call happens here); confirms the notification
     // idempotency guarantee holds on the SAME code path that now also does
     // order finalization, not just a bare payment-status update.

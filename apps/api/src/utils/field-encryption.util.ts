@@ -4,7 +4,7 @@ import { env } from '../config/env';
 import { logger } from '../config/logger';
 
 /**
- * Prompt 24 Part 29 — application-level field encryption for third-party
+ * Part 29 — application-level field encryption for third-party
  * credentials an admin sets via the Configuration engine (e.g. Razorpay
  * `keySecret`/`webhookSecret`, Cloudinary `apiSecret`, AWS
  * `secretAccessKey`, SMTP `smtpPassword`) rather than env vars.

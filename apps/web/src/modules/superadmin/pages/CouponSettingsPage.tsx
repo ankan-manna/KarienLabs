@@ -9,7 +9,7 @@ import { Switch } from '../../../components/common/Switch';
 import { toast } from '../../../utils/toast';
 
 /**
- * Prompt 19 Part 9/53 — the dedicated Super Admin / permitted Platform
+ * Part 9/53 — the dedicated Super Admin / permitted Platform
  * Admin "Coupon Settings" configuration page. Its OWN page (not a namespace
  * on the generic ConfigurationPage) for the same reason
  * MedicalCompliancePage is: writes must go through the validated

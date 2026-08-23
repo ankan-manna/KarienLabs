@@ -21,11 +21,11 @@ export const orderRouter = Router();
 
 orderRouter.use(requireAuth);
 
-// Prompt 2 — `POST /orders/checkout` removed; see order.controller.ts's
+// `POST /orders/checkout` removed; see order.controller.ts's
 // comment. Checkout now starts at `POST /payments/checkout-intent`.
 orderRouter.get('/me', validate(listQuerySchema, 'query'), listMyOrdersHandler);
 
-// Prompt 27 Part 30/31/39/42 — MUST be registered before the `/:id` catch-all
+// Part 30/31/39/42 — MUST be registered before the `/:id` catch-all
 // below (Express matches route patterns in registration order — the same
 // reason `/me` above precedes it), same rationale/precedent as
 // prescription.routes.ts's dedicated `/config` pair. Super Admin / permitted

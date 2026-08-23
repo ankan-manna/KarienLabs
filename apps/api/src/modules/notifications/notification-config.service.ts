@@ -12,7 +12,7 @@ import {
 
 export { DEFAULT_NOTIFICATION_CONFIG, validateNotificationConfig, type NotificationConfig };
 
-/** Prompt 20 Part 14/47 — every notification enable/disable decision reads from HERE. Uses the EXISTING Configuration engine (`notification` namespace) — not a second settings store. */
+/** Part 14/47 — every notification enable/disable decision reads from HERE. Uses the EXISTING Configuration engine (`notification` namespace) — not a second settings store. */
 export async function getNotificationConfig(): Promise<NotificationConfig> {
   const stored = (await getConfiguration('notification')) as Partial<NotificationConfig>;
   return { ...DEFAULT_NOTIFICATION_CONFIG, ...stored };

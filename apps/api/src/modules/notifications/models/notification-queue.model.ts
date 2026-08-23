@@ -16,7 +16,7 @@ const notificationQueueSchema = new Schema({
   templateKey: { type: String, required: true },
   recipient: { type: String, required: true }, // email address, phone number, or device token
   userId: { type: Schema.Types.ObjectId, ref: 'User', default: null },
-  // Prompt 20 Part 21/48 — carried through to NotificationHistory once sent,
+  // Part 21/48 — carried through to NotificationHistory once sent,
   // so admin history/customer notification-center views can filter/link
   // back to the originating order without joining through `data`.
   orderId: { type: Schema.Types.ObjectId, ref: 'Order', default: null, index: true },
@@ -29,7 +29,7 @@ const notificationQueueSchema = new Schema({
   },
   attempts: { type: Number, default: 0 },
   lastError: { type: String, default: '' },
-  // Prompt 20 Part 25/57 — e.g. `PAYMENT_SUCCESS:<paymentId>`. See the
+  // Part 25/57 — e.g. `PAYMENT_SUCCESS:<paymentId>`. See the
   // PARTIAL index below (not a plain `sparse` index — see that index's
   // comment for why) so most rows (no key given) are unaffected, but two
   // enqueue calls with the SAME key can never both create a queue doc — see

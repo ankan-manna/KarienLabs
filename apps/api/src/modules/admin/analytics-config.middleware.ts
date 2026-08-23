@@ -7,9 +7,9 @@ import { isAnalyticsDomainEnabled } from './analytics-config.service';
 import type { AnalyticsConfig } from './analytics-config.util';
 
 /**
- * Prompt 22 Part 2/3/38/46 — backend enforcement of the analytics
+ * Part 2/3/38/46 — backend enforcement of the analytics
  * Configuration toggles, same shape as requireCouponManagementEnabled
- * (Prompt 19) / requireNotificationEnabled (Prompt 20). Super Admin always
+ * ( 19) / requireNotificationEnabled ( 20). Super Admin always
  * retains access (otherwise there'd be no way to reach `/admin/analytics-config`
  * to turn a domain back on once disabled — that config route itself is
  * gated by the `reports:update` PERMISSION, not this middleware).

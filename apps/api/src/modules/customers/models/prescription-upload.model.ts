@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * Prompt 17 extends the pre-existing model (do not remove
+ * extends the pre-existing model (do not remove
  * userId/orderId/cloudinaryPublicId/status/verifiedBy/verifiedAt/
  * rejectionReason/notes — real historical data depends on them) with:
  *  - S3 storage fields (Part 10/11) for NEW uploads going forward;
@@ -22,11 +22,11 @@ const prescriptionUploadSchema = new Schema({
   orderId: { type: Schema.Types.ObjectId, ref: 'Order', default: null, index: true },
   orderItemIds: { type: [Schema.Types.ObjectId], default: [] },
 
-  // Legacy Cloudinary path (pre-Prompt-17 rows, and the automatic fallback
+  // Legacy Cloudinary path (pre--17 rows, and the automatic fallback
   // when S3 isn't configured — see prescription.service.ts).
   cloudinaryPublicId: { type: String, default: null },
 
-  // Prompt 17 — S3 StorageService path (Part 10/11/12).
+   // S3 StorageService path (Part 10/11/12).
   storageProvider: { type: String, enum: Object.values(STORAGE_PROVIDERS), default: null },
   bucket: { type: String, default: '' },
   objectKey: { type: String, default: '' },

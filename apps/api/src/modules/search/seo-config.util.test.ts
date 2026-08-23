@@ -48,7 +48,7 @@ test('rejects searchMinLength greater than searchMaxLength', () => {
   assert.throws(() => validateSeoConfig(next), /cannot be greater than/);
 });
 
-test('rejects an abusive searchMaxLength (Part 39 abuse protection)', () => {
+test('rejects an abusive searchMaxLength (abuse protection)', () => {
   const next: SeoConfig = { ...DEFAULT_SEO_CONFIG, searchMaxLength: 5000 };
   assert.throws(() => validateSeoConfig(next), /cannot exceed 200/);
 });

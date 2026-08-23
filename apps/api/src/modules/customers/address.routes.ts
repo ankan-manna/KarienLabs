@@ -29,7 +29,7 @@ addressRouter.patch('/:id', validate(updateAddressSchema), updateAddressHandler)
 addressRouter.patch('/:id/default', validate(z.object({ isDefault: z.boolean() })), setDefaultAddressHandler);
 addressRouter.delete('/:id', deleteAddressHandler);
 
-// Prompt 31 Part 2/23 — per-address mobile-OTP verification.
+ // Part 2/23 — per-address mobile-OTP verification.
 addressRouter.post('/:id/mobile-otp/request', otpRateLimiter, requestAddressMobileOtpHandler);
 addressRouter.post(
   '/:id/mobile-otp/confirm',

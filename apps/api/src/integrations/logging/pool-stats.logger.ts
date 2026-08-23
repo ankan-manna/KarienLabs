@@ -9,7 +9,7 @@ import { LOG_DIR } from '../../config/logger';
 import { redis } from '../../config/redis';
 
 /**
- * Prompt 18 Part 20 — the Node/MERN equivalent of the reference
+ * Part 20 — the Node/MERN equivalent of the reference
  * `PoolStatsLogger`. This codebase doesn't expose a raw JDBC-style
  * connection-pool (available/in-use/waiting counts) the way the Java
  * reference architecture did, so rather than inventing numbers that don't

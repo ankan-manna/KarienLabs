@@ -7,7 +7,7 @@ import { processOrderFulfillmentAutomation } from '../../modules/orders/order-fu
 import { QUEUE_NAMES, type OrderFulfillmentAutomationJobData } from '../queue';
 
 /**
- * Prompt 27 — consumes the per-order jobs the automation sweep enqueues
+ * consumes the per-order jobs the automation sweep enqueues
  * (fulfillment-automation-sweep.job.ts). Concurrency > 1 is safe here for
  * the SAME reason the existing invoice/shipment workers already run at
  * concurrency 4/2: each job only ever touches its own single order, and

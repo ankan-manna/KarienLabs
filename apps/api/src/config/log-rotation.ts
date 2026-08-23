@@ -4,7 +4,7 @@ import path from 'node:path';
 import SonicBoom from 'sonic-boom';
 
 /**
- * Prompt 18 Part 1/28/29 — wall-clock-aligned log rotation shared by every
+ * Part 1/28/29 — wall-clock-aligned log rotation shared by every
  * log category (application / third-party-api / pool-stats). Deliberately
  * built as pure date math + a thin SonicBoom wrapper rather than reaching
  * for a Java-style `TimeBasedTriggeringPolicy`: SonicBoom (pino's own

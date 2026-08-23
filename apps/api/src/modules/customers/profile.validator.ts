@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Prompt 21 Part 3 — `phone` is deliberately NOT in this schema. It is a
+ * Part 3 — `phone` is deliberately NOT in this schema. It is a
  * security-sensitive identifier and can only change via the OTP-verified
  * requestPhoneChangeSchema/confirmPhoneChangeSchema flow below (profile.service.ts's
  * requestPhoneChange/confirmPhoneChange) — never a blind PATCH.

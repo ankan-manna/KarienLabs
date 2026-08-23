@@ -1,16 +1,16 @@
 /**
- * Prompt 16 Part 21/22/24/25 — the refund calculation layer. Deliberately
- * NOT a rebuild of the pricing/tax engine (Prompts 4/13): every number this
+ * Part 21/22/24/25 — the refund calculation layer. Deliberately
+ * NOT a rebuild of the pricing/tax engine (s 4/13): every number this
  * function touches (unitPrice, gstRate, item.amount, order.totals.discount)
  * is read verbatim from the already-frozen Order document — nothing here
  * ever recomputes GST from a current tax config or re-prices a product.
  *
- * Coupon/discount allocation (Prompt 19 Part 30/34/35): orders created
- * since Prompt 19 store an EXACT per-item `couponDiscountAmount` (computed
+ * Coupon/discount allocation ( 19 Part 30/34/35): orders created
+ * since store an EXACT per-item `couponDiscountAmount` (computed
  * once at checkout, eligibility-aware — see coupon-discount-calculation.util.ts
  * — never re-derived from the live coupon document). When present, this
  * function uses that value directly, scaled to the returned quantity
- * fraction. For orders created BEFORE Prompt 19 (no stored allocation),
+ * fraction. For orders created BEFORE (no stored allocation),
  * this falls back to the original estimate: each item's share of the
  * order-level `totals.discount` proportional to that item's share of the
  * order's total GST-inclusive gross (`amount`) — preserved for backward
@@ -24,7 +24,7 @@ export interface RefundableOrderItem {
   unitPrice: number; // frozen, GST-exclusive
   gstRate: number;
   amount: number; // frozen GST-inclusive gross for the FULL line (quantity units), pre-discount
-  /** Prompt 19 — this line's exact coupon-discount share for the FULL originally-ordered quantity, when the order was created after this field existed. */
+  /** this line's exact coupon-discount share for the FULL originally-ordered quantity, when the order was created after this field existed. */
   couponDiscountAmount?: number;
 }
 
@@ -88,7 +88,7 @@ export function calculateReturnRefundAmount(input: RefundCalculationInput): Refu
 
     // This item's share of the discount, scaled to just the returned
     // quantity (Part 24). Prefers the exact stored per-item allocation
-    // (Part 30/34/35); falls back to the pre-Prompt-19 proportional
+    // (Part 30/34/35); falls back to the pre--19 proportional
     // estimate for orders that predate it (Part 36).
     const discountShare =
       orderItem.couponDiscountAmount != null

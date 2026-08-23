@@ -9,7 +9,7 @@ interface DateRange {
   [key: string]: unknown;
 }
 
-/** Prompt 22 Part 4 — mirrors analytics-date-range.util.ts's DATE_RANGE_PRESETS exactly; kept as a plain array (not imported from @medcommerce/shared) since this is a report-screen-only UI concern, not a shared domain constant every module needs. */
+/* 22 Part 4 — mirrors analytics-date-range.util.ts's DATE_RANGE_PRESETS exactly; kept as a plain array (not imported from @medcommerce/shared) since this is a report-screen-only UI concern, not a shared domain constant every module needs. */
 export const DATE_RANGE_PRESET_OPTIONS = [
   { value: 'today', label: 'Today' },
   { value: 'yesterday', label: 'Yesterday' },
@@ -164,7 +164,7 @@ export interface ReturnReportData {
 export const fetchReturnReport = (range: DateRange) =>
   fetchReport<ReturnReportData>('/admin/reports/returns', range);
 
-/** Prompt 22 Part 24 */
+/** Part 24 */
 export interface PrescriptionReportData {
   totalPrescriptions: number;
   statusBreakdown: Record<string, number>;
@@ -173,7 +173,7 @@ export interface PrescriptionReportData {
 export const fetchPrescriptionReport = (range: DateRange) =>
   fetchReport<PrescriptionReportData>('/admin/reports/prescriptions', range);
 
-/** Prompt 22 Part 19/20 */
+/** Part 19/20 */
 export interface ShipmentReportData {
   totalShipments: number;
   statusBreakdown: Record<string, number>;
@@ -184,7 +184,7 @@ export interface ShipmentReportData {
 export const fetchShipmentReport = (range: DateRange) =>
   fetchReport<ShipmentReportData>('/admin/reports/shipments', range);
 
-/** Prompt 22 Part 14 */
+/** Part 14 */
 export interface CategoryReportRow {
   categoryId: string | null;
   categoryName: string;
@@ -205,7 +205,7 @@ export async function exportReportPdf(path: string, range: DateRange): Promise<B
   return data as Blob;
 }
 
-/** Prompt 22 Part 2/9/46/53 — analytics per-domain Configuration, GET/PUT `/admin/reports/config`. */
+/** Part 2/9/46/53 — analytics per-domain Configuration, GET/PUT `/admin/reports/config`. */
 export interface AnalyticsConfig {
   analyticsEnabled: boolean;
   salesAnalyticsEnabled: boolean;

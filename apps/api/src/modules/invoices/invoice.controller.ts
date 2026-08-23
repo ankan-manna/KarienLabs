@@ -28,7 +28,7 @@ export const regenerateInvoiceHandler = asyncHandler(async (req: Request, res) =
   );
 });
 
-/** Prompt 15 Part 9 — the only path a customer gets an actual (short-lived, presigned when S3-backed) download link from; ownership is enforced by getInvoiceDownloadUrl -> getInvoiceByOrderId's customerId filter. */
+/** Part 9 — the only path a customer gets an actual (short-lived, presigned when S3-backed) download link from; ownership is enforced by getInvoiceDownloadUrl -> getInvoiceByOrderId's customerId filter. */
 export const getInvoiceDownloadUrlHandler = asyncHandler(async (req: Request, res) => {
   return sendSuccess(res, await invoiceService.getInvoiceDownloadUrl(req.params.orderId, req.user!.id));
 });

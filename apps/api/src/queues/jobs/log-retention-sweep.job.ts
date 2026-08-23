@@ -8,7 +8,7 @@ import { isPastRetention } from '../../integrations/s3/storage.util';
 import { recordAudit } from '../../modules/audit/audit.service';
 
 /**
- * Prompt 15 Part 14 — SAFETY NET only. The primary retention mechanism is
+ * Part 14 — SAFETY NET only. The primary retention mechanism is
  * the S3 bucket lifecycle rule configured by configureLogLifecycleRule()
  * (storage.service.ts), enforced by AWS itself. This sweep exists purely
  * for deployments where the IAM credentials lack

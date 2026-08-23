@@ -1,5 +1,5 @@
 /**
- * Actor/authentication-event vocabulary for Prompt 10 (OTP login, OTP password
+ * Actor/authentication-event vocabulary for (OTP login, OTP password
  * reset, admin Google OAuth, actor-context audit logging). Consumed by
  * `AuditLogModel` (apps/api/src/modules/audit/models/audit-log.model.ts) via
  * its new optional `actorType`/`authenticationMethod` fields — this does NOT
@@ -25,7 +25,7 @@ export const AUTH_ACTIONS = {
   SESSION_REVOKED: 'session_revoked',
   ACCOUNT_LOCKED: 'account_locked',
   ACCOUNT_UNLOCKED: 'account_unlocked',
-  // Prompt 31 — registration-OTP gate. REGISTRATION_STARTED fires when an
+  // registration-OTP gate. REGISTRATION_STARTED fires when an
   // account is created pending verification (OTP issuance itself is already
   // covered generically by OTP_GENERATED with metadata.purpose); the two
   // failure/blocked events below cover paths verifyOtp's own OTP_FAILED/

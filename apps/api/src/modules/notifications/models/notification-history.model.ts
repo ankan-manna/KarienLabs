@@ -7,12 +7,12 @@ const notificationHistorySchema = new Schema({
   templateKey: { type: String, required: true },
   recipient: { type: String, required: true },
   userId: { type: Schema.Types.ObjectId, ref: 'User', default: null, index: true },
-  // Prompt 20 Part 21/42/48 — carried over from NotificationQueue when set,
+  // Part 21/42/48 — carried over from NotificationQueue when set,
   // so admin history and the customer notification center can filter/link
   // by order without ever needing to read the (intentionally-dropped) `data` payload.
   orderId: { type: Schema.Types.ObjectId, ref: 'Order', default: null, index: true },
   status: { type: String, enum: Object.values(NOTIFICATION_STATUS), required: true },
-  // Prompt 20 Part 24/39 — cross-reference to the originating
+  // Part 24/39 — cross-reference to the originating
   // NotificationQueue document. On FAILURE the queue doc is deliberately
   // KEPT (not deleted — see notification.worker.ts), since it's the only
   // place the original template `data` still lives (History intentionally
@@ -20,15 +20,15 @@ const notificationHistorySchema = new Schema({
   // unnecessarily"). The admin retry endpoint uses this to find and
   // re-enqueue the same queue doc rather than needing the raw data again.
   queueId: { type: Schema.Types.ObjectId, ref: 'NotificationQueue', default: null },
-  // Prompt 20 Part 21/42 — a SAFE, human-readable failure reason only
+  // Part 21/42 — a SAFE, human-readable failure reason only
   // (never a raw provider error object, which could contain request/response
   // internals) — see notification.worker.ts's error handling.
   errorCode: { type: String, default: '' },
-  // Prompt 20 Part 25/43 — mirrors NotificationQueue's idempotencyKey so a
+  // Part 25/43 — mirrors NotificationQueue's idempotencyKey so a
   // duplicate-suppression check survives past the queue doc's deletion
   // (which happens immediately on successful send).
   idempotencyKey: { type: String, default: null },
-  // Prompt 20 Part 53/54 — the in-app "notification center" read/unread
+  // Part 53/54 — the in-app "notification center" read/unread
   // state. Only meaningful for `userId`-attributed rows; admin-wide/system
   // rows with no `userId` are never shown as "unread" to anyone.
   isRead: { type: Boolean, default: false },

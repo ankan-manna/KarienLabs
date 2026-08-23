@@ -79,9 +79,9 @@ function resolveConfigGate(
 }
 
 /**
- * Prompt 21 Part 30 — the customer's OWN email/SMS channel opt-out
+ * Part 30 — the customer's OWN email/SMS channel opt-out
  * (`CustomerProfile.notificationPreferences.emailEnabled`/`smsEnabled`,
- * defined since Prompt 21's profile model but never actually checked by
+ * defined since  21's profile model but never actually checked by
  * anything until now). Deliberately does NOT check the granular
  * `orderUpdates`/`paymentUpdates`/`deliveryUpdates` toggles — Part 30 is
  * explicit that customers must never be able to disable mandatory
@@ -130,7 +130,7 @@ function isDuplicateKeyError(error: unknown): boolean {
 }
 
 /**
- * Prompt 20 Part 1 — the CENTRAL notification entry point every business
+ * Part 1 — the CENTRAL notification entry point every business
  * module goes through; no module is allowed to call an email/SMS transport
  * directly. Writes the NotificationQueue document AND enqueues a BullMQ job
  * to dispatch it (apps/api/src/queues/workers/notification.worker.ts is the
@@ -191,7 +191,7 @@ export async function enqueueNotification(input: EnqueueNotificationInput): Prom
 }
 
 /**
- * Prompt 20 Part 12/29 — the previously-missing admin-notification helper.
+ * Part 12/29 — the previously-missing admin-notification helper.
  * Queries REAL admin/super_admin users (never a hardcoded fake address —
  * see the low-stock/expiry job fix this replaces) and enqueues one
  * notification per recipient, category ADMIN.
@@ -225,7 +225,7 @@ export async function notifyAdmins(input: {
 }
 
 /**
- * Prompt 20 Part 24/39/46 — admin-triggered retry for a FAILED notification.
+ * Part 24/39/46 — admin-triggered retry for a FAILED notification.
  * Operates on the ORIGINATING NotificationQueue document (via
  * NotificationHistory.queueId), never re-derives `data` from scratch —
  * NotificationHistory intentionally never stores it (Part 21). The queue
@@ -268,7 +268,7 @@ export async function retryFailedNotification(
 }
 
 /**
- * Prompt 20 Part 20 — admin template preview. Renders with SAFE, generic
+ * Part 20 — admin template preview. Renders with SAFE, generic
  * mock data ONLY (never real customer/order/payment/prescription data —
  * see notification-render.util.ts's buildMockDataForTemplate) so previewing
  * a template can never leak anything real.
@@ -285,7 +285,7 @@ export async function previewTemplate(templateId: string): Promise<{ subject: st
 }
 
 /**
- * Prompt 20 Part 31 — provider health for admin/operations. Configuration
+ * Part 31 — provider health for admin/operations. Configuration
  * presence only (never verifies live connectivity, which would mean
  * sending a real test message) — matches the existing `isS3Configured()`-
  * style pattern used elsewhere in this codebase. No secrets/credentials in

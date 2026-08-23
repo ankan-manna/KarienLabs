@@ -3,7 +3,7 @@ import ExcelJS from 'exceljs';
 import { ValidationError } from './app-error';
 
 /**
- * Prompt 24 Part 22/41 — content-sniffing, not just trusting the
+ * Part 22/41 — content-sniffing, not just trusting the
  * client-supplied `Content-Type`/extension (upload.middleware.ts's
  * `fileFilter` only checks the declared MIME type, which a client fully
  * controls). A real `.xlsx` file is a ZIP archive and always starts with
@@ -21,7 +21,7 @@ function assertLooksLikeXlsx(buffer: Buffer): void {
 }
 
 /**
- * Prompt 24 Part 41 — the classic "CSV/formula injection" defense: any
+ * Part 41 — the classic "CSV/formula injection" defense: any
  * string value that STARTS with one of these characters is interpreted by
  * Excel/Sheets/LibreOffice as a live formula the moment a human opens the
  * file, regardless of which system produced it. A value like

@@ -1,7 +1,7 @@
 import { Schema, model, type InferSchemaType } from 'mongoose';
 
 /**
- * Prompt 23 Part 33/34/42 — one row per product-search request, the source
+ * Part 33/34/42 — one row per product-search request, the source
  * of truth for "popular searches" and "zero-result searches" admin
  * analytics. Deliberately minimal: only the NORMALIZED query text (never the
  * raw customer-typed string, which could contain PII if a customer searches

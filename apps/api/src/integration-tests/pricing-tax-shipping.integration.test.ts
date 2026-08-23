@@ -8,16 +8,16 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 30 (product-level GST/shipping + checkout total calculation) —
+ * (product-level GST/shipping + checkout total calculation) —
  * real HTTP/DB-level tests against the actual Express app and a real
- * ephemeral MongoDB (same fixtures every prior prompt's integration tests
- * use). Covers what's new in this prompt specifically: independent
+ * ephemeral MongoDB (same fixtures every prior 's integration tests
+ * use). Covers what's new in this  specifically: independent
  * per-product GST, the new product-level shipping charge (additive to the
  * pre-existing zone engine), combo commercial-value shipping, tampering
  * rejection, historical (post-catalog-edit) invoice immutability, and
  * rounding consistency across checkout/order/invoice.
  */
-describe('Product-level GST/shipping + checkout totals (Prompt 5)', () => {
+describe('Product-level GST/shipping + checkout totals', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let extra: {
@@ -172,9 +172,9 @@ describe('Product-level GST/shipping + checkout totals (Prompt 5)', () => {
    * `generateInvoiceForOrder`/`regenerateInvoice` always attempt a REAL PDF
    * upload — this sandbox's `.env` happens to resolve `isS3Configured()` to
    * true (real S3 credentials are configured for the shared dev environment
-   * — see Prompt 4's report) but has no outbound network access, so an
+   * — see  4's report) but has no outbound network access, so an
    * unmocked call fails with ECONNREFUSED. Stubs the storage boundary via
-   * `s3Ops` (integrations/s3/s3-ops.ts, built in Prompt 4 specifically for
+   * `s3Ops` (integrations/s3/s3-ops.ts, built in specifically for
    * this) so these tests exercise the REAL tax/snapshot logic
    * (`calculateOrderTax`, immutability) while faking only the actual
    * network I/O.
@@ -290,7 +290,7 @@ describe('Product-level GST/shipping + checkout totals (Prompt 5)', () => {
 
   // ---------------------------------------------------------------------
   // Part 10/34 — combo uses its OWN configured commercial shipping charge,
-  // never summed from components (mirrors Prompt 1's price rule exactly).
+  // never summed from components (mirrors  1's price rule exactly).
   // ---------------------------------------------------------------------
   test('combo shipping charge uses the combo SKU\'s own configured value, not a sum of component shipping charges', async () => {
     const customer = await createCustomer(m.UserModel);
@@ -324,7 +324,7 @@ describe('Product-level GST/shipping + checkout totals (Prompt 5)', () => {
     const order = await m.OrderModel.findById(res.body.data.orderId).lean();
     assert.equal(order!.items[0].unitPrice, 250);
     assert.equal((order!.items[0] as unknown as { shippingAmount: number }).shippingAmount, 30);
-    // Part 3 (Prompt 3) — inventory still consumes COMPONENT stock, unchanged.
+    // Part 3 ( 3) — inventory still consumes COMPONENT stock, unchanged.
     const sku1After = await extra.BatchModel.findOne({ productId: sku1._id }).lean();
     assert.equal(sku1After!.quantityAvailable, 8, 'component stock consumed per-combo-unit, unrelated to the commercial/shipping values above');
   });

@@ -28,7 +28,7 @@ import { getDistributorEnquiryConfig } from './distributor-enquiry-config.servic
 import { DistributorEnquiryModel } from './models/distributor-enquiry.model';
 
 /**
- * Prompt 32 — a business ENQUIRY/LEAD only. Nothing in this file may ever:
+ * a business ENQUIRY/LEAD only. Nothing in this file may ever:
  *   - create an Order, Payment, or Razorpay order
  *   - deduct, reserve, or otherwise touch Inventory/Batch stock
  *   - create a Shiprocket shipment, label, or Invoice

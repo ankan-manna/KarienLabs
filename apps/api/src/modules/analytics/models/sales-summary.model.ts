@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
  * Materialized rollup, not computed per-request — a scheduled worker job aggregates
  * Orders into this collection (daily and monthly share the same shape, distinguished
  * by `period`, avoiding two near-identical collections). Report generation logic
- * itself lands with the Order Analytics domain in Prompt 7.
+ * itself lands with the Order Analytics domain in  7.
  */
 const salesSummarySchema = new Schema({
   period: { type: String, enum: ['daily', 'monthly'], required: true },

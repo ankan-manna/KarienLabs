@@ -180,7 +180,7 @@ export function DistributorEnquiryDetailDrawer({
             )}
           </div>
 
-          {/* Part 10 — connects this enquiry to Prompt 1's role-management
+          {/* Part 10 — connects this enquiry to  1's role-management
               work. Reuses the SAME PATCH /admin/rbac/users/:id endpoint and
               `users:update` permission AdminUsersPage's "Change Role"
               control uses — never auto-assigns the role, only offers a

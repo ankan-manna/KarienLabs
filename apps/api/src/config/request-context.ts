@@ -5,7 +5,7 @@ import { ACTOR_TYPES } from '@medcommerce/shared';
 import { env } from './env';
 
 /**
- * Prompt 18 Part 4/5/30/31/32 — the single mechanism that lets a `requestId`
+ * Part 4/5/30/31/32 — the single mechanism that lets a `requestId`
  * (and actor/tenant/job identity) reach EVERY log line emitted while
  * handling a request or background job, without threading a `requestId`
  * parameter through every service function signature across the whole
@@ -63,7 +63,7 @@ export function updateRequestContext(patch: Partial<RequestLogContext>): void {
 }
 
 /**
- * Prompt 18 Part 30/31/32 — the one helper every BullMQ worker processor
+ * Part 30/31/32 — the one helper every BullMQ worker processor
  * (invoice/notification/shipment/maintenance) wraps its handler in, so
  * every log line a background job produces — including everything it
  * calls transitively (payment/inventory/shipment/audit/StorageService) —

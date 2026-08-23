@@ -12,14 +12,14 @@ const orderSchema = new Schema({
   orderNumber: { type: String, required: true, unique: true },
   customerId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
 
-  // Prompt 11 — set once at checkout (see order.service.ts's checkout()) and
+  // set once at checkout (see order.service.ts's checkout()) and
   // NEVER re-derived later from the fulfilling warehouse's current
   // sellerId — a warehouse's ownership can change (transferWarehouseSeller)
   // without rewriting the seller attribution of orders already placed
-  // against it. `default: null` because pre-Prompt-11 orders (and orders
+  // against it. `default: null` because pre--11 orders (and orders
   // placed before any Seller exists / while seller resolution is ambiguous
   // across multiple sellers with no configured default) have no seller to
-  // attribute — see docs/DEVELOPMENT_TASKS.md CAT-01 and this prompt's Part
+  // attribute — see docs/DEVELOPMENT_TASKS.md CAT-01 and this 's Part
   // 18 migration strategy. One seller per order (not a marketplace
   // multi-seller split) per Part 7.
   sellerId: { type: Schema.Types.ObjectId, ref: 'Seller', default: null, index: true },
@@ -36,24 +36,24 @@ const orderSchema = new Schema({
         unitPrice: { type: Number, required: true, min: 0 },
         gstRate: { type: Number, required: true, min: 0 },
         amount: { type: Number, required: true, min: 0 },
-        // Prompt 19 Part 30/34/35 — this line's exact share of the order's
+        // Part 30/34/35 — this line's exact share of the order's
         // coupon discount, computed once at checkout (see
         // coupon-discount-calculation.util.ts) and frozen here. Refund/return
         // math (return-refund-calculation.util.ts) reads THIS instead of
         // re-deriving a proportional share from order.totals.discount, so a
         // product/category-RESTRICTED coupon's discount is correctly
         // refunded only against the item(s) it actually applied to.
-        // `default: 0` — every pre-Prompt-19 order line has no allocation.
+        // `default: 0` — every pre--19 order line has no allocation.
         couponDiscountAmount: { type: Number, default: 0, min: 0 },
-        // Prompt 30 — this line's frozen product-level shipping contribution
+        // this line's frozen product-level shipping contribution
         // (product.shippingCharge * quantity at checkout time — see
         // order.service.ts's buildCheckoutDraft), summed into
         // `totals.shipping` alongside the pre-existing zone/weight-based
-        // ShippingRule charge. `default: 0` — every pre-Prompt-30 order line
+        // ShippingRule charge. `default: 0` — every pre-existing order line
         // (and any product with no configured shippingCharge) contributes
         // nothing extra, so historical orders are unaffected.
         shippingAmount: { type: Number, default: 0, min: 0 },
-        // Prompt 12 (Bundle/combo-pack) — present ONLY when this line is a
+        // (Bundle/combo-pack) — present ONLY when this line is a
         // bundle purchase (product.isBundle was true at checkout);
         // `undefined`/omitted entirely for every plain-product line, so
         // existing non-bundle orders and this snapshot shape are unaffected.
@@ -133,7 +133,7 @@ const orderSchema = new Schema({
   },
 
   couponCode: { type: String, default: null },
-  // Prompt 19 Part 31 — the authoritative, immutable coupon snapshot. The
+  // Part 31 — the authoritative, immutable coupon snapshot. The
   // live Coupon document may later be disabled/edited/archived; historical
   // orders must remain correct regardless (Part 31/36), so nothing that
   // reads an order's discount (invoice, refund/return, this order's own
@@ -161,10 +161,10 @@ const orderSchema = new Schema({
   prescriptionVerified: { type: Boolean, default: false },
   paymentId: { type: Schema.Types.ObjectId, ref: 'Payment', default: null },
 
-  // Prompt 16 Part 26/28 — a Return resolved as REPLACEMENT spawns a second,
+  // Part 26/28 — a Return resolved as REPLACEMENT spawns a second,
   // fully traceable Order rather than mutating the original order's items
   // (Part 26: "must NOT simply modify the original order item quantity").
-  // `default: null` on both — every order created before this prompt, and
+  // `default: null` on both — every order created before this , and
   // every ordinary (non-replacement) order going forward, leaves these unset.
   originalOrderId: { type: Schema.Types.ObjectId, ref: 'Order', default: null, index: true },
   returnId: { type: Schema.Types.ObjectId, ref: 'Return', default: null },
@@ -173,7 +173,7 @@ const orderSchema = new Schema({
 
 orderSchema.index({ customerId: 1, createdAt: -1 });
 orderSchema.index({ status: 1, createdAt: -1 });
-// Prompt 2 (prepaid-only redesign) — at most ONE order may ever be created
+// (prepaid-only redesign) — at most ONE order may ever be created
 // per Payment, enforced at the database level. Order finalization
 // (order.service.ts's finalizeOrderFromDraft) relies on this to safely
 // detect/resolve a concurrent frontend-verify + webhook race: the loser's

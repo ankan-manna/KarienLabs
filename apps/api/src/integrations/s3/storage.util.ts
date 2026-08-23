@@ -40,7 +40,7 @@ export function buildDocumentObjectKey(params: {
 }
 
 /**
- * Prompt 17 Part 11 — prescriptions get their OWN key shape
+ * Part 11 — prescriptions get their OWN key shape
  * (`prescriptions/{customerId}/{year}/{month}/{prescriptionId}/{file}`)
  * rather than reusing buildDocumentObjectKey's `{prefix}/{sellerId}/...`
  * shape above: a prescription belongs to a CUSTOMER, not a seller (a
@@ -101,7 +101,7 @@ export function assertValidPrescriptionFile(input: {
 }
 
 /**
- * Prompt 18 Part 9/10/16 — deterministic, per-category, per-instance S3 key
+ * Part 9/10/16 — deterministic, per-category, per-instance S3 key
  * for a compressed rotated log archive:
  *   logs/{category}/{YYYY}/{MM}/{DD}/{instanceId}/{category}.{bucketLabel}.log.gz
  *
@@ -116,7 +116,7 @@ export function assertValidPrescriptionFile(input: {
  * the SAME key for the SAME bucket on RETRY (Part 16 idempotency holds),
  * but two DIFFERENT replicas never collide on the same key for the same
  * 6-hour window (which a purely category+bucketLabel key — as literally
- * shown in the prompt's own illustrative example — would NOT guarantee).
+ * shown in the 's own illustrative example — would NOT guarantee).
  */
 export function buildLogObjectKey(params: { category: string; bucketLabel: string; instanceId?: string }): string {
   const [year, month, day] = params.bucketLabel.split('-');

@@ -1,9 +1,9 @@
 import { UnprocessableEntityError } from '../../utils/app-error';
 
 /**
- * Prompt 23 Part 16/17/19/36/46/49 — pure, DB/Redis-free config shape +
- * validation, same triple-file split as analytics-config.util.ts (Prompt 22)
- * / coupon-config.util.ts (Prompt 19): configuration.service.ts transitively
+ * Part 16/17/19/36/46/49 — pure, DB/Redis-free config shape +
+ * validation, same triple-file split as analytics-config.util.ts ( 22)
+ * / coupon-config.util.ts ( 19): configuration.service.ts transitively
  * imports the Redis-backed maintenance-mode cache, and importing that as a
  * side effect of a plain unit test opens a real Redis connection.
  *

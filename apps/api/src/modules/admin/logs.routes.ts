@@ -19,7 +19,7 @@ export const adminRouter = Router();
 adminRouter.use(requireAuth, authorize(permission(RESOURCES.REPORTS, ACTIONS.READ)));
 
 adminRouter.get('/dashboard', requireAnalyticsEnabled(), getDashboardStatsHandler);
-// Prompt 22 Part 37/38 — platform-operations internals (DB/queue health,
+// Part 37/38 — platform-operations internals (DB/queue health,
 // memory, security alerts) are materially more sensitive than an ordinary
 // sales/order report, so beyond the shared `reports:read` permission gate
 // above, this ALSO requires the dedicated `platformHealthAnalyticsEnabled`

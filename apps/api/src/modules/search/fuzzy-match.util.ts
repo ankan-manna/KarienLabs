@@ -1,5 +1,5 @@
 /**
- * Prompt 23 Part 5 — lightweight, bounded typo tolerance. Deliberately NOT a
+ * Part 5 — lightweight, bounded typo tolerance. Deliberately NOT a
  * full search-engine integration (Elasticsearch/Algolia/etc.) — per Part 5's
  * own instruction, "do not implement an unnecessarily complex search engine
  * if MongoDB search/indexing is sufficient for the current project scale."

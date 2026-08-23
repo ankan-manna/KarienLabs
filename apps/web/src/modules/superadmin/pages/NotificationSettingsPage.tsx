@@ -15,7 +15,7 @@ import { Switch } from '../../../components/common/Switch';
 import { toast } from '../../../utils/toast';
 
 /**
- * Prompt 20 Part 9/15/31/53 — the dedicated Super Admin / permitted
+ * Part 9/15/31/53 — the dedicated Super Admin / permitted
  * Platform Admin "Notification Settings" page, same reasoning as Coupon
  * Settings / Medical Compliance: writes must go through the validated
  * `/notifications/config` endpoint, not the generic unvalidated

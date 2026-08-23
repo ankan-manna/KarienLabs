@@ -21,7 +21,7 @@ export const createWarehouseSchema = z.object({
     .optional(),
   status: z.enum(['operational', 'maintenance', 'closed']).optional(),
   // Required on create (CAT-01) — a warehouse must belong to a Seller from the
-  // moment it's created going forward. Existing pre-Prompt-11 warehouses
+  // moment it's created going forward. Existing pre--11 warehouses
   // without one are backfilled by scripts/migrate-seller-backfill.ts, not by
   // relaxing this requirement.
   sellerId: objectIdSchema,
@@ -34,7 +34,7 @@ export const createWarehouseSchema = z.object({
 // `sellerId` is intentionally EXCLUDED from the update schema — changing a
 // warehouse's seller must go through the dedicated, audited transfer
 // endpoint (PATCH /warehouses/:id/transfer-seller) so ownership never
-// changes silently via a routine field edit (Prompt 11 Part 4).
+// changes silently via a routine field edit ( 11 Part 4).
 export const updateWarehouseSchema = createWarehouseSchema.omit({ sellerId: true }).partial();
 
 export const transferWarehouseSellerSchema = z.object({

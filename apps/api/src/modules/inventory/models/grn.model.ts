@@ -5,7 +5,7 @@ import { auditPlugin } from '../../../plugins/audit.plugin';
 /**
  * Goods Receipt Note — confirms physical receipt against a PurchaseOrder.
  * On completion this is what triggers Batch creation + a `receipt` StockMovement
- * entry per line item (business logic lands with the Inventory domain in Prompt 7).
+ * entry per line item (business logic lands with the Inventory domain in  7).
  */
 const grnSchema = new Schema({
   grnNumber: { type: String, required: true, unique: true },

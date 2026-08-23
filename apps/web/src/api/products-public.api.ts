@@ -14,7 +14,7 @@ export interface PublicProduct {
   mrp: number;
   gstRate: number;
   images: { url: string; isPrimary: boolean }[];
-  // Prompt (Product Image Management) — server-derived from `images` (Part
+  // (Product Image Management) — server-derived from `images` (Part
   // 5/22), always present; `mainImage` is `null` only when the product has
   // no images at all.
   mainImage: { url: string; publicId: string } | null;
@@ -65,7 +65,7 @@ export interface PublicProductDetail extends PublicProduct {
   manufacturer: { _id: string; name: string; slug: string } | null;
   faq?: { question: string; answer: string }[];
   /**
-   * Prompt 23 Part 25/46/47 — server-computed schema.org Product JSON-LD,
+   * Part 25/46/47 — server-computed schema.org Product JSON-LD,
    * ALREADY correct against the real `inStock`/`basePrice` this same
    * response returns (never re-derived client-side — a client-side rebuild
    * previously hardcoded `availability: InStock` regardless of actual

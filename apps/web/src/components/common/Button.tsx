@@ -30,12 +30,20 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   // filled color to preserve visual hierarchy against `primary`/`gradient`.
   outline:
     'border border-brand-500 text-brand-600 hover:bg-brand-50 dark:border-brand-500 dark:text-brand-400 dark:hover:bg-brand-500/10',
-  // KarienLabs storefront design system — coral is the CTA accent
-  // ("primarily used for important CTAs, highlights and selected
-  // interactive states", spec Part 1). Admin never references this variant
-  // string, so it has no effect on the Admin Control Panel's theme.
-  coral: 'bg-coral text-white hover:brightness-95 focus-visible:ring-coral',
-  teal: 'bg-deep-teal text-white hover:bg-healthcare-teal focus-visible:ring-healthcare-teal',
+  // KarienLabs storefront design system — `coral` is the single most
+  // prominent CTA per surface (Add to Cart, Shop Now); `teal` is the
+  // secondary/less-prominent action alongside it (Buy Now, Bulk Purchase).
+  // Names kept as-is (not renamed to `primary`/`accent`) so no call site
+  // needed to change — only the underlying colors moved to the new
+  // orange/cream palette. Admin never references these variants.
+  coral: 'bg-primary text-white hover:brightness-95 focus-visible:ring-primary',
+  // `ink` is deliberately static across themes (it also serves as the
+  // navbar/footer chrome color), but that means a plain `bg-ink` button
+  // barely differs from the KARIEN DARK card surface it usually sits on
+  // (~1.1:1 contrast, confirmed via computed-style luminance check) —
+  // the `dark:border` gives it a defined edge so it still reads as a
+  // distinct, clickable secondary action against a dark card.
+  teal: 'bg-ink text-white hover:bg-accent focus-visible:ring-accent dark:border dark:border-night-border',
 };
 
 const SIZE_CLASSES: Record<Size, string> = {

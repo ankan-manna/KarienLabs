@@ -15,7 +15,7 @@ export function ProductCard({ product }: { product: PublicProduct }) {
   const { add } = useCartMutations();
   const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
-  // Prompt (Product Image Management) Part 7/8/29 — the card ALWAYS shows
+  // (Product Image Management) Part 7/8/29 — the card ALWAYS shows
   // the product's configured main image, never a random sub-image, and only
   // ever requests a small transformed thumbnail (never the full-res
   // original) — `mainImage` falls back to the legacy `images[].isPrimary`
@@ -78,7 +78,7 @@ export function ProductCard({ product }: { product: PublicProduct }) {
           )}
           <Link
             to={`/products/${product.slug}`}
-            className="line-clamp-2 text-sm font-medium text-charcoal-teal hover:text-healthcare-teal dark:text-night-text"
+            className="line-clamp-2 text-sm font-medium text-ink hover:text-accent dark:text-night-text"
           >
             {product.name}
           </Link>
@@ -86,11 +86,11 @@ export function ProductCard({ product }: { product: PublicProduct }) {
             <RatingStars value={product.ratingAvg ?? 0} count={product.ratingCount} size="sm" />
           )}
           <div className="mt-1 flex items-baseline gap-2">
-            <span className="text-base font-semibold text-charcoal-teal dark:text-night-text">
+            <span className="text-base font-semibold text-ink dark:text-night-text">
               {formatCurrency(product.basePrice)}
             </span>
             {discountPct > 0 && (
-              <span className="text-xs text-slate-teal line-through">
+              <span className="text-xs text-gray-500 line-through">
                 {formatCurrency(product.mrp)}
               </span>
             )}

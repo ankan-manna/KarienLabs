@@ -1,7 +1,7 @@
 import { getConfiguration } from '../platform/configuration.service';
 
 /**
- * Prompt (Product Image Management) Part 4 — "Maximum Sub Images must be
+ *  (Product Image Management) Part 4 — "Maximum Sub Images must be
  * configurable by Super Admin... must not be hardcoded... enforced by the
  * BACKEND." Stored/edited through the EXISTING Configuration Engine
  * (superadmin ConfigurationPage -> PUT /platform/configuration/catalog),

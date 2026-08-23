@@ -14,7 +14,7 @@ const customerAddressSchema = new Schema({
   country: { type: String, default: 'India' },
   phone: { type: String, required: true },
   isDefault: { type: Boolean, default: false },
-  // ---- Prompt 31 — address verification state ----
+  // ---- — address verification state ----
   // Both default false on every new address (never auto-true even when
   // `mobileVerificationEnabled`/`pincodeValidationEnabled` are off — see
   // address.service.ts, which only READS these gated by config; a config
@@ -29,7 +29,7 @@ const customerAddressSchema = new Schema({
 customerAddressSchema.index({ userId: 1, isDefault: 1 });
 
 /**
- * Prompt 31 Part 24 — enforced HERE (query middleware), not only in
+ * Part 24 — enforced HERE (query middleware), not only in
  * address.service.ts, so the invariant holds regardless of entry point
  * (mirrors notification-template.model.ts's identical
  * pre('findOneAndUpdate') pattern): editing `phone` always clears

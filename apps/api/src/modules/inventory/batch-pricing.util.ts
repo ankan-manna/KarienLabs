@@ -1,5 +1,5 @@
 /**
- * Prompt 12 (CAT-04) batch MRP resolution:
+ * (CAT-04) batch MRP resolution:
  *
  *   Batch MRP exists (non-null)  -> use Batch MRP
  *   Batch MRP absent (null)      -> use Product MRP

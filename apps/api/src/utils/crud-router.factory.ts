@@ -8,6 +8,7 @@ import { requireAuth } from '../middlewares/auth.middleware';
 import { authorize } from '../middlewares/rbac.middleware';
 import { uploadExcelFile } from '../middlewares/upload.middleware';
 import { recordAudit } from '../modules/audit/audit.service';
+import { escapeRegexLiteral } from '../modules/search/search-normalize.util';
 import type { BaseRepository } from '../repositories/base.repository';
 
 import { sendCreated, sendPaginated, sendSuccess } from './api-response';
@@ -39,7 +40,7 @@ interface CrudRouterOptions<T> {
   /** Sheet name for the excel export; defaults to `label`. */
   excelSheetName?: string;
   /**
-   * Prompt 20 Part 44 — opt-in audit trail for create/update/delete. Purely
+   * Part 44 — opt-in audit trail for create/update/delete. Purely
    * additive (existing consumers that don't pass this are completely
    * unaffected) — added because notification templates had ZERO audit
    * trail despite being a security/compliance-relevant configuration
@@ -98,6 +99,26 @@ export function createCrudRouter<T>(opts: CrudRouterOptions<T>): Router {
     asyncHandler(async (req, res) => {
       const query = req.query as unknown as ListQuery;
       const filter: Record<string, unknown> = { ...query.filter };
+
+      if (query.search) {
+        const safeSearch = escapeRegexLiteral(query.search.trim());
+        const searchRegex = new RegExp(safeSearch, 'i');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const schemaPaths = (repository as any).model?.schema?.paths;
+        if (schemaPaths) {
+          const candidates = ['name', 'title', 'code', 'sku', 'email', 'phone', 'gstin', 'barcode'];
+          const searchConditions: Record<string, unknown>[] = [];
+          for (const field of candidates) {
+            if (schemaPaths[field]) {
+              searchConditions.push({ [field]: searchRegex });
+            }
+          }
+          if (searchConditions.length > 0) {
+            filter.$or = searchConditions;
+          }
+        }
+      }
+
       const result = await repository.paginate(filter, {
         page: query.page,
         limit: query.limit,

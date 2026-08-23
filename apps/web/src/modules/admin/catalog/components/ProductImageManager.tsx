@@ -31,13 +31,13 @@ interface ProductImageManagerProps {
 }
 
 const UPLOAD_FOLDER = 'products';
-// Part 32 — exact wording the prompt specifies for a failed Cloudinary upload.
+// Part 32 — exact wording the  specifies for a failed Cloudinary upload.
 const UPLOAD_FAILED_MESSAGE = 'Product image upload failed. Please try again.';
 
 type ImageRef = { url: string; publicId: string };
 
 /**
- * Prompt (Product Image Management) Part 3/4/18 — one Main Image slot +
+ *  (Product Image Management) Part 3/4/18 — one Main Image slot +
  * up to `maxSubImages` (Super-Admin-configured, Part 4) Additional Images,
  * visually separated per Part 3's explicit requirement. Reuses the existing
  * signed direct-to-Cloudinary upload flow (`uploadImageDirect`, same one

@@ -1,5 +1,5 @@
 /**
- * Prompt 31 — `login()` now blocks CUSTOMER accounts with `emailVerified:
+ * `login()` now blocks CUSTOMER accounts with `emailVerified:
  * false` when `authentication.registrationOtpEnabled` is on (default ON —
  * see auth-config.service.ts). Every customer account created before this
  * feature shipped has `emailVerified: false` (the schema's own default; no

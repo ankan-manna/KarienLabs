@@ -30,7 +30,7 @@ import { RefundModel } from '../payments/models/refund.model';
 import { dateRangeMatchStage, type ResolvedDateRange } from './analytics-date-range.util';
 
 /**
- * Prompt 22 Part 4/5/43 — every report below now takes an already-resolved,
+ * Part 4/5/43 — every report below now takes an already-resolved,
  * always-bounded UTC range (see analytics-date-range.util.ts) instead of the
  * old ad-hoc `{from?, to?}` optional-string shape, which allowed a fully
  * unbounded ("all time") query whenever neither param was supplied and had
@@ -444,7 +444,7 @@ export async function refundReport(range: DateRange) {
 
 /**
  * Date-ranged return-request counts, breakdown by RETURN_STATUS, the top 10
- * free-text return reasons, and — Prompt 22 Part 23 — a resolutionType
+ * free-text return reasons, and — Part 23 — a resolutionType
  * breakdown (refund vs. replacement) so replacement analytics doesn't need
  * a second, duplicate Return query: replacement orders ARE returns with
  * `resolutionType: 'replacement'`, there's no separate Replacement model.
@@ -487,7 +487,7 @@ export async function returnReport(range: DateRange) {
   };
 }
 
-/** Prompt 22 Part 24 — date-ranged prescription counts, breakdown by PRESCRIPTION_STATUS, and average admin turnaround time (upload -> verified/rejected) in hours. Never exposes the file itself (bucket/objectKey/cloudinaryPublicId) — counts and timestamps only. */
+/** Part 24 — date-ranged prescription counts, breakdown by PRESCRIPTION_STATUS, and average admin turnaround time (upload -> verified/rejected) in hours. Never exposes the file itself (bucket/objectKey/cloudinaryPublicId) — counts and timestamps only. */
 export async function prescriptionReport(range: DateRange) {
   const [byStatus, totals, turnaround] = await Promise.all([
     PrescriptionUploadModel.aggregate([
@@ -526,7 +526,7 @@ export async function prescriptionReport(range: DateRange) {
   };
 }
 
-/** Prompt 22 Part 19/20 — date-ranged shipment counts, breakdown by SHIPMENT_STATUS, real average delivery duration (dispatchedAt -> deliveredAt, hours), and on-time-delivery rate against `estimatedDeliveryDate` — all derived from timestamps this codebase already records, no fabricated metric. */
+/** Part 19/20 — date-ranged shipment counts, breakdown by SHIPMENT_STATUS, real average delivery duration (dispatchedAt -> deliveredAt, hours), and on-time-delivery rate against `estimatedDeliveryDate` — all derived from timestamps this codebase already records, no fabricated metric. */
 export async function shipmentReport(range: DateRange) {
   const [byStatus, totals, deliveryStats] = await Promise.all([
     ShipmentModel.aggregate([
@@ -587,7 +587,7 @@ export async function shipmentReport(range: DateRange) {
   };
 }
 
-/** Prompt 22 Part 14 — date-ranged category performance: revenue, units sold, and order count per category, derived from Order line items (never a second source of truth for catalog data — categoryName/Id come from the live `categories` collection via $lookup, sales figures from Order). */
+/** Part 14 — date-ranged category performance: revenue, units sold, and order count per category, derived from Order line items (never a second source of truth for catalog data — categoryName/Id come from the live `categories` collection via $lookup, sales figures from Order). */
 export async function categoryReport(range: DateRange) {
   const rows = await OrderModel.aggregate([
     { $match: { paymentStatus: PAYMENT_STATUS.CAPTURED, ...dateMatch(range) } },
@@ -620,7 +620,7 @@ export async function categoryReport(range: DateRange) {
 }
 
 /**
- * Prompt 34 Part 22/40 — date-ranged Distributor/Bulk Purchase enquiry
+ * Part 22/40 — date-ranged Distributor/Bulk Purchase enquiry
  * report: status breakdown, conversion status (Part 40 — "conversion
  * status" is read from the enquiry's OWN `status` field, e.g. `converted`,
  * never inferred from Order data; this module never joins to Orders,

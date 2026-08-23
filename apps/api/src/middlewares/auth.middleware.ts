@@ -21,7 +21,7 @@ declare module 'express-serve-static-core' {
 /**
  * Verifies the Bearer access token and attaches `{ id, role }` to `req.user`.
  *
- * Prompt 24 Part 63 — also re-checks the account's CURRENT active/suspended
+ * Part 63 — also re-checks the account's CURRENT active/suspended
  * state (Redis-cached, 60s TTL, same pattern as the role-permission cache
  * in rbac.middleware.ts) rather than trusting the JWT's embedded role for
  * its full unexpired lifetime unconditionally. Closes the window where a
@@ -47,7 +47,7 @@ export async function requireAuth(req: Request, _res: Response, next: NextFuncti
     }
 
     req.user = { id: payload.sub, role: payload.role };
-    // Prompt 18 Part 32 — fills in the SAME request-log-context object the
+    // Part 32 — fills in the SAME request-log-context object the
     // requestId is already sitting on, so every log line from here on
     // (controller/service/payment/inventory/etc.) carries actor identity
     // too, without any of those call sites needing to accept/pass it.

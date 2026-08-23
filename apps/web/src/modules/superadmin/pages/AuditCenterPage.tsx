@@ -47,7 +47,7 @@ function actorLabel(entry: AuditLogEntry): string {
   const { actorId } = entry;
   if (!actorId) {
     // SYSTEM/WEBHOOK/BACKGROUND_JOB rows carry no User doc at all — fall back
-    // to the actor-context type (Prompt 10 Part 4/5) when present.
+    // to the actor-context type ( 10 Part 4/5) when present.
     return entry.actorType ? entry.actorType.replace(/_/g, ' ') : 'System';
   }
   if (typeof actorId === 'string') return entry.actorName || actorId;

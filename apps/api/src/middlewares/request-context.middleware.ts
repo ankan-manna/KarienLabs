@@ -4,7 +4,7 @@ import { env } from '../config/env';
 import { runWithRequestContext } from '../config/request-context';
 
 /**
- * Prompt 18 Part 4/5/6 — mounted immediately after `requestId` (app.ts), so
+ * Part 4/5/6 — mounted immediately after `requestId` (app.ts), so
  * `req.requestId` is already assigned. Wraps the ENTIRE remainder of the
  * middleware/route chain in one AsyncLocalStorage scope; `requireAuth`
  * later fills in `actorId`/`actorType`/`role` on this SAME context object

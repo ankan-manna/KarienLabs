@@ -8,7 +8,7 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 2 (prepaid-only redesign) — real HTTP-level tests against the
+ * (prepaid-only redesign) — real HTTP-level tests against the
  * actual Express app + a real, ephemeral MongoDB + Redis (same pattern as
  * customer-ownership.integration.test.ts / webhook-security.integration.test.ts).
  *
@@ -25,7 +25,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * (same technique already used by webhook-security.integration.test.ts —
  * no Razorpay network call is needed to verify a signature, only to
  * CREATE an order or FETCH a payment, and the amount cross-check added in
- * this prompt is deliberately resilient to that fetch being unreachable —
+ * this  is deliberately resilient to that fetch being unreachable —
  * see payment.service.ts::verifyAndCapturePayment). The full flow
  * INCLUDING real Razorpay order creation was additionally verified live in
  * a browser against real Razorpay TEST-MODE credentials — see the final
@@ -380,7 +380,7 @@ describe('Prepaid-only checkout/payment/order lifecycle', () => {
   });
 
   // ---------------------------------------------------------------------
-  // 8/9. Combo checkout — uses the Prompt 1 canonical combo price, and its
+  // 8/9. Combo checkout — uses the canonical combo price, and its
   // stock is validated via component availability.
   // ---------------------------------------------------------------------
   test('combo checkout charges the independently-set combo price, not the sum of component prices', async () => {
@@ -435,7 +435,7 @@ describe('Prepaid-only checkout/payment/order lifecycle', () => {
     const address = await seedAddress(customer._id);
     await addToCart(String(customer._id), comboProduct._id, 1);
 
-    // Prompt 3 Part 22/23 — a checkout-intent for stock that's ALREADY known
+    // Part 22/23 — a checkout-intent for stock that's ALREADY known
     // to be insufficient is now rejected here, before any Razorpay order (and
     // therefore any charge) is ever created — strictly better than the old
     // behavior of taking the payment and only discovering the shortfall at

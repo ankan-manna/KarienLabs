@@ -10,7 +10,7 @@ import { DEFAULT_SEO_CONFIG, SEO_DOMAIN_KEYS, validateSeoConfig, type SeoConfig 
 export { DEFAULT_SEO_CONFIG, validateSeoConfig, type SeoConfig };
 
 /**
- * Prompt 23 Part 16/17/36/46/49 — every SEO/AEO/GEO/search endpoint reads
+ * Part 16/17/36/46/49 — every SEO/AEO/GEO/search endpoint reads
  * its enablement/tunables from HERE, never hardcoded at the call site. Uses
  * the EXISTING Configuration engine (`seo` namespace), same as
  * analytics/coupon/notification configuration.

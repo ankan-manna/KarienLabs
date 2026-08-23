@@ -59,7 +59,7 @@ import { uploadsRouter } from '../modules/uploads/uploads.routes';
 
 export const v1Router = Router();
 
-// Prompt 24 Part 2 — a broader-than-global per-actor ceiling on the WHOLE
+// Part 2 — a broader-than-global per-actor ceiling on the WHOLE
 // `/admin/*` surface, layered ahead of every admin sub-router mounted
 // below (Express applies path-prefix middleware in registration order,
 // so this runs for `/admin/rbac`, `/admin/reports`, `/admin/seo`, the
@@ -80,7 +80,7 @@ v1Router.use('/manufacturers', manufacturerRouter);
 v1Router.use('/products', productRouter);
 v1Router.use('/bundles', bundleRouter);
 
-// Sellers (Prompt 11) — mounted alongside Inventory since Warehouse is the
+// Sellers ( 11) — mounted alongside Inventory since Warehouse is the
 // primary thing that references it, but Seller is its own top-level entity
 // (also referenced by Order/Invoice), not nested under /warehouses.
 v1Router.use('/sellers', sellerRouter);
@@ -104,7 +104,7 @@ v1Router.use('/wishlist', wishlistRouter);
 v1Router.use('/saved-medicines', savedMedicineRouter);
 v1Router.use('/prescriptions', prescriptionRouter);
 v1Router.use('/cart', cartRouter);
-// Prompt 32 — public + optionally-authenticated Distributor/Bulk Purchase
+// public + optionally-authenticated Distributor/Bulk Purchase
 // enquiry submission; deliberately its own router, never merged into any
 // existing customer/contact surface (Part 59).
 v1Router.use('/distributor-enquiries', distributorEnquiryRouter);
@@ -138,7 +138,7 @@ v1Router.use('/delivery', deliveryRouter);
 v1Router.use('/tax', taxRouter);
 v1Router.use('/cms', cmsRouter);
 v1Router.use('/public/cms', publicCmsRouter);
-// Prompt 34 Part 13/14/19 — anonymous-readable GA4 enablement check for
+// Part 13/14/19 — anonymous-readable GA4 enablement check for
 // the storefront's analytics loader, mirroring /public/cms's pattern.
 v1Router.use('/public/analytics-config', publicAnalyticsRouter);
 v1Router.use('/notifications', notificationsRouter);
@@ -148,5 +148,5 @@ v1Router.use('/uploads', uploadsRouter);
 v1Router.use('/files', filesRouter);
 v1Router.use('/search', searchRouter);
 
-// Realtime (Prompt 3) — customer-safe inventory-change stream (SSE over Redis pub/sub)
+// Realtime ( 3) — customer-safe inventory-change stream (SSE over Redis pub/sub)
 v1Router.use('/realtime', inventoryEventsRouter);

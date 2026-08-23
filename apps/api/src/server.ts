@@ -18,7 +18,7 @@ async function bootstrap(): Promise<void> {
     logger.info(`API listening on port ${env.PORT} [${env.NODE_ENV}]`);
   });
 
-  // Prompt 18 Part 17/20/38 — each process (api + worker) independently
+  // Part 17/20/38 — each process (api + worker) independently
   // rotates/archives its OWN local logs and samples its OWN pool/system
   // stats; see log-archival.scheduler.ts for why this is per-process
   // rather than a single centralized BullMQ job.

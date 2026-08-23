@@ -1,5 +1,5 @@
 /**
- * Prompt 23 Part 25/26/46/47 — pure schema.org Product JSON-LD builder.
+ * Part 25/26/46/47 — pure schema.org Product JSON-LD builder.
  * Every field is sourced from REAL, already-authoritative data passed in by
  * the caller (never fabricated):
  *   - price/availability: the SAME values the storefront already shows

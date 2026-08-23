@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 const SOFT_DELETE_METHODS = ['find', 'findOne', 'findOneAndUpdate', 'countDocuments'] as const;
 
 /**
- * Applied to every Prompt 2 collection. Adds the audit trail fields
+ * Applied to every collection. Adds the audit trail fields
  * (createdBy/updatedBy/deletedAt/deletedBy), timestamps, and an explicit
  * `version` counter (renamed from Mongoose's default `__v`), then wires
  * soft-delete query middleware so `deletedAt: null` docs are excluded by

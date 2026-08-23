@@ -9,11 +9,11 @@ export const createCategorySchema = z.object({
   description: z.string().max(2000).optional(),
   imageUrl: z.string().url().optional(),
   order: z.number().int().optional(),
-  // Prompt 12 (CAT-06) — see product-defaults.util.ts for how products inherit these.
+  // (CAT-06) — see product-defaults.util.ts for how products inherit these.
   isExpirableDefault: z.boolean().optional(),
   requiresPrescriptionDefault: z.boolean().optional(),
-  // Prompt 23 Part 15/18/21/28/29 — the Mongoose model already had a `seo`
-  // sub-object (and now `faq`, added this prompt), but neither was ever
+  // Part 15/18/21/28/29 — the Mongoose model already had a `seo`
+  // sub-object (and now `faq`, newly added), but neither was ever
   // reachable through the admin API — this schema didn't accept them, so
   // Zod silently stripped any value an admin form sent. Wiring them in here
   // is what actually makes Category SEO/AEO editable.

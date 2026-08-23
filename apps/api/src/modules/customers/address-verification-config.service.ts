@@ -1,7 +1,7 @@
 import { getConfiguration } from '../platform/configuration.service';
 
 /**
- * Prompt 31 — shape of the `address_verification` Configuration namespace
+ * shape of the `address_verification` Configuration namespace
  * (Part 44/45), stored/edited through the EXISTING Configuration Engine
  * (superadmin ConfigurationPage -> PUT /platform/configuration/
  * address_verification) — not a parallel settings surface, mirrors
@@ -15,7 +15,7 @@ import { getConfiguration } from '../platform/configuration.service';
  * default (see auth-config.service.ts).
  *
  * `mobileVerificationEnabled` defaults OFF (business correction, see
- * PROMPT_7_EMAIL_VERIFICATION_CORRECTION_REPORT.md): SMS OTP delivery isn't
+ * _7_EMAIL_VERIFICATION_CORRECTION_REPORT.md): SMS OTP delivery isn't
  * currently reliable/configured, so gating checkout on a per-address SMS
  * verification was blocking real customers from completing purchases. Each
  * flag stays independently switchable — a super admin can still turn this

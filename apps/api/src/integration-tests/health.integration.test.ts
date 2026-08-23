@@ -5,8 +5,8 @@ import request from 'supertest';
 
 import { setupTestApp, type TestAppContext } from '../test-support/test-app';
 
-/** Prompt 24 Part 49/50/51 — liveness vs readiness split. */
-describe('Health checks (Prompt 24)', () => {
+/** Part 49/50/51 — liveness vs readiness split. */
+describe('Health checks', () => {
   let ctx: TestAppContext;
 
   before(async () => {

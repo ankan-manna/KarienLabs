@@ -9,7 +9,7 @@ export interface AccessTokenPayload {
 }
 
 /**
- * Prompt 24 Part 18 — explicitly pinned to HS256 on both sign and verify.
+ * Part 18 — explicitly pinned to HS256 on both sign and verify.
  * Not previously exploitable (a string HMAC secret already restricts
  * `jsonwebtoken` to symmetric algorithms; the classic RS256-to-HS256
  * "confused-key" attack needs a PUBLIC key being reused as an HMAC
@@ -42,7 +42,7 @@ export function accessTokenExpiresAt(): string {
 }
 
 /**
- * Short-lived, single-purpose JWTs (Prompt 10) that stand in for a "you've
+ * Short-lived, single-purpose JWTs ( 10) that stand in for a "you've
  * proven step 1, now do step 2" state without needing server-side session
  * storage — same JWT_ACCESS_SECRET/library as the real access token, but a
  * distinct `typ` claim so one can never be presented where the other is
@@ -54,11 +54,11 @@ export function accessTokenExpiresAt(): string {
 export type ChallengeTokenType =
   | 'login_otp_challenge'
   | 'password_reset_session'
-  // Prompt 31 — stands in for "registered but not yet email-verified" between
+  // stands in for "registered but not yet email-verified" between
   // register() and verifyRegistrationOtp(); real session tokens are withheld
   // until this is exchanged, same pattern as login_otp_challenge.
   | 'registration_otp_challenge'
-  // Prompt 32 — proves a GUEST distributor's email was just OTP-verified,
+  // proves a GUEST distributor's email was just OTP-verified,
   // without minting any session/account. `sub` holds the verified email
   // (not a userId — the only challenge type where that's true; see
   // distributor-enquiry.service.ts, which checks `payload.sub` equals the

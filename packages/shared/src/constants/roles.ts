@@ -3,7 +3,7 @@ export const ROLES = {
   ADMIN: 'admin',
   INVENTORY_MANAGER: 'inventory_manager',
   CUSTOMER: 'customer',
-  // Prompt (User Role Management) — a customer/user promoted for wholesale/
+
   // bulk-purchase business, distinct from the admin-panel roles above. Not
   // an admin-panel role (never added to auth/actor-context.util.ts's
   // ADMIN_ROLES list) — a distributor keeps ordinary storefront/account

@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * Prompt 15 Part 27 — ONE reusable document-metadata model, not separate
+ * Part 27 — ONE reusable document-metadata model, not separate
  * InvoiceFile/ShipmentFile/LogFile collections. `entityType`/`entityId` is a
  * generic polymorphic reference (`invoice`|`shipment`|`log_bundle` today;
  * future Return/Replacement/Refund/Prescription documents reuse this same
@@ -47,7 +47,7 @@ const documentSchema = new Schema({
 // unlimited-duplicate on retry/regeneration).
 documentSchema.index({ entityType: 1, entityId: 1 }, { unique: true });
 documentSchema.index({ sellerId: 1, documentType: 1 });
-// Prompt 27 — supports the retention sweep's query (document-retention-sweep.job.ts):
+// supports the retention sweep's query (document-retention-sweep.job.ts):
 // "AVAILABLE invoice/label objects uploaded before the retention cutoff",
 // paginated/batched rather than a full collection scan.
 documentSchema.index({ documentType: 1, status: 1, uploadedAt: 1 });

@@ -37,7 +37,7 @@ function unwrap<T>(response: ApiResponse<T>): T {
   return response.data;
 }
 
-// --- Prompt 21 Part 10 — the enriched customer order-detail shape. `GET
+// --- Part 10 — the enriched customer order-detail shape. `GET
 // /orders/:id` returns this composed response when the caller is a
 // customer (see order.controller.ts's getOrderHandler branch) — the SAME
 // endpoint `getOrder` below calls, just richer for that role, so no new

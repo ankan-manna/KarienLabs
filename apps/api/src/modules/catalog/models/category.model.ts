@@ -11,7 +11,7 @@ const categorySchema = new Schema({
   imageUrl: { type: String, default: '' },
   order: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
-  // Prompt 12 (CAT-06) — category-level defaults a product inherits when its
+  // (CAT-06) — category-level defaults a product inherits when its
   // own `expirable`/`medicine.prescriptionRequired` field is unset (`null`).
   // See product-defaults.util.ts's resolveProductDefaults for the resolution
   // rule; these are plain non-nullable booleans (a category itself has no
@@ -22,12 +22,12 @@ const categorySchema = new Schema({
   seo: {
     metaTitle: { type: String, default: '' },
     metaDescription: { type: String, default: '' },
-    // Prompt 23 Part 15/21 — Product already had this field (Category didn't,
+    // Part 15/21 — Product already had this field (Category didn't,
     // an inconsistency); additive with a safe default, existing categories
     // are unaffected until an admin sets one.
     canonicalUrl: { type: String, default: '' },
   },
-  // Prompt 23 Part 28/29/30 — lightweight, generic FAQ content for
+  // Part 28/29/30 — lightweight, generic FAQ content for
   // Answer-Engine-Optimization. Embedded (bounded, always read with the
   // category) rather than a separate collection — mirrors how
   // `specifications`/`images` are embedded on Product for the same reason.

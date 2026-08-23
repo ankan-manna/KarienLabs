@@ -4,10 +4,10 @@ import { logger } from '../../config/logger';
 import { runLogArchivalJob } from './log-archival.job';
 
 /**
- * Prompt 18 Part 17/38/48 — log archival deliberately runs as an IN-PROCESS
+ * Part 17/38/48 — log archival deliberately runs as an IN-PROCESS
  * timer in EVERY process that produces local rotated logs (both `api` and
  * `worker` — see server.ts/worker.ts), rather than as a single centralized
- * BullMQ job (which is how Prompt 15's original log-upload job worked).
+ * BullMQ job (which is how  15's original log-upload job worked).
  *
  * Why the change: this codebase's Docker deployment (infra/docker/
  * docker-compose*.yml) runs `api` and `worker` as SEPARATE containers with

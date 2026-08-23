@@ -1,7 +1,4 @@
 /**
- * Prompt 12 (CAT-06) inheritance rule for the two tri-state product fields
- * (`expirable`, `medicine.prescriptionRequired`):
- *
  *   Product value explicitly set (true or false) -> use Product value
  *   Product value unset (null/undefined)          -> use Category default
  *

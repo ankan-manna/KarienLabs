@@ -65,8 +65,8 @@ export interface AuditLogEntry {
   before?: unknown;
   after?: unknown;
   createdAt: string;
-  // Actor-context fields (Prompt 10 Part 4/5) — optional since every
-  // pre-Prompt-10 row simply doesn't have them set.
+  // Actor-context fields ( 10 Part 4/5) — optional since every
+  // pre--10 row simply doesn't have them set.
   actorType?: string | null;
   actorName?: string;
   actorEmail?: string;

@@ -220,7 +220,7 @@ export async function listAvailableCoupons(userId: string) {
 }
 
 /**
- * Prompt 19 Part 21/51 — the `/coupons/validate` dry-run: runs the SAME
+ * Part 21/51 — the `/coupons/validate` dry-run: runs the SAME
  * authoritative pipeline as applyCouponToCart, against the customer's
  * current cart, WITHOUT persisting `cart.couponCode`. Lets the customer UI
  * show a real discount preview (and a real error message) before committing

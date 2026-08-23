@@ -53,7 +53,7 @@ export class BatchRepository extends BaseRepository<BatchDocument> {
   }
 
   /**
-   * Prompt 23 Part 8/46 — the ONE authoritative in-stock lookup, batched
+   * Part 8/46 — the ONE authoritative in-stock lookup, batched
    * across many products in a single aggregation (not one query per
    * product — Part 43's "avoid expensive per-product database calls").
    * Extracted from what was previously inline, duplicated ad hoc logic in
@@ -63,7 +63,7 @@ export class BatchRepository extends BaseRepository<BatchDocument> {
    * "second stock value inside SearchService" anti-pattern Part 8
    * explicitly warns against).
    *
-   * Prompt 27 (inventory lifecycle) fix — this previously counted a
+   * (inventory lifecycle) fix — this previously counted a
    * recalled batch's `quantityAvailable` toward "available" even though
    * `order.service.ts::decrementStockFifo` (the actual FEFO picker used at
    * order finalization) explicitly excludes `recallFlag: true` batches from

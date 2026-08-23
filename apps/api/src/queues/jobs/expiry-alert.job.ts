@@ -4,7 +4,7 @@ import { notifyAdmins } from '../../modules/notifications/notification.service';
 
 const EXPIRY_WARNING_WINDOW_DAYS = 30;
 
-/** Prompt 20 fix — same `insertMany`-bypasses-dispatch bug as low-stock-alert.job.ts, same fix. */
+/** fix — same `insertMany`-bypasses-dispatch bug as low-stock-alert.job.ts, same fix. */
 export async function runExpiryAlertJob(): Promise<number> {
   const nearExpiryBatches = await batchRepository.findNearExpiry(EXPIRY_WARNING_WINDOW_DAYS);
   if (nearExpiryBatches.length === 0) return 0;

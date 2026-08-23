@@ -6,7 +6,7 @@ import request from 'supertest';
 import { setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 24 Part 73 — "ensure rate limiting and security middleware do not
+ * Part 73 — "ensure rate limiting and security middleware do not
  * become a bottleneck" under concurrent load. Run against the SAME
  * ephemeral mongodb-memory-server + redis-test-server harness every other
  * integration test in this repo uses (never the shared dev database) —
@@ -16,7 +16,7 @@ import { setupTestApp, type TestAppContext } from '../test-support/test-app';
  * ephemeral single-process test harness can meaningfully exercise without
  * itself becoming the bottleneck being measured.
  */
-describe('Concurrency & load (Prompt 24 Part 73)', () => {
+describe('Concurrency & load', () => {
   let ctx: TestAppContext;
 
   before(async () => {
@@ -31,7 +31,7 @@ describe('Concurrency & load (Prompt 24 Part 73)', () => {
     await ctx.resetDatabase();
   });
 
-  test('100 concurrent requests to a public read endpoint all complete without crashing or hanging', async () => {
+  test('concurrent requests to a public read endpoint all complete without crashing or hanging', async () => {
     const CONCURRENCY = 100;
     const start = Date.now();
 
@@ -60,7 +60,7 @@ describe('Concurrency & load (Prompt 24 Part 73)', () => {
     assert.ok(elapsedMs < 15000, `100 concurrent requests took ${elapsedMs}ms — unexpectedly slow`);
   });
 
-  test('150 concurrent requests correctly trigger rate limiting rather than being silently dropped or crashing the process', async () => {
+  test('concurrent requests correctly trigger rate limiting rather than being silently dropped or crashing the process', async () => {
     // globalRateLimiter's default test-env limit — see env schema
     // (RATE_LIMIT_MAX) — is well under 150, so this burst is EXPECTED to
     // produce a mix of 200s and 429s, never a crash.

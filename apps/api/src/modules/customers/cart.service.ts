@@ -95,7 +95,7 @@ export async function clearCart(userId: string) {
 }
 
 /**
- * Prompt 17 Part 7 — "the customer must know before payment," computed the
+ * Part 7 — "the customer must know before payment," computed the
  * SAME way checkout() computes `order.prescriptionRequired` (the exact same
  * `resolveProductDefaults` tri-state inheritance — never a second,
  * independently-drifting prescription-requirement calculation) but exposed
@@ -126,7 +126,7 @@ export async function getCartPrescriptionStatus(userId: string) {
 }
 
 /**
- * Prompt 19 Part 19/21 — shared by applyCouponToCart AND
+ * Part 19/21 — shared by applyCouponToCart AND
  * coupon.service.ts's previewCouponForCart (the `/coupons/validate`
  * dry-run endpoint), so "how do we turn a customer's cart into a coupon
  * validation context" is defined exactly once.

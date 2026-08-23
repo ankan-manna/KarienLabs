@@ -15,7 +15,7 @@ export interface Seller {
   gstin: string;
   drugLicenseNumber: string;
   enabled: boolean;
-  // Prompt 13 — invoice display/numbering.
+   // invoice display/numbering.
   address?: string;
   invoiceCode?: string | null;
   createdAt?: string;

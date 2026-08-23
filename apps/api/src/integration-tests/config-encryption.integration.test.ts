@@ -6,14 +6,14 @@ import mongoose from 'mongoose';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 24 Part 29 — end-to-end (real ephemeral MongoDB, not a pure-function
+ * Part 29 — end-to-end (real ephemeral MongoDB, not a pure-function
  * unit test) proof that third-party credentials saved through the
  * Configuration engine are NOT stored in plaintext, while every existing
  * caller of `getConfiguration()` still transparently receives the decrypted
  * plaintext value (i.e. razorpay.client.ts / cloudinary.client.ts /
  * shiprocket.client.ts etc. needed zero changes).
  */
-describe('Configuration field encryption at rest (Prompt 24)', () => {
+describe('Configuration field encryption at rest', () => {
   let ctx: TestAppContext;
   let ConfigurationModel: typeof import('../modules/platform/models/configuration.model').ConfigurationModel;
   let getConfiguration: typeof import('../modules/platform/configuration.service').getConfiguration;

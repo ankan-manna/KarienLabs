@@ -23,7 +23,7 @@ async function loadOwnedAddress(userId: string, addressId: string) {
 }
 
 /**
- * Prompt 31 Part 2/23 — verifies THIS address's own phone number, distinct
+ * Part 2/23 — verifies THIS address's own phone number, distinct
  * from the account-level `PHONE_VERIFICATION` purpose (profile.service.ts) —
  * a customer can have multiple addresses with different contact numbers
  * (e.g. a relative's number for a gift-shipping address), each verified
@@ -114,7 +114,7 @@ export interface PincodeValidationResult {
 }
 
 /**
- * Prompt 31 Part 3 — cross-checks a submitted pincode against India Post's
+ * Part 3 — cross-checks a submitted pincode against India Post's
  * directory and, when the address form provides one, against the submitted
  * `state`. Fail-OPEN at this layer when `pincodeValidationEnabled` is off OR
  * the third-party API is unreachable (`unknown`/`unreachable`) — a flaky

@@ -21,9 +21,9 @@ const DOMAIN_TOGGLES: { key: keyof SeoConfig; label: string }[] = [
 ];
 
 /**
- * Prompt 23 Part 16/17/18/19/46/49 — the dedicated Super Admin / permitted
+ * Part 16/17/18/19/46/49 — the dedicated Super Admin / permitted
  * Platform Admin "SEO Settings" configuration page, same pattern as
- * AnalyticsSettingsPage.tsx (Prompt 22): its own page (not a namespace on
+ * AnalyticsSettingsPage.tsx ( 22): its own page (not a namespace on
  * the generic ConfigurationPage) because writes must go through the
  * validated `/admin/seo/config` endpoint, which cascades the master switch
  * and rejects an inconsistent combination server-side.

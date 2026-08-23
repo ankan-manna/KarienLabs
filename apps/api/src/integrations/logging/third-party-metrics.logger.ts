@@ -6,7 +6,7 @@ import { LOG_DIR } from '../../config/logger';
 import { getRequestContext } from '../../config/request-context';
 
 /**
- * Prompt 18 Part 18/19 — the Node/MERN equivalent of the reference
+ * Part 18/19 — the Node/MERN equivalent of the reference
  * `ThirdPartyApiMetricsAppender` / `third-party-api-metrics-logger`: a
  * DEDICATED logger category, kept architecturally separate from the main
  * application log (its own rotating file, its own S3 sub-prefix — see

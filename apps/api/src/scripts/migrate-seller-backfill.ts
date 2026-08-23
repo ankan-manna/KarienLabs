@@ -1,5 +1,5 @@
 /**
- * Prompt 11 Part 18 migration — backfills `sellerId` onto pre-existing
+ * Part 18 migration — backfills `sellerId` onto pre-existing
  * Warehouse/Order/Invoice records created before the Seller entity existed.
  *
  * Deliberately does NOT auto-fabricate a seller or guess which one an
@@ -126,7 +126,7 @@ async function run(): Promise<void> {
   };
 
   // Attributed to BACKGROUND_JOB, never a human actorId — this is an
-  // operator-triggered but unattended script, matching Prompt 10/11's actor-
+  // operator-triggered but unattended script, matching  10/11's actor-
   // context rule that automated operations must not be logged as a person.
   await recordAudit({
     actorId: null,

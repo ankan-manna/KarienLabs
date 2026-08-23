@@ -3,7 +3,7 @@ import { test } from 'node:test';
 
 import { extractTemplateVariables, validateTemplateVariables } from './notification-template-variables.util';
 
-// Prompt 20 Part 18/19 — never allow a template to reference a
+// Part 18/19 — never allow a template to reference a
 // forbidden/secret-shaped variable name, and only allow variables the
 // specific templateKey is known to legitimately use.
 
@@ -53,7 +53,7 @@ test('validateTemplateVariables: {{code}} is allowed ONLY for the two OTP templa
   assert.doesNotThrow(() => validateTemplateVariables('password_reset_otp', 'Your code is {{code}}.'));
 });
 
-test('validateTemplateVariables: {{code}} is REJECTED for every other template key (Part 19)', () => {
+test('validateTemplateVariables: {{code}} is REJECTED for every other template key', () => {
   assert.throws(() => validateTemplateVariables('order_status_changed', 'Your code: {{code}}'), /disallowed/);
   assert.throws(() => validateTemplateVariables('unknown_custom_key', 'Your code: {{code}}'), /disallowed/);
 });

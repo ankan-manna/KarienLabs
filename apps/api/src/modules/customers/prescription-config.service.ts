@@ -13,12 +13,12 @@ import {
 export { DEFAULT_PRESCRIPTION_CONFIG, validatePrescriptionConfig, type PrescriptionConfig };
 
 /**
- * Prompt 17's "MOST IMPORTANT ARCHITECTURAL RULE" (Part 1/5/38): every
+ *  17's "MOST IMPORTANT ARCHITECTURAL RULE" (Part 1/5/38): every
  * prescription business behavior is read from HERE, never hardcoded at the
  * call site. Uses the EXISTING Configuration engine (`prescription`
- * namespace, Prompt 1's architecture) — not a second settings store, not
+ * namespace,  1's architecture) — not a second settings store, not
  * the separate FeatureFlags system (which already has an unrelated
- * `prescription_upload` rollout flag seeded from an earlier prompt; left
+ * `prescription_upload` rollout flag seeded from an earlier ; left
  * alone, untouched, per Part 54).
  */
 export async function getPrescriptionConfig(): Promise<PrescriptionConfig> {

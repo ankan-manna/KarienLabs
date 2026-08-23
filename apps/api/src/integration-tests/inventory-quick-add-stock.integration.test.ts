@@ -7,7 +7,7 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * PROMPT 3 (Distributor Request Page + Manual Product-wise Inventory
+ * (Distributor Request Page + Manual Product-wise Inventory
  * Management) — HTTP-level tests for the new "Add Inventory" single-step
  * stock addition (`POST /stock-adjustments/quick-add`). Covers exactly the
  * scenarios the spec calls out by name: the atomic math (Part 13/18), race
@@ -15,7 +15,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * 22/33), input validation (Part 17), and role-based authorization (Part
  * 24/34) — Customer/Distributor forbidden, Admin/Super Admin allowed.
  */
-describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inventory)', () => {
+describe('Admin Inventory — quick add stock (Distributor Request + Inventory)', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let ProductModel: typeof import('../modules/catalog/models/product.model').ProductModel;
@@ -142,7 +142,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     void product; // seeded for realism; the availability calc itself (batchRepository.getAvailableStockMap) is unchanged and reads this same field
   });
 
-  test('rejects zero, negative, and decimal quantities (400)', async () => {
+  test('rejects zero, negative, and decimal quantities', async () => {
     const { batch } = await seedProductAndBatch(10);
     const { token } = await seedSuperAdmin();
 
@@ -158,7 +158,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     assert.equal(unchanged?.quantityAvailable, 10, 'no rejected request should have touched stock');
   });
 
-  test('rejects a nonexistent batch (404)', async () => {
+  test('rejects a nonexistent batch', async () => {
     const { token } = await seedSuperAdmin();
     const res = await request(ctx.app)
       .post('/api/v1/stock-adjustments/quick-add')
@@ -167,7 +167,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     assert.equal(res.status, 404);
   });
 
-  test('a Customer cannot add inventory (403)', async () => {
+  test('a Customer cannot add inventory', async () => {
     const { batch } = await seedProductAndBatch(10);
     const customer = await createCustomer(m.UserModel, { name: 'Plain Customer' });
     const token = bearerFor(m.signAccessToken, customer);
@@ -182,7 +182,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     assert.equal(unchanged?.quantityAvailable, 10);
   });
 
-  test('a Distributor cannot add inventory unless explicitly authorized (403)', async () => {
+  test('a Distributor cannot add inventory unless explicitly authorized', async () => {
     const { batch } = await seedProductAndBatch(10);
     const distributor = await createCustomer(m.UserModel, { name: 'A Distributor', role: 'distributor' });
     const token = bearerFor(m.signAccessToken, distributor);
@@ -194,7 +194,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     assert.equal(res.status, 403);
   });
 
-  test('calling the API unauthenticated is rejected (401)', async () => {
+  test('calling the API unauthenticated is rejected', async () => {
     const { batch } = await seedProductAndBatch(10);
     const res = await request(ctx.app)
       .post('/api/v1/stock-adjustments/quick-add')
@@ -223,7 +223,7 @@ describe('Admin Inventory — quick add stock (Prompt: Distributor Request + Inv
     assert.equal(updated?.quantityAvailable, 15);
   });
 
-  test('a Platform Admin WITHOUT inventory:update is forbidden (403)', async () => {
+  test('a Platform Admin WITHOUT inventory:update is forbidden', async () => {
     await RoleModel.create({
       key: 'admin',
       name: 'Platform Admin',

@@ -74,7 +74,7 @@ export interface CustomerInsights {
 export const fetchCustomerInsights = () =>
   fetchAnalytics<CustomerInsights>('/admin/analytics/customer-insights', {});
 
-/** Prompt 34 Part 22/40 — Distributor/Bulk Purchase enquiry KPIs for the Analytics page's new section. */
+/** Part 22/40 — Distributor/Bulk Purchase enquiry KPIs for the Analytics page's new section. */
 export interface DistributorEnquirySummary {
   totalEnquiries: number;
   statusBreakdown: Record<string, number>;

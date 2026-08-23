@@ -28,7 +28,7 @@ const fields: ConfigField[] = [
   },
 ];
 
-/** Seller detail view's "Related Information" tab — Warehouses / Orders / Invoices / Inventory summary (Prompt 11 Part 11). Read-only rollup via GET /sellers/:id/summary. */
+/** Seller detail view's "Related Information" tab — Warehouses / Orders / Invoices / Inventory summary ( 11 Part 11). Read-only rollup via GET /sellers/:id/summary. */
 function SellerRelatedInfo({ seller }: { seller: Seller }) {
   const { data, isLoading } = useQuery({
     queryKey: ['sellers', 'summary', seller._id],

@@ -13,7 +13,7 @@ import {
   isPastRetention,
 } from './storage.util';
 
-test('buildDocumentObjectKey is deterministic — same inputs always produce the same key (Part 20 idempotency)', () => {
+test('buildDocumentObjectKey is deterministic — same inputs always produce the same key (idempotency)', () => {
   const date = new Date('2026-03-15T00:00:00Z');
   const a = buildDocumentObjectKey({
     documentType: DOCUMENT_TYPES.INVOICE,
@@ -31,7 +31,7 @@ test('buildDocumentObjectKey is deterministic — same inputs always produce the
   assert.equal(a, 'invoices/seller123/2026/03/INV-A-2026-000001.pdf');
 });
 
-test('buildDocumentObjectKey: invoice vs shipping-label use distinct prefixes (Part 3 conceptual structure)', () => {
+test('buildDocumentObjectKey: invoice vs shipping-label use distinct prefixes (conceptual structure)', () => {
   const date = new Date('2026-03-15T00:00:00Z');
   const invoiceKey = buildDocumentObjectKey({
     documentType: DOCUMENT_TYPES.INVOICE,
@@ -59,7 +59,7 @@ test('buildDocumentObjectKey: null sellerId falls back to "unassigned", never a 
   assert.equal(key, 'invoices/unassigned/2026/01/entity1.pdf');
 });
 
-test('buildLogObjectKey: predictable logs/{category}/YYYY/MM/DD/{instance}/{category}.{bucket}.log.gz structure (Prompt 18 Part 9/10)', () => {
+test('buildLogObjectKey: predictable logs/{category}/YYYY/MM/DD/{instance}/{category}.{bucket}.log.gz structure', () => {
   const key = buildLogObjectKey({
     category: 'api-application',
     bucketLabel: '2026-08-05-06',
@@ -68,7 +68,7 @@ test('buildLogObjectKey: predictable logs/{category}/YYYY/MM/DD/{instance}/{cate
   assert.equal(key, 'logs/api-application/2026/08/05/host-1/api-application.2026-08-05-06.log.gz');
 });
 
-test('buildLogObjectKey: same category+bucket+instance is idempotent across retries (Part 16)', () => {
+test('buildLogObjectKey: same category+bucket+instance is idempotent across retries', () => {
   const params = { category: 'api-third-party-api', bucketLabel: '2026-08-05-12', instanceId: 'host-1' };
   assert.equal(buildLogObjectKey(params), buildLogObjectKey(params));
 });
@@ -112,9 +112,9 @@ test('assertDocumentSizeWithinLimit accepts a normal-sized buffer', () => {
   assert.doesNotThrow(() => assertDocumentSizeWithinLimit(Buffer.alloc(1024)));
 });
 
-// --- Prompt 17: prescription-specific helpers ---
+// ---  17: prescription-specific helpers ---
 
-test('buildPrescriptionObjectKey follows the documented prescriptions/{customerId}/{year}/{month}/{prescriptionId}/{file} structure (Part 11)', () => {
+test('buildPrescriptionObjectKey follows the documented prescriptions/{customerId}/{year}/{month}/{prescriptionId}/{file} structure', () => {
   const key = buildPrescriptionObjectKey({
     customerId: 'cust123',
     prescriptionId: 'presc456',
@@ -148,7 +148,7 @@ test('assertValidPrescriptionFile accepts PDF/JPG/PNG within the size ceiling', 
   );
 });
 
-test('assertValidPrescriptionFile rejects an unsupported MIME type (Part 9/48 — never accept arbitrary executables)', () => {
+test('assertValidPrescriptionFile rejects an unsupported MIME type (never accept arbitrary executables)', () => {
   assert.throws(
     () =>
       assertValidPrescriptionFile({

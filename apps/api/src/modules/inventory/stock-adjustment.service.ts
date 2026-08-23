@@ -113,7 +113,7 @@ type QuickAddStockInput =
     };
 
 /**
- * Prompt (Admin Inventory Management) Part 12-19 — "Add Inventory": a
+ *  (Admin Inventory Management) Part 12-19 — "Add Inventory": a
  * single-step counterpart to the request→approve workflow above, for the
  * common case of an admin who already holds both `inventory:update` (this
  * route's own gate) and, in practice, `inventory:approve` too (every seeded
@@ -128,7 +128,7 @@ type QuickAddStockInput =
  * parallel adjustment queue — it's the same audit trail, just created and
  * approved in one step instead of two.
  *
- * Prompt (Manufacturer Inventory Model) — `mode: 'new_batch'` is the
+ *  (Manufacturer Inventory Model) — `mode: 'new_batch'` is the
  * PO/GRN-free path for KarienLabs' own manufactured stock: it creates the
  * Batch itself (the exact same atomic upsert `grn.service.ts::createGrn`
  * already uses — `$inc` the quantity fields, `$setOnInsert` the
@@ -274,7 +274,7 @@ export async function quickAddStock(input: QuickAddStockInput, actorId: string) 
     void publishInventoryUpdate([String(batch.productId)]);
 
     // Bugfix (Human-Readable API Logging) Part 12/13 — connects this
-    // function back to Prompt 1 (Manufacturer Inventory Model): distinct
+    // function back to (Manufacturer Inventory Model): distinct
     // `operation` per STOCK_MOVEMENT_TYPES branch above (MANUFACTURED_STOCK
     // for the PO-free `new_batch` mode, STOCK_ADJUSTMENT for a manual
     // addition to an existing batch) so a developer can grep logs for

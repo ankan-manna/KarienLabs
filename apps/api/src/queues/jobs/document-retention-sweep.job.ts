@@ -13,12 +13,16 @@ import { DocumentModel } from '../../modules/documents/models/document.model';
 import { InvoiceModel } from '../../modules/invoices/models/invoice.model';
 import { ShipmentModel } from '../../modules/orders/models/shipment.model';
 
-const RETENTION_DOCUMENT_TYPES = [
-  DOCUMENT_TYPES.INVOICE,
-  DOCUMENT_TYPES.SHIPPING_LABEL,
-  DOCUMENT_TYPES.RETURN_LABEL,
-];
+type RetentionDocumentType =
+  | typeof DOCUMENT_TYPES.INVOICE
+  | typeof DOCUMENT_TYPES.SHIPPING_LABEL
+  | typeof DOCUMENT_TYPES.RETURN_LABEL;
+
 const SWEEP_BATCH_SIZE = 100;
+
+/** Shipping and return labels share one "label" retention window; invoices have their own. */
+const INVOICE_TYPES: RetentionDocumentType[] = [DOCUMENT_TYPES.INVOICE];
+const LABEL_TYPES: RetentionDocumentType[] = [DOCUMENT_TYPES.SHIPPING_LABEL, DOCUMENT_TYPES.RETURN_LABEL];
 
 /**
  * Reflects the S3-deletion outcome onto the OWNING business record's own
@@ -28,7 +32,7 @@ const SWEEP_BATCH_SIZE = 100;
  * field, which must agree with what's actually still in S3.
  */
 async function markOwningRecordExpired(
-  documentType: (typeof RETENTION_DOCUMENT_TYPES)[number],
+  documentType: RetentionDocumentType,
   entityId: unknown,
 ): Promise<void> {
   if (documentType === DOCUMENT_TYPES.INVOICE) {
@@ -42,9 +46,9 @@ async function markOwningRecordExpired(
 }
 
 /**
- * Prompt 27 Part 19/37 — deletes S3 objects for invoice/label documents past
+ * Part 19/37 — deletes S3 objects for invoice/label documents past
  * the configured retention window (~30 days default). CRITICAL invariant
- * (Part 19/37, tested explicitly — see the Prompt 4 report): "DELETE S3
+ * (Part 19/37, tested explicitly — see the report): "DELETE S3
  * OBJECT != DELETE DATABASE RECORD" — the Document/Invoice/Shipment rows
  * are NEVER deleted here, only their `status`/`documentStatus` flipped to
  * EXPIRED, preserving every field needed to regenerate later (Part 12/38).
@@ -59,10 +63,11 @@ async function markOwningRecordExpired(
  * extended here to "don't even mark it expired until the delete actually
  * succeeded").
  */
-export async function runDocumentRetentionSweepJob(): Promise<number> {
-  if (!(await s3Ops.isS3Configured())) return 0;
-
-  const retentionDays = await s3Ops.getDocumentRetentionDays();
+/** Sweeps ONE type-group (invoices, or shipping/return labels) against its own retention cutoff. */
+async function sweepTypeGroup(
+  types: RetentionDocumentType[],
+  retentionDays: number,
+): Promise<number> {
   const cutoff = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000);
 
   let expiredCount = 0;
@@ -70,7 +75,7 @@ export async function runDocumentRetentionSweepJob(): Promise<number> {
 
   for (;;) {
     const filter: Record<string, unknown> = {
-      documentType: { $in: RETENTION_DOCUMENT_TYPES },
+      documentType: { $in: types },
       status: DOCUMENT_STATUS.AVAILABLE,
       storageProvider: STORAGE_PROVIDERS.S3,
       uploadedAt: { $lt: cutoff },
@@ -89,7 +94,7 @@ export async function runDocumentRetentionSweepJob(): Promise<number> {
         await s3Ops.deleteObject(doc.objectKey);
         await DocumentModel.updateOne({ _id: doc._id }, { status: DOCUMENT_STATUS.EXPIRED });
         await markOwningRecordExpired(
-          doc.documentType as (typeof RETENTION_DOCUMENT_TYPES)[number],
+          doc.documentType as RetentionDocumentType,
           doc.entityId,
         );
         expiredCount += 1;
@@ -105,15 +110,35 @@ export async function runDocumentRetentionSweepJob(): Promise<number> {
     if (page.length < SWEEP_BATCH_SIZE) break;
   }
 
+  return expiredCount;
+}
+
+export async function runDocumentRetentionSweepJob(): Promise<number> {
+  if (!(await s3Ops.isS3Configured())) return 0;
+
+  // Invoices and shipping/return labels each have their own admin-configurable
+  // retention window (Control Panel -> Website Design -> Storage & Retention),
+  // falling back to the combined documentRetentionDays for deployments that
+  // never split them out.
+  const invoiceRetentionDays = await s3Ops.getInvoiceRetentionDays();
+  const labelRetentionDays = await s3Ops.getLabelRetentionDays();
+
+  const invoiceExpiredCount = await sweepTypeGroup(INVOICE_TYPES, invoiceRetentionDays);
+  const labelExpiredCount = await sweepTypeGroup(LABEL_TYPES, labelRetentionDays);
+  const expiredCount = invoiceExpiredCount + labelExpiredCount;
+
   if (expiredCount > 0) {
     await recordAudit({
       actorId: null,
       actorType: ACTOR_TYPES.BACKGROUND_JOB,
       action: FULFILLMENT_AUDIT_ACTIONS.DOCUMENT_EXPIRED,
       resource: 'document',
-      metadata: { expiredCount, retentionDays },
+      metadata: { expiredCount, invoiceExpiredCount, labelExpiredCount, invoiceRetentionDays, labelRetentionDays },
     });
-    logger.info({ expiredCount, retentionDays }, 'Document retention sweep expired documents past retention');
+    logger.info(
+      { expiredCount, invoiceExpiredCount, labelExpiredCount, invoiceRetentionDays, labelRetentionDays },
+      'Document retention sweep expired documents past retention',
+    );
   }
 
   return expiredCount;

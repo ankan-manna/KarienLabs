@@ -34,7 +34,7 @@ const shipmentSchema = new Schema({
     default: [],
   },
 
-  // --- Prompt 14: Shiprocket / fulfillment integration ---
+  // ---  14: Shiprocket / fulfillment integration ---
   // Denormalized from Order at shipment-creation time (Part 5) so shipment
   // queries/filters don't need to join back to Order for every list/search;
   // also lets ownership be validated (warehouse.sellerId === order.sellerId)
@@ -91,7 +91,7 @@ const shipmentSchema = new Schema({
 shipmentSchema.index({ trackingNumber: 1 });
 shipmentSchema.index({ sellerId: 1, createdAt: -1 });
 shipmentSchema.index({ awbCode: 1 });
-// Prompt 22 live-verification fix — `{unique:true, sparse:true}` does NOT
+// Live-verification fix — `{unique:true, sparse:true}` does NOT
 // exclude this field the way it looks like it should: `default: null` makes
 // `shiprocketOrderId` always PRESENT (with value null) on every document
 // Mongoose creates, and "sparse" only excludes genuinely ABSENT fields, not
@@ -99,7 +99,7 @@ shipmentSchema.index({ awbCode: 1 });
 // shipment in the whole collection could ever be created; every one after
 // it hit `E11000 duplicate key error ... shiprocketOrderId: null`. This is
 // the exact same bug already found and fixed for
-// NotificationQueueModel.idempotencyKey in Prompt 20 — same fix here:
+// NotificationQueueModel.idempotencyKey in — same fix here:
 // a partial index that only applies once the field actually holds a string.
 shipmentSchema.index(
   { shiprocketOrderId: 1 },

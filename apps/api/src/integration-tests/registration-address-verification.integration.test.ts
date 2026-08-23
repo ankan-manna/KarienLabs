@@ -7,7 +7,7 @@ import { createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 31 — real HTTP-level tests (same pattern as prepaid-checkout /
+ * real HTTP-level tests (same pattern as prepaid-checkout /
  * customer-ownership) against the actual Express app + a real, ephemeral
  * MongoDB + Redis. `registrationOtpEnabled`/`pincodeValidationEnabled`/
  * `mobileVerificationEnabled`/`serviceabilityCheckEnabled` all default ON
@@ -22,7 +22,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * (test-app.ts sets no SHIPROCKET_* env vars), which is itself the fixture
  * for the fail-closed "not configured -> block checkout" test below.
  */
-describe('Prompt 31 — registration OTP, address verification, serviceability gate', () => {
+describe('Registration OTP, address verification, serviceability gate', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let extra: {

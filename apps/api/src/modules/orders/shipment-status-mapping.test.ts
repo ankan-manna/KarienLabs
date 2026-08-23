@@ -5,7 +5,7 @@ import { SHIPMENT_STATUS, SHIPROCKET_STATUS_MAP } from '@medcommerce/shared';
 
 const VALID_STATUSES = new Set<string>(Object.values(SHIPMENT_STATUS));
 
-test('Part 23: every SHIPROCKET_STATUS_MAP value is a real internal SHIPMENT_STATUS — no invented parallel status vocabulary', () => {
+test('every SHIPROCKET_STATUS_MAP value is a real internal SHIPMENT_STATUS — no invented parallel status vocabulary', () => {
   for (const [external, internal] of Object.entries(SHIPROCKET_STATUS_MAP)) {
     assert.ok(
       VALID_STATUSES.has(internal),

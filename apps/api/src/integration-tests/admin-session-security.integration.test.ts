@@ -7,8 +7,8 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 24 Part 63 — real HTTP-level regression test for the admin-session
- * gap found during the "is Prompt 24 done?" follow-up audit: `requireAuth`
+ * Part 63 — real HTTP-level regression test for the admin-session
+ * gap found during the "is done?" follow-up audit: `requireAuth`
  * previously trusted a JWT's embedded `{ sub, role }` for the token's full
  * 15-minute life with no re-check of the account's CURRENT active/
  * suspended state. A just-suspended (or self-deactivated) account could
@@ -17,7 +17,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * Redis-cached (60s TTL) account-status check inside `requireAuth`,
  * invalidated on every suspend/unsuspend/role-change/deactivate write.
  */
-describe('Admin session security — account status invalidation (Prompt 24)', () => {
+describe('Admin session security — account status invalidation', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let RoleModel: typeof import('../modules/auth/models/role.model').RoleModel;
