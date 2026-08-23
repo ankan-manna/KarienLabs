@@ -10,7 +10,7 @@ const items: RefundableOrderItem[] = [
   { orderItemId: 'b', quantity: 1, unitPrice: 500, gstRate: 12, amount: 560 },
 ];
 
-test('Part 24 — coupon discount is allocated proportionally, not ignored: returning ONE of two equal-value items refunds roughly half the discount-adjusted amount, not the full gross price', () => {
+test('coupon discount is allocated proportionally, not ignored: returning ONE of two equal-value items refunds roughly half the discount-adjusted amount, not the full gross price', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 200, // ₹200 off a ₹1120 (560+560) order
@@ -21,13 +21,13 @@ test('Part 24 — coupon discount is allocated proportionally, not ignored: retu
 
   // Item A is exactly half the order's gross (560 / 1120), so it should
   // absorb exactly half the discount (₹100), leaving a ₹460 refund — NOT
-  // the full ₹560 gross price the old (pre-Prompt-16) calc would have used.
+  // the full ₹560 gross price the old (pre--16) calc would have used.
   assert.equal(result.breakdown[0].grossAmount, 560);
   assert.equal(result.breakdown[0].discountShare, 100);
   assert.equal(result.refundableAmount, 460);
 });
 
-test('Part 22 — partial refund: returning a subset of items only refunds that subset', () => {
+test('partial refund: returning a subset of items only refunds that subset', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 0,
@@ -38,7 +38,7 @@ test('Part 22 — partial refund: returning a subset of items only refunds that 
   assert.equal(result.refundableAmount, 560);
 });
 
-test('Part 22 — never refunds more than what remains after subtracting already-refunded amounts', () => {
+test('never refunds more than what remains after subtracting already-refunded amounts', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 0,
@@ -52,7 +52,7 @@ test('Part 22 — never refunds more than what remains after subtracting already
   assert.equal(result.cappedByRemainingRefundable, true);
 });
 
-test('Part 22 — fully refunded order caps at zero, never negative', () => {
+test('fully refunded order caps at zero, never negative', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 0,
@@ -63,7 +63,7 @@ test('Part 22 — fully refunded order caps at zero, never negative', () => {
   assert.equal(result.refundableAmount, 0);
 });
 
-test('Part 23 — shipping is excluded from the refund by default (not passed = not refunded)', () => {
+test('shipping is excluded from the refund by default (not passed = not refunded)', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 0,
@@ -74,7 +74,7 @@ test('Part 23 — shipping is excluded from the refund by default (not passed = 
   assert.equal(result.refundableAmount, 560); // no shipping component included
 });
 
-test('Part 23 — shipping IS included only when the caller explicitly opts in', () => {
+test('shipping IS included only when the caller explicitly opts in', () => {
   const result = calculateReturnRefundAmount({
     orderItems: items,
     orderDiscount: 0,
@@ -86,7 +86,7 @@ test('Part 23 — shipping IS included only when the caller explicitly opts in',
   assert.equal(result.refundableAmount, 610);
 });
 
-test('Part 25 — GST is never recalculated, only read from the frozen per-line `amount` (already GST-inclusive)', () => {
+test('GST is never recalculated, only read from the frozen per-line `amount` (already GST-inclusive)', () => {
   // A 28%-GST item alongside a 5%-GST item — if GST were being recomputed
   // from a "current" rate this would drift; it must exactly match the
   // pre-summed `amount` fields instead.

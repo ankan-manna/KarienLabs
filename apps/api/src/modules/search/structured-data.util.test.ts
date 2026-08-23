@@ -36,7 +36,7 @@ test('availability reflects OutOfStock when inStock is false', () => {
   assert.equal(data.offers.availability, 'https://schema.org/OutOfStock');
 });
 
-test('NEVER includes aggregateRating when ratingCount is 0/undefined (Part 25 — no fake ratings)', () => {
+test('NEVER includes aggregateRating when ratingCount is 0/undefined (no fake ratings)', () => {
   const data = buildProductStructuredData(BASE_PRODUCT, 'https://example.com');
   assert.equal('aggregateRating' in data, false);
 

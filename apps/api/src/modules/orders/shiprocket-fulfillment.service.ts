@@ -489,7 +489,7 @@ export async function assignAwbForShipment(
 
 /**
  * Fetches the shipping label from Shiprocket and re-uploads it through the
- * centralized storage abstraction (Prompt 15 Part 1/7 — S3 when configured,
+ * centralized storage abstraction ( 15 Part 1/7 — S3 when configured,
  * falling back to the pre-existing Cloudinary path otherwise; see
  * document-storage.helper.ts) — never stored as raw binary in MongoDB and
  * never depends on Shiprocket's own externally-hosted URL staying valid
@@ -502,7 +502,7 @@ export async function fetchAndStoreLabel(
   const shipment = await ShipmentModel.findById(shipmentId);
   if (!shipment) throw new NotFoundError('Shipment');
   if (shipment.labelUrl) {
-    // Prompt 27 Part 20/38 — same transparent expired-object recovery the
+    // Part 20/38 — same transparent expired-object recovery the
     // invoice download path uses (invoice.service.ts's
     // ensureInvoicePdfAvailable): a label whose DB record still points at
     // an S3 key the retention sweep already deleted falls through and
@@ -713,7 +713,7 @@ function isShiprocketAuthFailure(err: unknown): boolean {
 }
 
 /**
- * Prompt 31 Part 4/34 — the MANDATORY, fail-CLOSED twin of
+ * Part 4/34 — the MANDATORY, fail-CLOSED twin of
  * `checkPincodeServiceability` above. Deliberately the opposite posture:
  * that function is a best-effort ETA widget where "can't tell" safely means
  * "assume yes, fall back to zones"; THIS function backs a checkout gate a

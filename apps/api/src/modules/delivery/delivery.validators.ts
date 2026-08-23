@@ -28,7 +28,7 @@ export const createShippingRuleSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-/** Prompt 14 Part 2 — server-side PIN-code serviceability check at checkout. */
+/** Part 2 — server-side PIN-code serviceability check at checkout. */
 export const checkServiceabilitySchema = z.object({
   pincode: z.string().trim().min(4).max(10),
   sellerId: z.string().trim().optional(),

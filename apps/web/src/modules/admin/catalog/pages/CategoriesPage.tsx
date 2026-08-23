@@ -13,7 +13,7 @@ const fields: ConfigField[] = [
     required: false,
     showInTable: false,
   },
-  // Prompt 12 (CAT-06) — products in this category inherit these when their
+  // (CAT-06) — products in this category inherit these when their
   // own expirable/prescriptionRequired field is left unset. See
   // packages/shared/src/utils/resolve-product-defaults.ts.
   {

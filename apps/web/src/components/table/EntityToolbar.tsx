@@ -19,7 +19,7 @@ interface EntityToolbarProps {
 
 /**
  * Refresh / Export Excel / Export CSV / Import Excel — the toolbar row every
- * "Standard CRUD Design" admin list page needs per Prompt 5, built once and
+ * "Standard CRUD Design" admin list page needs per  5, built once and
  * dropped into `DataTable`'s `toolbar` slot alongside a page's own search bar.
  */
 export function EntityToolbar({

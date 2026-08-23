@@ -19,8 +19,8 @@ import {
 } from '../constants/menu';
 
 export function AdminLayout() {
-  // Prompt 33 Part 13/44 — no mobile/tablet admin nav existed before this
-  // prompt (the sidebar was simply always rendered at a fixed width); this
+  // Part 13/44 — no mobile/tablet admin nav existed before this
+  // (the sidebar was simply always rendered at a fixed width); this
   // is the minimal state needed to drive the new off-canvas drawer below
   // the desktop breakpoint. Desktop behavior (always-visible sidebar) is
   // unaffected — Sidebar.tsx ignores these props once `useIsDesktop()` is true.
@@ -37,7 +37,7 @@ export function AdminLayout() {
     // engages. Sidebar/Topbar need no `sticky`/`fixed` positioning at all:
     // as plain flex siblings of a capped, non-scrolling ancestor, they
     // simply never move — a single scroll region, no double scrollbars.
-    <div className="flex h-screen overflow-hidden bg-soft-mint dark:bg-night">
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-night">
       <Sidebar
         title="KarienLabs Admin"
         mobileOpen={mobileNavOpen}

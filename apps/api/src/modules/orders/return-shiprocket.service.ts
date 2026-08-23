@@ -21,7 +21,7 @@ import { OrderModel } from './models/order.model';
 import { ReturnModel, type ReturnDocument } from './models/return.model';
 
 /**
- * Prompt 16 Part 13 — the abstraction boundary SHIP-05 asked for: everything
+ * Part 13 — the abstraction boundary SHIP-05 asked for: everything
  * Shiprocket-reverse-pickup-specific lives here, so return.service.ts never
  * imports the Shiprocket SDK/client directly. If a different reverse-
  * logistics provider is added later, only this file changes.

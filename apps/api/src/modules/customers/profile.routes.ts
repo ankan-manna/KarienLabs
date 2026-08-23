@@ -26,7 +26,7 @@ profileRouter.patch('/me', validate(updateProfileSchema), updateMyProfileHandler
 
 // Part 3 — OTP-verified phone change (reuses the existing OTP system; see
 // otp.service.ts/profile.service.ts). `issueOtp`'s own cooldown/max-resend
-// limits already bound the request side; `otpRateLimiter` (Prompt 24 Part
+// limits already bound the request side; `otpRateLimiter` ( 24 Part
 // 2) is an additional outer HTTP-level guard, consistent with every other
 // OTP-touching endpoint in the app.
 profileRouter.post(

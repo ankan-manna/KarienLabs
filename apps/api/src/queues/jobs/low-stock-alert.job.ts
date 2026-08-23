@@ -3,7 +3,7 @@ import { batchRepository } from '../../modules/inventory/batch.repository';
 import { notifyAdmins } from '../../modules/notifications/notification.service';
 
 /**
- * Prompt 20 fix — this job previously wrote directly to
+ * fix — this job previously wrote directly to
  * `NotificationQueueModel.insertMany(...)` with a hardcoded fake recipient
  * address, bypassing `enqueueNotificationDispatch` entirely. That meant
  * these rows sat in Mongo forever, NEVER actually processed (the worker

@@ -8,7 +8,7 @@ import { validatePincodeForAddress } from './address-verification.service';
 import { CustomerAddressModel } from './models/customer-address.model';
 
 /**
- * Prompt 31 Part 3/24 — runs pincode validation whenever `pincode` is part
+ * Part 3/24 — runs pincode validation whenever `pincode` is part
  * of the write, using `state` from the same input if given, else the
  * existing address's state (an update that only changes `pincode` still
  * needs a state to cross-check against). Mutates `input` in place with the
@@ -33,7 +33,7 @@ export function listMyAddresses(userId: string) {
 }
 
 /**
- * Prompt 21 Part 7/60 — atomic default-address transition. The previous
+ * Part 7/60 — atomic default-address transition. The previous
  * implementation ran `clearDefault()` (an `updateMany`) and the create/
  * update as TWO SEPARATE, non-transactional writes — two concurrent
  * "set as default" requests for the same customer could interleave and

@@ -1,7 +1,7 @@
 import { getPublicAnalyticsConfig } from '../api/public-analytics.api';
 
 /**
- * Prompt 34 Part 13-21 — Google Analytics 4 loader + event helpers.
+ * Part 13-21 — Google Analytics 4 loader + event helpers.
  *
  * Dual-gated (mirrors the existing Google OAuth admin-login precedent):
  * BOTH `VITE_GA_MEASUREMENT_ID` (build-time, public client config — never a

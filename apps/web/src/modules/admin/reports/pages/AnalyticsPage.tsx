@@ -25,7 +25,7 @@ import { downloadBlob } from '../../../../utils/downloadBlob';
 import { formatCurrency } from '../../../../utils/format';
 import { toast } from '../../../../utils/toast';
 
-/** Prompt 34 Part 40 — human-readable labels for DISTRIBUTOR_ENQUIRY_STATUS values, display-only (never sent back to the API). */
+/** Part 40 — human-readable labels for DISTRIBUTOR_ENQUIRY_STATUS values, display-only (never sent back to the API). */
 const DISTRIBUTOR_STATUS_LABELS: Record<string, string> = {
   new: 'New',
   in_review: 'In Review',
@@ -109,7 +109,7 @@ export default function AnalyticsPage() {
 
   const range = { from: from || undefined, to: to || undefined };
 
-  /** Prompt 34 Part 29 — reuses the EXISTING /admin/reports/sales export endpoint; no new backend code for this button. */
+  /** Part 29 — reuses the EXISTING /admin/reports/sales export endpoint; no new backend code for this button. */
   async function handleExportSales(format: 'excel' | 'pdf') {
     try {
       const blob =
@@ -200,7 +200,7 @@ export default function AnalyticsPage() {
                     labelStyle={tooltipLabelStyle}
                     itemStyle={tooltipItemStyle}
                   />
-                  <Bar dataKey="revenue" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="revenue" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

@@ -1,5 +1,4 @@
 /**
- * Prompt 16 — named audit actions for the return/replacement/refund
  * lifecycle, mirroring INVOICE_AUDIT_ACTIONS/SHIPMENT_AUDIT_ACTIONS/
  * STORAGE_AUDIT_ACTIONS: specific action strings for recordAudit() instead
  * of the generic 'create'/'update' verbs return.service.ts used before.

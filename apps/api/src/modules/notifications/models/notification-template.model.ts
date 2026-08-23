@@ -15,7 +15,7 @@ const notificationTemplateSchema = new Schema({
 notificationTemplateSchema.index({ key: 1, channel: 1 }, { unique: true });
 
 /**
- * Prompt 20 Part 18/19 — enforced HERE (a Mongoose hook), not just at the
+ * Part 18/19 — enforced HERE (a Mongoose hook), not just at the
  * HTTP validator layer, so it applies uniformly regardless of entry point
  * (the generic createCrudRouter's create/update, a future script, direct
  * repository use) — never allow a template to reference a forbidden

@@ -63,7 +63,7 @@ export const addDeliveryNoteHandler = asyncHandler(async (req: Request, res) => 
   );
 });
 
-// --- Prompt 14: Shiprocket fulfillment actions (all admin/staff-only, see shipment.routes.ts) ---
+// ---  14: Shiprocket fulfillment actions (all admin/staff-only, see shipment.routes.ts) ---
 
 export const createShiprocketShipmentHandler = asyncHandler(async (req: Request, res) => {
   return sendSuccess(
@@ -97,7 +97,7 @@ export const syncShipmentTrackingHandler = asyncHandler(async (req: Request, res
 });
 
 /** Part 18/34 — label download is itself an authorized, audited action (not just a static URL fetch), so every access is traceable even though the actual bytes live on Cloudinary. */
-/** Prompt 15 Part 8 — resolves a short-lived presigned URL when the label is S3-backed (passthrough for a legacy Cloudinary-stored label), never the raw stored reference. */
+/** Part 8 — resolves a short-lived presigned URL when the label is S3-backed (passthrough for a legacy Cloudinary-stored label), never the raw stored reference. */
 export const downloadLabelHandler = asyncHandler(async (req: Request, res) => {
   const shipment = await fetchAndStoreLabel(req.params.id, { id: req.user!.id, role: req.user!.role });
   const labelUrl = await resolveDocumentDownloadUrl(shipment.storageProvider, shipment.labelUrl);

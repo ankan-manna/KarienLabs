@@ -10,11 +10,11 @@ export interface Category {
   slug: string;
   parentId: string | null;
   isActive: boolean;
-  // Prompt 12 (CAT-06) — see product-defaults resolution on Product below.
+  // (CAT-06) — see product-defaults resolution on Product below.
   isExpirableDefault?: boolean;
   requiresPrescriptionDefault?: boolean;
-  // Prompt 23 Part 15/18/28/29 — existed on the backend model since
-  // Prompt 23 but was never surfaced in the admin type/form until now
+  // Part 15/18/28/29 — existed on the backend model,
+  // but was never surfaced in the admin type/form until now
   // (see CategorySeoFaqFields.tsx).
   seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
   faq?: { question: string; answer: string }[];
@@ -48,7 +48,7 @@ export interface Product {
   basePrice: number;
   mrp: number;
   gstRate: number;
-  // Prompt 30 — per-unit commercial shipping charge configured on the product.
+   // per-unit commercial shipping charge configured on the product.
   shippingCharge: number;
   reorderLevel: number;
   isActive: boolean;
@@ -60,21 +60,21 @@ export interface Product {
   };
   // Tri-state (CAT-06) — null/undefined means "inherit from category".
   expirable?: boolean | null;
-  // Prompt 12 (CAT-03) — Shiprocket-required physical attributes.
+  // (CAT-03) — Shiprocket-required physical attributes.
   weightGrams?: number | null;
   lengthMm?: number | null;
   widthMm?: number | null;
   heightMm?: number | null;
   barcode?: string | null;
-  // Prompt 12 (CAT-05) — set automatically when a Bundle references this product.
+  // (CAT-05) — set automatically when a Bundle references this product.
   isBundle?: boolean;
   images: { url: string; publicId: string; isPrimary: boolean }[];
-  // Prompt (Product Image Management) — server-derived from `images` (Part
+  // (Product Image Management) — server-derived from `images` (Part
   // 5/22); `mainImage` is `null` only for a product with zero images at all.
   mainImage: { url: string; publicId: string } | null;
   subImages: { url: string; publicId: string; sortOrder: number }[];
   createdAt: string;
-  // Prompt 23 Part 13/18/40 — existed on the backend model since Prompt 12
+  // Part 13/18/40 — existed on the backend model
   // but was never surfaced in the admin type/form until now.
   seo?: { metaTitle?: string; metaDescription?: string; canonicalUrl?: string };
   faq?: { question: string; answer: string }[];

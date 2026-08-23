@@ -39,7 +39,7 @@ const productSchema = new Schema({
     default: [],
   },
 
-  // Prompt 23 Part 28/29/30 — see Category.faq's comment; same embedded,
+  // Part 28/29/30 — see Category.faq's comment; same embedded,
   // admin-authored-only, factual-content-only pattern (e.g. "What is the
   // available strength?", "Is prescription required?", "What is the package
   // size?" — Part 28's own examples). Never auto-generated.
@@ -61,7 +61,7 @@ const productSchema = new Schema({
     dosageForm: { type: String, default: '' }, // tablet, syrup, injection, ...
     strength: { type: String, default: '' }, // e.g. "500mg"
     schedule: { type: String, enum: Object.values(DRUG_SCHEDULES), default: DRUG_SCHEDULES.NONE },
-    // Prompt 12 (CAT-06): tri-state — `null`/unset means "not explicitly set on
+    // (CAT-06): tri-state — `null`/unset means "not explicitly set on
     // this product, fall back to category.requiresPrescriptionDefault" (see
     // product-defaults.util.ts's resolveProductDefaults). Deliberately no
     // `default: false` here anymore (that would make every new product
@@ -72,34 +72,34 @@ const productSchema = new Schema({
     prescriptionRequired: { type: Boolean, default: null, index: true },
     storageInstructions: { type: String, default: '' },
     hsnCode: { type: String, default: '' },
-    // Prompt 12 (CAT-06) — cold-chain handling requirement. Not tri-state
+    // (CAT-06) — cold-chain handling requirement. Not tri-state
     // (unlike prescriptionRequired/expirable): a product either needs cold
     // storage or it doesn't, there's no category-level cold-chain default to
     // inherit from.
     coldStorage: { type: Boolean, default: false },
   },
 
-  // Prompt 12 (CAT-06) — tri-state, same inheritance pattern as
+  // (CAT-06) — tri-state, same inheritance pattern as
   // medicine.prescriptionRequired: `null`/unset falls back to
   // category.isExpirableDefault; an explicit `true`/`false` always wins.
   expirable: { type: Boolean, default: null },
 
-  // Prompt 12 (CAT-03) — Shiprocket create-order API's mandatory dimension
-  // fields, exposed now so the later Shiprocket prompt doesn't need another
+  // (CAT-03) — Shiprocket create-order API's mandatory dimension
+  // fields, exposed now so the later Shiprocket integration doesn't need another
   // schema migration. Grams/millimeters (not kg/cm) so every stored value is
   // an integer-friendly, unambiguous unit — no "was this in kg or g" guessing.
   weightGrams: { type: Number, default: null, min: 0 },
   lengthMm: { type: Number, default: null, min: 0 },
   widthMm: { type: Number, default: null, min: 0 },
   heightMm: { type: Number, default: null, min: 0 },
-  // Prompt 12 (CAT-03) — distinct from `sku` (the internal catalog identifier):
+  // (CAT-03) — distinct from `sku` (the internal catalog identifier):
   // barcode is the physical pack's scannable code (EAN/UPC/etc.), globally
   // unique, but NOT required (existing products may not have one yet — see
   // the partial unique index below). HSN (medicine.hsnCode above) is
   // deliberately left NOT unique — many SKUs legitimately share one HSN.
   barcode: { type: String, default: null, trim: true },
 
-  // Prompt 12 (CAT-05) — set automatically by bundle.service.ts when a Bundle
+  // (CAT-05) — set automatically by bundle.service.ts when a Bundle
   // document is created referencing this product as its sellable SKU. Lets
   // checkout/cart/storefront code detect "this product needs bundle-component
   // expansion" via a single indexed boolean instead of a Bundle lookup on
@@ -109,10 +109,10 @@ const productSchema = new Schema({
   gstRate: { type: Number, default: 0, min: 0, max: 28 },
   basePrice: { type: Number, required: true, min: 0 },
   mrp: { type: Number, required: true, min: 0 },
-  // Prompt 30 (product-level shipping) — a per-unit commercial shipping
+  // (product-level shipping) — a per-unit commercial shipping
   // charge the admin configures per product, distinct from `weightGrams`/
   // `lengthMm`/etc. above (those are PHYSICAL attributes used to compute
-  // the COURIER's cost via Shiprocket — Part 6/7 of that prompt); this is
+  // the COURIER's cost via Shiprocket — Part 6/7); this is
   // what the CUSTOMER is charged, aggregated at checkout alongside the
   // existing order-level zone/weight-based ShippingRule engine
   // (shipping-calculation.service.ts), not a replacement for it — see
@@ -122,7 +122,7 @@ const productSchema = new Schema({
   shippingCharge: { type: Number, default: 0, min: 0 },
   reorderLevel: { type: Number, default: 10, min: 0 },
 
-  // Prompt 16 Part 5 — return-eligibility extension point. The project
+  // Part 5 — return-eligibility extension point. The project
   // documentation doesn't define a universal "which medicines can never be
   // returned" rule, so rather than inventing one, this is a plain
   // per-product admin toggle (default true = returnable, matching most

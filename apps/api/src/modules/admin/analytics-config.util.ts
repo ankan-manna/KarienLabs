@@ -1,9 +1,9 @@
 import { UnprocessableEntityError } from '../../utils/app-error';
 
 /**
- * Prompt 22 Part 2/3/38/46 — pure, DB/Redis-free config shape + validation,
- * same split-file pattern as coupon-config.util.ts (Prompt 19) /
- * notification-config.util.ts (Prompt 20): configuration.service.ts
+ * Part 2/3/38/46 — pure, DB/Redis-free config shape + validation,
+ * same split-file pattern as coupon-config.util.ts ( 19) /
+ * notification-config.util.ts ( 20): configuration.service.ts
  * transitively imports the Redis-backed maintenance-mode cache, and
  * importing that as a side effect of a plain unit test opens a real Redis
  * connection.
@@ -34,10 +34,10 @@ export interface AnalyticsConfig {
   prescriptionAnalyticsEnabled: boolean;
   couponAnalyticsEnabled: boolean;
   taxAnalyticsEnabled: boolean;
-  /** Prompt 34 — Distributor/Bulk Purchase enquiry analytics (Prompt 32's domain), gating the new /admin/analytics/distributor-enquiries + /admin/reports/distributor-enquiries endpoints, same pattern as every other domain toggle here. */
+  /** Distributor/Bulk Purchase enquiry analytics ( 32's domain), gating the new /admin/analytics/distributor-enquiries + /admin/reports/distributor-enquiries endpoints, same pattern as every other domain toggle here. */
   distributorAnalyticsEnabled: boolean;
   /**
-   * Prompt 34 Part 13/14 — whether the frontend loads Google Analytics 4 at
+   * Part 13/14 — whether the frontend loads Google Analytics 4 at
    * all. Deliberately reuses this SAME `analytics` Configuration namespace
    * (Part 14's explicit instruction) rather than a second config system —
    * even though GA tracks WEBSITE/user behavior and every other key here

@@ -1,8 +1,16 @@
-import { getDocumentRetentionDays, isS3Configured } from './s3.client';
+import {
+  getDocumentRetentionDays,
+  getInvoiceRetentionDays,
+  getLabelRetentionDays,
+  isS3Configured,
+  shouldUploadInvoiceToS3,
+  shouldUploadLabelToS3,
+  shouldUploadLogsToS3,
+} from './s3.client';
 import { deleteObject, getPresignedDownloadUrl, objectExists, uploadDocument } from './storage.service';
 
 /**
- * Prompt 27 — a mutable indirection layer over the handful of S3 functions
+ * a mutable indirection layer over the handful of S3 functions
  * `document-retention-sweep.job.ts` / `invoice.service.ts` /
  * `shiprocket-fulfillment.service.ts` need for the retention-expiry and
  * regeneration-on-download logic. Exists SOLELY so integration tests can
@@ -24,4 +32,9 @@ export const s3Ops = {
   getPresignedDownloadUrl,
   isS3Configured,
   getDocumentRetentionDays,
+  getInvoiceRetentionDays,
+  getLabelRetentionDays,
+  shouldUploadInvoiceToS3,
+  shouldUploadLabelToS3,
+  shouldUploadLogsToS3,
 };

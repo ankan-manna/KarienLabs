@@ -4,7 +4,7 @@ import { Schema, model, type InferSchemaType } from 'mongoose';
 import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
- * Line items — and, as of Prompt 13, the full tax/legal snapshot fields
+ * Line items — and, as of  13, the full tax/legal snapshot fields
  * below — are a legal point-in-time snapshot (not references) — an invoice
  * must not change if the underlying Order/Product/Seller/Warehouse data is
  * edited later. All tax-snapshot fields here are computed EXACTLY ONCE, at
@@ -13,11 +13,11 @@ import { auditPlugin } from '../../../plugins/audit.plugin';
  * from these already-frozen values, it does not call the tax engine again
  * (Part 15: invoice immutability). `regenerations` tracks reprints so
  * historical PDFs stay traceable to the template version active when each
- * was generated (Prompt 1's PDF strategy).
+ * was generated ( 1's PDF strategy).
  */
 const invoiceSchema = new Schema({
   invoiceNumber: { type: String, required: true, unique: true },
-  // `unique: true` (new in Prompt 13) is the concurrency guarantee Part 11/23
+  // `unique: true` (new in  13) is the concurrency guarantee Part 11/23
   // require: two concurrent generateInvoiceForOrder(orderId) calls can now
   // never both succeed in creating a document for the same order — the
   // second hits a duplicate-key error, which invoice.service.ts catches and
@@ -30,7 +30,7 @@ const invoiceSchema = new Schema({
   // is also the field seller-scoped invoice numbering (Part 14) keys off of.
   sellerId: { type: Schema.Types.ObjectId, ref: 'Seller', default: null, index: true },
 
-  // ---- Prompt 13 — frozen seller/warehouse/jurisdiction snapshot (Part 9) ----
+  // ---- — frozen seller/warehouse/jurisdiction snapshot (Part 9) ----
   sellerNameSnapshot: { type: String, default: '' },
   sellerGstinSnapshot: { type: String, default: '' },
   sellerAddressSnapshot: { type: String, default: '' },
@@ -62,7 +62,7 @@ const invoiceSchema = new Schema({
         unitPrice: { type: Number, required: true },
         gstRate: { type: Number, required: true },
         amount: { type: Number, required: true },
-        // Prompt 13 per-line tax breakdown (Part 9). Zero-valued (not
+        // Per-line tax breakdown (Part 9). Zero-valued (not
         // omitted) for a bundle line — see `bundleComponents` below for the
         // real per-HSN mixed-GST breakdown on those lines (Part 7).
         taxableAmount: { type: Number, default: 0 },
@@ -72,7 +72,7 @@ const invoiceSchema = new Schema({
         sgstAmount: { type: Number, default: 0 },
         igstRate: { type: Number, default: 0 },
         igstAmount: { type: Number, default: 0 },
-        // Prompt 30 — this line's frozen product-level shipping
+        // this line's frozen product-level shipping
         // contribution, copied verbatim from `order.items[].shippingAmount`
         // at first invoice generation and never recomputed on regeneration
         // (Part 15/16/17 immutability — same rule as every other tax field
@@ -121,14 +121,14 @@ const invoiceSchema = new Schema({
     grandTotal: { type: Number, required: true },
   },
 
-  // ---- Prompt 13 (TAX-02) — invoice round-off ----
+  // ---- (TAX-02) — invoice round-off ----
   // Computed once at final invoice assembly as
   // `finalAmount - shipping + discount - sum(taxableAmount + gst per line)`
   // (see tax-calculation.service.ts) — never re-derived afterward. Can be
   // positive or negative; typically a few paise of per-line-rounding drift.
   roundOffAmount: { type: Number, default: 0 },
   // Alias of `totals.grandTotal`, kept as its own top-level field to match
-  // Prompt 13's explicit field-naming (Part 24) — always exactly equal to
+  // Explicit field-naming (Part 24) — always exactly equal to
   // `totals.grandTotal`/what the customer was actually charged, the
   // round-off never alters this value.
   finalAmount: { type: Number, default: 0 },
@@ -140,11 +140,11 @@ const invoiceSchema = new Schema({
   couponCode: { type: String, default: null },
   razorpayPaymentId: { type: String, default: null },
   status: { type: String, enum: Object.values(INVOICE_STATUS), default: INVOICE_STATUS.DRAFT },
-  // Prompt 15 — for `storageProvider: 's3'` invoices, `pdfUrl` holds the S3
+  // for `storageProvider: 's3'` invoices, `pdfUrl` holds the S3
   // OBJECT KEY (not a working URL); the bucket is private, so a real
   // downloadable link is only ever generated on demand via a short-lived
   // presigned URL (see invoice.service.ts's resolveInvoiceDownloadUrl).
-  // Legacy rows created before this prompt have `storageProvider: 'cloudinary'`
+  // Legacy rows created before this  have `storageProvider: 'cloudinary'`
   // and `pdfUrl` remains their already-public, directly-usable Cloudinary URL
   // — untouched, no migration/rewrite performed on them (Part 31).
   pdfUrl: { type: String, default: null },

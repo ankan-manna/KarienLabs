@@ -25,7 +25,7 @@ function normalizeInput(input: Record<string, unknown>): Record<string, unknown>
 }
 
 /**
- * Real pagination (Prompt-24-style bug fix — this previously returned the
+ * Real pagination (-24-style bug fix — this previously returned the
  * FULL unpaginated list via a plain `sendSuccess(res, items)`, which left
  * `meta: null` in the response envelope; the admin table page's generic
  * ConfigEntityPage always reads `data.meta.total` unconditionally, exactly

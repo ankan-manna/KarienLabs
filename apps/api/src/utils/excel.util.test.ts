@@ -39,7 +39,7 @@ test('parseExcelBuffer enforces a maximum row count', async () => {
   await assert.rejects(() => parseExcelBuffer(buffer), /exceeds the maximum/);
 });
 
-test('buildExcelBuffer neutralizes a formula-injection payload (Part 41 — CSV/formula injection)', async () => {
+test('buildExcelBuffer neutralizes a formula-injection payload (CSV/formula injection)', async () => {
   const maliciousRows = [{ name: '=HYPERLINK("http://evil.example","Click me")', sku: 'SAFE1' }];
   const buffer = await buildExcelBuffer('Products', [
     { header: 'Name', key: 'name', width: 30 },

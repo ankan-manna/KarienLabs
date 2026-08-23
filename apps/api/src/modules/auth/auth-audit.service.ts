@@ -24,7 +24,7 @@ export interface AuthEventInput {
 /**
  * Thin, auth-event-specific wrapper around the existing generic `recordAudit`
  * (apps/api/src/modules/audit/audit.service.ts) — resource is always fixed to
- * `'auth'` and the actor-context fields (Prompt 10 Part 4) are derived
+ * `'auth'` and the actor-context fields ( 10 Part 4) are derived
  * consistently instead of every call site reimplementing the same mapping.
  * Does NOT introduce a second audit collection.
  */

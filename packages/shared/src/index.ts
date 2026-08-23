@@ -23,5 +23,6 @@ export * from './constants/distributor-enquiry-events';
 export * from './types/api';
 export * from './types/user';
 export * from './schemas/env.schema';
+export * from './schemas/s3-config.schema';
 export * from './utils/resolve-product-defaults';
 export * from './utils/tax';

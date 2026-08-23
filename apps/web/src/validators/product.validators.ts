@@ -19,7 +19,7 @@ export const productFormSchema = z.object({
   basePrice: z.coerce.number().min(0, 'Must be 0 or more'),
   mrp: z.coerce.number().min(0, 'Must be 0 or more'),
   gstRate: z.coerce.number().min(0).max(28).optional(),
-  // Prompt 30 — per-unit commercial shipping charge.
+   // per-unit commercial shipping charge.
   shippingCharge: z.coerce.number().min(0, 'Must be 0 or more').optional(),
   reorderLevel: z.coerce.number().min(0).optional(),
   genericName: z.string().optional(),
@@ -27,14 +27,14 @@ export const productFormSchema = z.object({
   expirable: z.enum(['inherit', 'true', 'false']),
   coldStorage: z.boolean().optional(),
   isActive: z.boolean().optional(),
-  // Prompt 12 (CAT-03) — all optional; kept as strings in the form (empty
+  // (CAT-03) — all optional; kept as strings in the form (empty
   // string = "not set") and coerced to number|null on submit.
   barcode: z.string().optional(),
   weightGrams: z.string().optional(),
   lengthMm: z.string().optional(),
   widthMm: z.string().optional(),
   heightMm: z.string().optional(),
-  // Prompt 23 Part 13/18/40 — SEO metadata; all optional, matches the
+  // Part 13/18/40 — SEO metadata; all optional, matches the
   // backend's `seo` sub-object (product.model.ts / product.validator.ts).
   seoTitle: z.string().max(70, 'Keep under 70 characters for search results').optional(),
   seoDescription: z.string().max(160, 'Keep under 160 characters for search results').optional(),

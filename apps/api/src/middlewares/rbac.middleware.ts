@@ -62,7 +62,7 @@ interface AccountStatus {
 }
 
 /**
- * Prompt 24 Part 63 — "if an admin's permissions change, ensure previously
+ * Part 63 — "if an admin's permissions change, ensure previously
  * issued tokens cannot bypass the updated authorization model." Permission
  * CHANGES already satisfy this (`getEffectivePermissions` above re-reads the
  * role's current permission set from this same Redis cache on every

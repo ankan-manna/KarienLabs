@@ -1,5 +1,5 @@
 /**
- * Prompt 32 — Distributor / Bulk Purchase enquiry workflow (a lead/enquiry
+ * Distributor / Bulk Purchase enquiry workflow (a lead/enquiry
  * domain, deliberately separate from ORDER_STATUS/RETURN_STATUS — an
  * enquiry is a business communication record, never an order). Mirrors
  * RETURN_STATUS/RETURN_STATUS_TRANSITIONS' exact shape (commerce.ts) — same

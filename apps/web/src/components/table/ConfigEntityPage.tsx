@@ -165,6 +165,13 @@ export function ConfigEntityPage<T extends BaseEntity>({
   } = form;
 
   useEffect(() => {
+    // Must also depend on `isFormOpen`, not just `editing`: reopening "New" twice in a
+    // row leaves `editing` at `null` both times (no reference change), so without
+    // `isFormOpen` in the deps this effect wouldn't rerun and the drawer would reopen
+    // still holding the PREVIOUS submission's stale react-hook-form state — including
+    // any `setValueAs`-transformed values (e.g. BlogImageFields' `tags` becoming an
+    // array instead of a string), which then crashes when transformed a second time.
+    if (!isFormOpen) return;
     if (editing) {
       const editingBag = editing as unknown as Record<string, unknown>;
       const values: Record<string, unknown> = {
@@ -179,7 +186,7 @@ export function ConfigEntityPage<T extends BaseEntity>({
       reset(values);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, fields, reset]);
+  }, [editing, isFormOpen, fields, reset]);
 
   function openCreate() {
     setEditing(null);

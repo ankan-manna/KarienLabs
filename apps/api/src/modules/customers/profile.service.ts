@@ -46,9 +46,9 @@ interface OtpRequestMeta {
 }
 
 /**
- * Prompt 21 Part 3 — security-sensitive identifier change flow, reusing
+ * Part 3 — security-sensitive identifier change flow, reusing
  * the EXISTING OTP system (`VERIFICATION_PURPOSES.PHONE_VERIFICATION`,
- * defined since Prompt 10 but never wired to anything until now — see
+ * defined but never wired to anything until now — see
  * otp.service.ts's OtpPurpose widening). `phone` is deliberately NOT part
  * of the generic `updateProfile` patch schema (profile.validator.ts) — the
  * ONLY way to change it is through this two-step verify flow, so a blind
@@ -108,7 +108,7 @@ export async function confirmPhoneChange(userId: string, code: string, meta: Otp
 }
 
 /**
- * Prompt 21 Part 35 — a SAFE, reversible-by-admin self-deactivation, never
+ * Part 35 — a SAFE, reversible-by-admin self-deactivation, never
  * a hard delete. Uses the User model's PRE-EXISTING `isActive` field
  * (already checked by every login path — see auth.service.ts — but never
  * previously writable by the customer themselves; only admin suspension
@@ -132,7 +132,7 @@ export async function deactivateAccount(userId: string, password: string, reason
   await user.save();
 
   await logoutAllSessions(userId);
-  // Prompt 24 Part 63 — see requireAuth (auth.middleware.ts)'s comment: this
+  // Part 63 — see requireAuth (auth.middleware.ts)'s comment: this
   // is what actually makes the "can't keep transacting on an already-issued
   // access token" claim above true, not just the refresh-token revocation.
   await invalidateAccountStatusCache(userId);

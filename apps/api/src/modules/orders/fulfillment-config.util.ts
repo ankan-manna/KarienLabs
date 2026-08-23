@@ -1,7 +1,7 @@
 import { UnprocessableEntityError } from '../../utils/app-error';
 
 /**
- * Prompt 27 (post-payment fulfillment automation) — pure, DB/Redis-free
+ * (post-payment fulfillment automation) — pure, DB/Redis-free
  * config shape + validation, split out from fulfillment-config.service.ts
  * for the same reason coupon-config.util.ts / prescription-config.util.ts
  * are split from their services (the Configuration service transitively

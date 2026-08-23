@@ -1,6 +1,6 @@
 /**
- * Prompt 19 — named audit-action-string-per-domain, same pattern as
- * PRESCRIPTION_AUDIT_ACTIONS (Prompt 17) / RETURN_AUDIT_ACTIONS (Prompt 16).
+ * named audit-action-string-per-domain, same pattern as
+ * PRESCRIPTION_AUDIT_ACTIONS ( 17) / RETURN_AUDIT_ACTIONS ( 16).
  */
 export const COUPON_AUDIT_ACTIONS = {
   COUPON_CREATED: 'COUPON_CREATED',

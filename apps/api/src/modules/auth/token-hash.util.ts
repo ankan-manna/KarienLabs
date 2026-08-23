@@ -3,7 +3,7 @@ import { createHash, timingSafeEqual } from 'crypto';
 /**
  * SHA-256 hash for opaque bearer secrets we need to look up by exact match
  * (refresh tokens, email-verification/password-reset link tokens, OTP codes).
- * Extracted from auth.service.ts (Prompt 1-9) so otp.service.ts (Prompt 10)
+ * Extracted from auth.service.ts ( 1-9) so otp.service.ts ( 10)
  * can reuse it instead of redefining the same function — not bcrypt, by
  * design: these are high-entropy random tokens or rate-limited/short-TTL OTP
  * codes looked up by hash equality, not low-entropy user-chosen passwords

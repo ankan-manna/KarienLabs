@@ -10,7 +10,7 @@ import { auditPlugin } from '../../../plugins/audit.plugin';
  * (a product is either a plain SKU or a bundle SKU, never both configurations
  * at once — see the unique index below).
  *
- * `sellingPrice` is independently admin-controlled — Prompt 12 explicitly
+ * `sellingPrice` is independently admin-controlled — explicitly
  * forbids auto-deriving it from the sum of component prices (e.g. components
  * totalling ₹600 sold as a ₹499 combo). See bundle-item.model.ts's
  * `priceRatio` for how that ₹499 is later apportioned across components for

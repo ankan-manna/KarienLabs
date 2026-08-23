@@ -19,6 +19,8 @@ interface Field {
   type: FieldType;
   options?: { label: string; value: string }[];
   placeholder?: string;
+  /** Shown when the stored value is unset — must match the backend's own default (e.g. s3.client.ts's envCredentials()) so the toggle displayed here never lies about actual runtime behavior. */
+  defaultBoolean?: boolean;
 }
 
 const NAMESPACE_FIELDS: Record<string, Field[]> = {
@@ -117,7 +119,7 @@ const NAMESPACE_FIELDS: Record<string, Field[]> = {
     { name: 'senderId', label: 'Sender ID', type: 'text' },
     { name: 'otpExpiryMinutes', label: 'OTP Expiry (minutes)', type: 'number' },
   ],
-  // Prompt 10 — OTP login/password-reset + admin Google OAuth toggles. See
+  // OTP login/password-reset + admin Google OAuth toggles. See
   // apps/api/src/modules/auth/auth-config.service.ts for defaults/validation;
   // field names match the API's `authentication` namespace verbatim.
   authentication: [
@@ -150,7 +152,7 @@ const NAMESPACE_FIELDS: Record<string, Field[]> = {
       type: 'boolean',
     },
   ],
-  // Prompt 31 — pincode validation / address mobile-OTP / mandatory
+  // pincode validation / address mobile-OTP / mandatory
   // pre-payment Shiprocket serviceability gate toggles. See
   // apps/api/src/modules/customers/address-verification-config.service.ts.
   address_verification: [
@@ -162,7 +164,7 @@ const NAMESPACE_FIELDS: Record<string, Field[]> = {
       type: 'boolean',
     },
   ],
-  // Prompt 32 — Distributor/Bulk Purchase enquiry enable/disable + OTP +
+  // Distributor/Bulk Purchase enquiry enable/disable + OTP +
   // email-notification toggles. See
   // apps/api/src/modules/distributor-enquiries/distributor-enquiry-config.service.ts.
   distributor_enquiry: [
@@ -175,13 +177,39 @@ const NAMESPACE_FIELDS: Record<string, Field[]> = {
   catalog: [
     { name: 'maxSubImages', label: 'Maximum Sub Images per Product', type: 'number' },
   ],
+  // S3 storage + retention for invoices/shipping labels/logs. Credentials
+  // fall back to env vars when left blank here — see
+  // apps/api/src/integrations/s3/s3.client.ts. The three "Upload ... to S3"
+  // toggles are backend-enforced (document-storage.helper.ts /
+  // log-archival.job.ts check them directly), not just UI state.
+  s3: [
+    { name: 'region', label: 'AWS Region', type: 'text', placeholder: 'us-east-1' },
+    { name: 'bucket', label: 'S3 Bucket Name', type: 'text' },
+    { name: 'accessKeyId', label: 'Access Key ID', type: 'text' },
+    { name: 'secretAccessKey', label: 'Secret Access Key', type: 'password' },
+    {
+      name: 'endpoint',
+      label: 'Custom S3 Endpoint (local dev / MinIO only)',
+      type: 'text',
+      placeholder: 'http://localhost:4568',
+    },
+    { name: 'uploadInvoiceToS3', label: 'Upload Invoice to S3', type: 'boolean', defaultBoolean: true },
+    { name: 'invoiceRetentionDays', label: 'Invoice S3 Retention (days)', type: 'number' },
+    { name: 'uploadLabelToS3', label: 'Upload Shipping Label to S3', type: 'boolean', defaultBoolean: true },
+    { name: 'labelRetentionDays', label: 'Shipping Label S3 Retention (days)', type: 'number' },
+    { name: 'uploadLogsToS3', label: 'Upload Logs to S3', type: 'boolean', defaultBoolean: true },
+    { name: 'logRetentionDays', label: 'Log S3 Retention (days)', type: 'number' },
+  ],
 };
 
 const NAMESPACES = Object.keys(NAMESPACE_FIELDS);
 
 function fieldValue(values: Record<string, unknown>, field: Field): string | boolean {
   const raw = values[field.name];
-  if (field.type === 'boolean') return Boolean(raw);
+  if (field.type === 'boolean') {
+    if (raw == null && field.defaultBoolean != null) return field.defaultBoolean;
+    return Boolean(raw);
+  }
   return raw == null ? '' : String(raw);
 }
 

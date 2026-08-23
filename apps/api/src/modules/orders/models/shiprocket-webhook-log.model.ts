@@ -1,7 +1,7 @@
 import { Schema, model, type InferSchemaType } from 'mongoose';
 
 /**
- * Prompt 14 Part 22 — every received Shiprocket webhook delivery is logged
+ * Part 22 — every received Shiprocket webhook delivery is logged
  * here BEFORE processing, keyed on a dedup fingerprint (awb + status +
  * shiprocket's own event timestamp if present) so an exact-duplicate
  * redelivery (Shiprocket retries on any non-2xx, or the same event genuinely
@@ -23,8 +23,8 @@ const shiprocketWebhookLogSchema = new Schema({
 
 shiprocketWebhookLogSchema.index({ dedupKey: 1 }, { unique: true });
 // 20 days, in seconds — matches the platform-wide log-retention policy
-// referenced in Prompt 14 Part 32 (full S3-backed log lifecycle is a later
-// prompt; this collection is deliberately already compliant with it).
+// referenced in Part 32 (full S3-backed log lifecycle is a later
+// item; this collection is deliberately already compliant with it).
 shiprocketWebhookLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 20 });
 
 export type ShiprocketWebhookLogDocument = InferSchemaType<typeof shiprocketWebhookLogSchema>;

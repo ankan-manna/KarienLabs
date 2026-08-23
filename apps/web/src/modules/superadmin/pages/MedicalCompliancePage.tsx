@@ -10,7 +10,7 @@ import { Switch } from '../../../components/common/Switch';
 import { toast } from '../../../utils/toast';
 
 /**
- * Prompt 17 Part 39 — the dedicated Super Admin / permitted Platform Admin
+ * Part 39 — the dedicated Super Admin / permitted Platform Admin
  * "Medical Compliance" configuration section. Deliberately its OWN page
  * (not a namespace added to the fully-generic ConfigurationPage) because
  * writes here MUST go through the validated /prescriptions/config endpoint

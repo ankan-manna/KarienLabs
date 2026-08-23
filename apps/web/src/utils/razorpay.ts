@@ -16,7 +16,7 @@ function loadRazorpayScript(): Promise<boolean> {
 }
 
 /**
- * Prompt 2 Part 11 — the Razorpay Checkout widget manipulates `<body>` styles
+ * Part 11 — the Razorpay Checkout widget manipulates `<body>` styles
  * (scroll locking) itself while its modal/iframe is open, and is SUPPOSED to
  * undo that on close — but that cleanup is third-party code we don't
  * control, and it doesn't reliably run on every exit path (a thrown error
@@ -54,7 +54,7 @@ interface OpenRazorpayCheckoutInput {
 }
 
 /**
- * Prompt 2 Part 11/12 — every exit path (success, dismiss/cancel, script
+ * Part 11/12 — every exit path (success, dismiss/cancel, script
  * load failure, `Razorpay.open()` throwing synchronously) funnels through
  * ONE cleanup call, so the caller (`CheckoutPage.tsx`) never has to
  * remember to reset scroll/loading state in more than one place, and a

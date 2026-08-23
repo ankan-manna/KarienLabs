@@ -57,7 +57,7 @@ export default function BlogDetailPage() {
       {blog.coverImageUrl && (
         <img src={blog.coverImageUrl} alt={blog.title} className="mb-6 w-full rounded-lg object-cover" />
       )}
-      <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{blog.title}</h1>
+      <h1 className="text-2xl font-semibold text-gray-900 dark:text-night-text">{blog.title}</h1>
       <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
         <span>{formatDate(blog.publishedAt)}</span>
         {typeof blog.authorId === 'object' && <span>· {blog.authorId.name}</span>}

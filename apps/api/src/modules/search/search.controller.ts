@@ -13,7 +13,7 @@ export const autocompleteHandler = asyncHandler(async (req, res) => {
 });
 
 /**
- * Prompt 23 Part 1/2 — the main paginated, filtered, sorted product search
+ * Part 1/2 — the main paginated, filtered, sorted product search
  * endpoint. `req.query` has ALREADY been Zod-validated + type-coerced by
  * `validate(productSearchQuerySchema, 'query')` in search.routes.ts
  * (`middlewares/validate.ts` replaces `req.query` with the parsed,

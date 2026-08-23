@@ -6,7 +6,7 @@ import { redis } from '../config/redis';
 export const healthRouter = Router();
 
 /**
- * Prompt 24 Part 49/50 — liveness: "is the Node.js process alive and able
+ * Part 49/50 — liveness: "is the Node.js process alive and able
  * to handle an HTTP request?" Deliberately checks NOTHING external
  * (Mongo/Redis) — Docker's `HEALTHCHECK` (Dockerfile) and any orchestrator
  * restart policy hit this path, and Part 50 is explicit that a liveness

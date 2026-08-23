@@ -14,7 +14,7 @@ import { UserModel } from './models/user.model';
 const BCRYPT_COST = 12;
 
 /**
- * Prompt 24 Part 16 — Super Admin protection. `authorize(permission(RESOURCES.USERS, ACTIONS.UPDATE))`
+ * Part 16 — Super Admin protection. `authorize(permission(RESOURCES.USERS, ACTIONS.UPDATE))`
  * at the route layer only proves the actor has *some* user-management
  * permission; it does NOT distinguish "can manage ordinary admins" from
  * "can manage/create/demote a super_admin account." Without this
@@ -157,7 +157,7 @@ export async function updateUserRoleOrStatus(
     { new: true },
   );
   if (!user) throw new NotFoundError('User');
-  // Prompt 24 Part 63 — a role/active-status change must take effect on the
+  // Part 63 — a role/active-status change must take effect on the
   // NEXT request from that user, not wait out their current access token's
   // TTL; see requireAuth (auth.middleware.ts) / getAccountStatus
   // (rbac.middleware.ts) for the read side of this cache.
@@ -205,7 +205,7 @@ export async function suspendUser(id: string, reason: string, actorId: string, a
   if (!user) throw new NotFoundError('User');
 
   await logoutAllSessions(String(user._id));
-  // Prompt 24 Part 63 — see updateUserRoleOrStatus's comment above.
+   // Part 63 — see updateUserRoleOrStatus's comment above.
   await invalidateAccountStatusCache(id);
 
   await recordAudit({

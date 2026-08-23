@@ -16,11 +16,11 @@ export interface Warehouse {
   capacity?: number | null;
   status?: 'operational' | 'maintenance' | 'closed';
   isActive: boolean;
-  // Prompt 11 — Seller/Warehouse relationship.
+   // Seller/Warehouse relationship.
   sellerId?: string | null;
   gstin?: string;
   stateCode?: string;
-  // Prompt 14 — Shiprocket pickup-location contact details.
+   // Shiprocket pickup-location contact details.
   contactPhone?: string;
   contactEmail?: string;
 }
@@ -213,7 +213,7 @@ export interface Batch {
   purchaseOrderId: string | null;
   status: BatchStatus;
   effectiveStatus?: BatchStatus;
-  // Prompt 12 (CAT-04) — batch-specific MRP override + recall flag.
+  // (CAT-04) — batch-specific MRP override + recall flag.
   mrp?: number | null;
   recallFlag?: boolean;
   /** batch.mrp ?? product.mrp, precomputed server-side — see batch-pricing.util.ts. */
@@ -313,7 +313,7 @@ export type QuickAddStockInput =
 /**
  * Admin Inventory Management — single-step "Add Inventory". `existing_batch`
  * adds quantity to a batch that's already there; `new_batch` is the
- * PO/GRN-free manufacturer path (Manufacturer Inventory Model prompt) that
+ * PO/GRN-free manufacturer path (Manufacturer Inventory Model ) that
  * creates the batch AND adds the quantity in one call. Backed by the same
  * `POST /stock-adjustments/quick-add` endpoint — no duplicate API surface.
  */

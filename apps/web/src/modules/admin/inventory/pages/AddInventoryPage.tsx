@@ -15,7 +15,7 @@ import { formatDate } from '../../../../utils/format';
 import { toast } from '../../../../utils/toast';
 
 /**
- * Prompt (Admin Inventory Management) Part 12-17 — "Add Inventory": select
+ *  (Admin Inventory Management) Part 12-17 — "Add Inventory": select
  * a product, select which of its existing batches to add stock to, enter a
  * quantity, save. Deliberately batch-scoped rather than product-scoped —
  * `Batch` (productId + warehouseId + batchNumber + expiryDate +
@@ -23,7 +23,7 @@ import { toast } from '../../../../utils/toast';
  * not create a duplicate Product Inventory model"), so "add 5 to this
  * product" always really means "add 5 to one specific batch of it."
  *
- * Prompt (Manufacturer Inventory Model) — KarienLabs manufactures its own
+ *  (Manufacturer Inventory Model) — KarienLabs manufactures its own
  * stock, so a product with no batches yet is no longer a dead end here: the
  * "Create New Batch" panel below creates the batch AND adds the quantity in
  * one step, with no Purchase Order / GRN involved. It's offered whenever a

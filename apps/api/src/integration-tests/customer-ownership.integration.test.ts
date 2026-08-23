@@ -10,7 +10,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * Real HTTP-level IDOR regression tests — boots the actual Express app
  * (createApp()) against a real, ephemeral MongoDB + Redis and drives every
  * request through supertest, exactly the way a real client would. This is
- * the automated replacement for Prompt 21's one-off verify-prompt21.ts
+ * the automated replacement for  21's one-off verify-21.ts
  * script: two seeded customers, Customer A repeatedly attempting to read/
  * mutate Customer B's order/address/invoice/prescription/shipment/return via
  * the real routes, asserting the ownership boundary holds (403/404) rather
@@ -358,7 +358,7 @@ describe('Customer ownership boundaries (IDOR)', () => {
       ]);
 
       // Fire both "make me default" requests concurrently — this is exactly
-      // the race address.service.ts's Prompt 21 Part 7/60 transaction fix
+      // the race address.service.ts's Part 7/60 transaction fix
       // (clearDefaultInSession + findOneAndUpdate in one session.withTransaction)
       // exists to close: two non-transactional writes interleaving could
       // previously leave either zero or two addresses marked default.

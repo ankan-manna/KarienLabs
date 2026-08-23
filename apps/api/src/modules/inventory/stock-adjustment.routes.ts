@@ -37,7 +37,7 @@ stockAdjustmentRouter.post(
   validate(createStockAdjustmentSchema),
   requestStockAdjustmentHandler,
 );
-// Prompt (Admin Inventory Management) Part 12/24 — "Add Inventory": the
+// (Admin Inventory Management) Part 12/24 — "Add Inventory": the
 // single-step counterpart to the two-step request/approve flow above, same
 // `inventory:update` gate as requesting one (Part 24: "Platform Admin
 // allowed if existing inventory permission grants access" — this is that

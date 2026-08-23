@@ -115,7 +115,7 @@ async function authenticate(): Promise<string> {
  * matches structured field NAMES — it can't reach into a raw text blob. This
  * parses the JSON error body and keeps only the fields that are actually
  * useful for debugging (`message`, `status_code`, `errors`) — the same shape
- * the prompt's own worked example expects — discarding anything else
+ * the 's own worked example expects — discarding anything else
  * Shiprocket might have echoed back. Falls back to a short, hard-capped
  * excerpt only when the body isn't valid JSON (rare — Shiprocket's API is
  * JSON-only, but a proxy/gateway error page could return HTML).
@@ -173,7 +173,7 @@ export async function shiprocketRequest<T>(
     res = await doFetch(freshToken);
   }
 
-  // Prompt 18 Part 18 — dedicated third-party-api-metrics logger, kept
+  // Part 18 — dedicated third-party-api-metrics logger, kept
   // architecturally separate from the main application log. Only safe
   // operational metadata (Part 18/22) — never the request/response body,
   // never the bearer token.

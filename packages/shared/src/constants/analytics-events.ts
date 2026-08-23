@@ -1,6 +1,6 @@
 /**
- * Prompt 22 — named audit-action-string-per-domain, same pattern as
- * COUPON_AUDIT_ACTIONS (Prompt 19) / NOTIFICATION_AUDIT_ACTIONS (Prompt 20).
+ * named audit-action-string-per-domain, same pattern as
+ * COUPON_AUDIT_ACTIONS ( 19) / NOTIFICATION_AUDIT_ACTIONS ( 20).
  */
 export const ANALYTICS_AUDIT_ACTIONS = {
   ANALYTICS_CONFIG_CHANGED: 'ANALYTICS_CONFIG_CHANGED',

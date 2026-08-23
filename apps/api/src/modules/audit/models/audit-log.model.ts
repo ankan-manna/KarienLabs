@@ -16,9 +16,9 @@ const auditLogSchema = new Schema({
   requestId: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
 
-  // Actor-context fields (Prompt 10 Part 4/5). All optional/defaulted so every
-  // pre-existing recordAudit() call site (config/role/order/return/... from
-  // Prompts 3-9) keeps working unchanged with these simply left blank —
+  // Actor-context fields (Part 4/5). All optional/defaulted so every
+  // pre-existing recordAudit() call site (config/role/order/return/...)
+  // keeps working unchanged with these simply left blank —
   // this extends the one existing audit collection rather than adding a
   // parallel "auth events" collection.
   actorType: { type: String, default: null }, // ACTOR_TYPES — CUSTOMER/PLATFORM_ADMIN/SUPER_ADMIN/SELLER/SYSTEM/WEBHOOK/BACKGROUND_JOB

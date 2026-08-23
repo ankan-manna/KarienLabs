@@ -45,7 +45,7 @@ const canExport = authorize(permission(RESOURCES.PRODUCTS, ACTIONS.EXPORT));
 
 productRouter.get('/', validate(listQuerySchema, 'query'), listProductsHandler);
 productRouter.get('/export/excel', requireAuth, canExport, exportImportRateLimiter, exportProductsHandler);
-// Prompt (Product Image Management) Part 4/28 — must be registered before
+// (Product Image Management) Part 4/28 — must be registered before
 // `/:id` (Express matches routes in order; without this, "config" would be
 // parsed as a product id). `requireAuth` only, no specific permission — any
 // authenticated staff member needs to know the current limit to enforce it

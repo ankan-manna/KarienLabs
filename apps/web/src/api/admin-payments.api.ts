@@ -5,7 +5,7 @@ import type { ListQueryParams, PaginatedMeta } from './types';
 
 export interface PaymentListItem {
   _id: string;
-  /** `null` for a payment whose checkout was never completed/paid (Prompt 2 prepaid-only redesign) — no Order was ever created for it. */
+  /** `null` for a payment whose checkout was never completed/paid ( 2 prepaid-only redesign) — no Order was ever created for it. */
   orderId: string | null;
   razorpayOrderId: string;
   razorpayPaymentId: string | null;

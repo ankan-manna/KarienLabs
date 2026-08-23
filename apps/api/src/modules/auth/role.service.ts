@@ -65,7 +65,7 @@ export async function cloneRole(
 }
 
 /**
- * Prompt 24 Part 16 — `authorize(permission(RESOURCES.ROLES, ACTIONS.UPDATE))`
+ * Part 16 — `authorize(permission(RESOURCES.ROLES, ACTIONS.UPDATE))`
  * at the route layer proves the actor can edit *some* role's permission
  * set; it does not distinguish "an ordinary role" from "the super_admin
  * role itself." Without this guard, any actor delegated `roles:update`

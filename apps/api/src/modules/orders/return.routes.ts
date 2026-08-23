@@ -61,12 +61,12 @@ const inspectReturnSchema = z.object({
 
 export const returnRouter = Router();
 
-// Prompt 16 Part 35 — the return workflow now has its own RESOURCES.RETURNS
+// Part 35 — the return workflow now has its own RESOURCES.RETURNS
 // scope instead of piggybacking on RESOURCES.ORDERS (see seed-roles.ts for
 // the corresponding grant). `approve` covers the whole staff review/QC/
 // dispatch workflow (approve/reject/picked-up/receive/inspect/reverse-
 // shipment — mirrors how ORDERS:approve covered the equivalent single-action
-// return workflow before this prompt); `refund` is its own action so a role
+// return workflow before this ); `refund` is its own action so a role
 // could in principle be granted return visibility without refund authority.
 const canApprove = authorize(permission(RESOURCES.RETURNS, ACTIONS.APPROVE));
 const canRefund = authorize(permission(RESOURCES.RETURNS, ACTIONS.REFUND));

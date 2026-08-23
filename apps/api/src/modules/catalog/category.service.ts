@@ -43,10 +43,10 @@ export async function updateCategory(
   const updated = await categoryRepository.updateById(id, patch);
   if (!updated) throw new NotFoundError('Category');
 
-  // Prompt 23 Part 18/40/41 — same distinct SEO-change audit signal as
+  // Part 18/40/41 — same distinct SEO-change audit signal as
   // product.service.ts::updateProduct; categories previously had NO audit
   // trail at all on update, so this is the first one, scoped to just the
-  // SEO/FAQ fields (the sensitive/reviewable surface this prompt adds).
+  // SEO/FAQ fields (the sensitive/reviewable surface this  adds).
   if (before && ('seo' in input || 'faq' in input)) {
     await recordAudit({
       actorId,
@@ -71,7 +71,7 @@ export async function deleteCategory(id: string, actorId: string) {
   if (!deleted) throw new NotFoundError('Category');
 }
 
-/** Prompt 23 Part 15/21 — public detail lookup, resolves by `_id` (existing links) or `slug` (SEO-friendly links) via `findByIdOrSlug`. This is only used by the public `GET /:id` route (confirmed: no admin code path calls it). */
+/** Part 15/21 — public detail lookup, resolves by `_id` (existing links) or `slug` (SEO-friendly links) via `findByIdOrSlug`. This is only used by the public `GET /:id` route (confirmed: no admin code path calls it). */
 export async function getCategoryById(idOrSlug: string) {
   const category = await categoryRepository.findByIdOrSlug(idOrSlug);
   if (!category) throw new NotFoundError('Category');

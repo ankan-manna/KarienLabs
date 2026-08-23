@@ -3,8 +3,8 @@ import { resolveAnalyticsDateRange, dateRangeMatchStage, type ResolvedDateRange 
 import { SearchLogModel } from './models/search-log.model';
 
 /**
- * Prompt 23 Part 33/34/35 — search analytics, built as a thin extra report
- * type reusing Prompt 22's existing analytics date-range resolver (the
+ * Part 33/34/35 — search analytics, built as a thin extra report
+ * type reusing  22's existing analytics date-range resolver (the
  * "integrate with the existing admin analytics module" requirement) rather
  * than inventing a second, parallel date-handling scheme. Read-only by
  * design (Part 35: "analytics/search data is primarily read-only... do not

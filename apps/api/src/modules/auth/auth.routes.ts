@@ -96,7 +96,7 @@ authRouter.post('/verify-email/confirm', validate(verifyEmailSchema), verifyEmai
 authRouter.get('/me', requireAuth, meHandler);
 authRouter.get('/auth-config', authConfigHandler);
 
-// Admin "Continue with Google" (Prompt 10 Part 3) — GET, not POST: this is a
+// Admin "Continue with Google" ( 10 Part 3) — GET, not POST: this is a
 // browser-navigation OAuth redirect flow, not a JSON API call.
 authRouter.get('/google', authRateLimiter, googleLoginHandler);
 authRouter.get('/google/callback', authRateLimiter, googleCallbackHandler);

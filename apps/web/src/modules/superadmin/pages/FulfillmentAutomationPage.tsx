@@ -10,10 +10,10 @@ import { Switch } from '../../../components/common/Switch';
 import { toast } from '../../../utils/toast';
 
 /**
- * Prompt 27 Part 30/31/32/39 — Super Admin / permitted Platform Admin
+ * Part 30/31/32/39 — Super Admin / permitted Platform Admin
  * configuration for the automated post-payment fulfillment sweep (payment
  * captured -> order advanced -> invoice -> Shiprocket -> label, all
- * unchanged pipeline steps from Prompts 2/13/14 — this page only controls
+ * unchanged pipeline steps from s 2/13/14 — this page only controls
  * WHETHER and HOW OFTEN the automation that triggers them runs). Its own
  * dedicated page (not the raw generic ConfigurationPage) for the same
  * reason Medical Compliance/Coupon/Notification Settings are — writes go

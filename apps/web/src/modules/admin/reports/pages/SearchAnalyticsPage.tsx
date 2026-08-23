@@ -22,7 +22,7 @@ const PRESET_OPTIONS = [
 ];
 
 /**
- * Prompt 23 Part 33/34/35 — read-only search analytics screen: popular
+ * Part 33/34/35 — read-only search analytics screen: popular
  * searches, zero-result searches (the actionable "catalog/search gap"
  * signal), and a daily volume trend. No CRUD here by design (Part 35:
  * "analytics/search data is primarily read-only... do not create
@@ -100,7 +100,7 @@ export default function SearchAnalyticsPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="totalSearches" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="totalSearches" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="zeroResultSearches" fill="#dc2626" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

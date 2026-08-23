@@ -15,7 +15,7 @@ import { warehouseHooks } from '../hooks/useWarehouses';
  * existing warehouse — the backend deliberately strips `sellerId` from
  * `PATCH /warehouses/:id` (see warehouse.validator.ts's
  * `updateWarehouseSchema`) so ownership never changes silently via a routine
- * field edit (Prompt 11 Part 4). This panel is the actual, audited way to
+ * field edit ( 11 Part 4). This panel is the actual, audited way to
  * reassign a warehouse's seller — it calls the dedicated
  * `PATCH /warehouses/:id/transfer-seller` endpoint and requires a reason.
  */

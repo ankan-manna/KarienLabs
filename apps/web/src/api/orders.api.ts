@@ -35,7 +35,7 @@ export interface CheckoutIntentResult {
 }
 
 /**
- * Prompt 2 (prepaid-only redesign) — checkout Phase 1. Validates the cart/
+ * (prepaid-only redesign) — checkout Phase 1. Validates the cart/
  * address/coupon/combo/GST/shipping rules server-side and creates a Razorpay
  * order for the authoritative amount. Deliberately does NOT create an Order
  * and does NOT touch inventory or the cart — replaces the old two-step

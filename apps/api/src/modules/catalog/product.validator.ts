@@ -40,7 +40,7 @@ export const createProductSchema = z.object({
   manufacturerId: objectIdSchema.nullable().optional(),
   tags: z.array(z.string()).optional(),
   specifications: z.array(z.object({ key: z.string(), value: z.string() })).optional(),
-  // Prompt 23 Part 13/14/18/21 — `canonicalUrl` already existed on the
+  // Part 13/14/18/21 — `canonicalUrl` already existed on the
   // Mongoose model but was missing here, meaning an admin-supplied value was
   // silently stripped (Zod's default `z.object()` drops unknown keys rather
   // than rejecting them) before ever reaching the database.
@@ -51,12 +51,12 @@ export const createProductSchema = z.object({
       canonicalUrl: z.string().trim().max(500).optional(),
     })
     .optional(),
-  // Prompt 23 Part 28/29 — AEO FAQ content, admin-authored only.
+   // Part 28/29 — AEO FAQ content, admin-authored only.
   faq: z.array(z.object({ question: z.string().trim().min(1).max(300), answer: z.string().trim().min(1).max(2000) })).max(30).optional(),
   medicine: medicineSchema.optional(),
   // Tri-state (CAT-06) — same "null clears to category default" semantics as medicine.prescriptionRequired.
   expirable: z.boolean().nullable().optional(),
-  // Prompt 12 (CAT-03) — Shiprocket-required physical attributes, all optional
+  // (CAT-03) — Shiprocket-required physical attributes, all optional
   // (existing products may not have these yet — see Part 15 migration notes).
   weightGrams: z.number().min(0).nullable().optional(),
   lengthMm: z.number().min(0).nullable().optional(),
@@ -65,13 +65,13 @@ export const createProductSchema = z.object({
   // Trimmed + empty-string treated as "no barcode" (not a value to enforce
   // uniqueness against) — see product.service.ts's barcode handling.
   barcode: z.string().trim().max(64).nullable().optional(),
-  // Prompt 16 Part 5 — per-product return-eligibility override.
+   // Part 5 — per-product return-eligibility override.
   isReturnable: z.boolean().optional(),
   nonReturnableReason: z.string().trim().max(300).optional(),
   gstRate: z.number().min(0).max(28).optional(),
   basePrice: z.number().min(0),
   mrp: z.number().min(0),
-  // Prompt 30 — product-level commercial shipping charge (Part 4/26:
+  // product-level commercial shipping charge (Part 4/26:
   // numeric, non-negative; no upper bound imposed here since — unlike GST —
   // there is no legal/business ceiling on a shipping charge).
   shippingCharge: z.number().min(0).optional(),
@@ -87,7 +87,7 @@ export const bulkEditProductsSchema = z.object({
   patch: updateProductSchema,
 });
 
-// Prompt (Product Image Management) — the main image now has its own
+// (Product Image Management) — the main image now has its own
 // dedicated endpoint/schema (`setMainProductImageSchema` below), so this one
 // is exclusively for sub/additional images; `isPrimary` is gone; the max-count
 // enforcement happens in the service layer (needs a DB read of the current

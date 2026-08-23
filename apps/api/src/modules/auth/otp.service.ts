@@ -23,31 +23,31 @@ import { hashesMatch, hashToken } from './token-hash.util';
 type OtpPurpose =
   | typeof VERIFICATION_PURPOSES.LOGIN_OTP
   | typeof VERIFICATION_PURPOSES.PASSWORD_RESET_OTP
-  // Prompt 21 Part 3 — `PHONE_VERIFICATION` was defined on
-  // VERIFICATION_PURPOSES since Prompt 10 but never actually wired to
+  // Part 3 — `PHONE_VERIFICATION` was defined on
+  // VERIFICATION_PURPOSES but never actually wired to
   // anything; this is that wiring. Reuses the SAME generic issueOtp/
   // verifyOtp pipeline (Part 3's explicit "do not create another OTP
   // system") — see modules/customers/profile.service.ts's
   // requestPhoneChange/confirmPhoneChange.
   | typeof VERIFICATION_PURPOSES.PHONE_VERIFICATION
-  // Prompt 31 — gates registration; see register()/verifyRegistrationOtp() in auth.service.ts.
+   // gates registration; see register()/verifyRegistrationOtp() in auth.service.ts.
   | typeof VERIFICATION_PURPOSES.REGISTRATION_OTP
-  // Prompt 31 — scoped to a single address, distinct from the account-level
+  // scoped to a single address, distinct from the account-level
   // PHONE_VERIFICATION above so the two flows never invalidate each other.
   | typeof VERIFICATION_PURPOSES.ADDRESS_MOBILE_VERIFICATION
-  // Prompt 32 — guest-mode (no userId); see issueOtp/verifyOtp's scope-filter branch.
+   // guest-mode (no userId); see issueOtp/verifyOtp's scope-filter branch.
   | typeof VERIFICATION_PURPOSES.DISTRIBUTOR_ENQUIRY_VERIFICATION;
 
 interface RequestMeta {
   ip?: string;
   userAgent?: string;
   requestId?: string;
-  /** Threaded through purely so `recordAuthEvent` can resolve the correct `actorType` (Prompt 10 Part 4) — otp.service.ts has no independent way to look up a user's role, only auth.service.ts's callers do. */
+  /** Threaded through purely so `recordAuthEvent` can resolve the correct `actorType` ( 10 Part 4) — otp.service.ts has no independent way to look up a user's role, only auth.service.ts's callers do. */
   role?: Role;
 }
 
 interface IssueOtpInput extends RequestMeta {
-  // Prompt 32 — omitted for guest purposes (currently only
+  // omitted for guest purposes (currently only
   // DISTRIBUTOR_ENQUIRY_VERIFICATION); every existing authenticated purpose's
   // call sites are unaffected, they just keep passing a real userId.
   userId?: string;
@@ -58,7 +58,7 @@ interface IssueOtpInput extends RequestMeta {
 }
 
 /**
- * Prompt 32 — every authenticated purpose scopes by `(userId, purpose)`
+ * every authenticated purpose scopes by `(userId, purpose)`
  * exactly as before; a guest purpose (no `userId`) scopes by `(contact,
  * purpose)` instead via the `{contact, purpose}` index on
  * VerificationTokenModel — `userId: null` alone would otherwise match every
@@ -112,7 +112,7 @@ async function deliverOtp(
     templateKey: templateKeyFor(purpose),
     recipient: contact,
     userId,
-    // Prompt 20 Part 5/34 — OTP is security-critical: it must never be
+    // Part 5/34 — OTP is security-critical: it must never be
     // silently swallowed by a generic "notifications disabled" admin
     // toggle, which would lock every customer out of login/password-reset.
     // `critical: true` bypasses the notificationsEnabled master switch and
@@ -127,7 +127,7 @@ async function deliverOtp(
 /**
  * Generates (or resends) an OTP for LOGIN or PASSWORD_RESET, enforcing
  * cooldown/max-resend/config limits, and invalidates any prior un-consumed
- * OTP for the same (userId, purpose) — Prompt 10 Part 1/2/OTP-resend.
+ * OTP for the same (userId, purpose) — Part 1/2/OTP-resend.
  */
 export async function issueOtp(input: IssueOtpInput): Promise<IssueOtpResult> {
   const cfg = await getAuthConfig();
@@ -219,7 +219,7 @@ export async function issueOtp(input: IssueOtpInput): Promise<IssueOtpResult> {
 }
 
 interface VerifyOtpInput extends RequestMeta {
-  // Prompt 32 — omit for guest purposes; `contact` becomes required in that
+  // omit for guest purposes; `contact` becomes required in that
   // case (enforced at runtime below, since TS can't express "exactly one of").
   userId?: string;
   contact?: string;
@@ -231,7 +231,7 @@ interface VerifyOtpInput extends RequestMeta {
  * Verifies a submitted OTP against the active (un-consumed) record for
  * (userId, purpose). On success: marks consumed + verified, resets nothing
  * else (attempt state is per-record, not per-user, so it naturally resets on
- * the next `issueOtp`). Throws on any failure mode (Prompt 10's OTP
+ * the next `issueOtp`). Throws on any failure mode ( 10's OTP
  * verification checklist: exists / correct purpose / not expired / not
  * consumed / attempts not exceeded / matches).
  */

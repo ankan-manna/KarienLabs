@@ -16,17 +16,17 @@ export type EligibilityOrderInput = Pick<
 >;
 
 /**
- * Prompt 27 Part 4 — THE canonical "is this order allowed into automated
+ * Part 4 — THE canonical "is this order allowed into automated
  * fulfillment right now" check, reused by BOTH the sweep's coarse DB query
  * filter (order-fulfillment-automation.service.ts) and the per-order job's
  * own re-check immediately before acting (defense in depth against a race
  * — e.g. a return/cancellation landing between the sweep's query and the
  * job actually running).
  *
- * Deliberately reuses the EXACT state names Prompt 2/3 already established
+ * Deliberately reuses the EXACT state names  2/3 already established
  * — never invents parallel terminology:
  *   - `status === PLACED` — the only status a NEWLY-paid, not-yet-advanced
- *     order can be in (Prompt 2: an Order only ever comes into existence
+ *     order can be in ( 2: an Order only ever comes into existence
  *     with `paymentStatus: CAPTURED` in the first place — see
  *     order.service.ts's finalizeOrderFromDraft). An order already at
  *     CONFIRMED/PACKED/beyond has already entered (or finished) this same

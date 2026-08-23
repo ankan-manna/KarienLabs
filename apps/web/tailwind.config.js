@@ -33,26 +33,31 @@ export default {
         // ProductDetailPage, ...). Named after the spec's own color names
         // (not Tailwind's built-in `teal`, which has different hex values)
         // so every usage traces directly back to the design system doc.
-        'deep-teal': '#0F3035', // primary — navbar/brand color
-        'healthcare-teal': '#0D6A68', // secondary
-        'soft-mint': '#E5F7F2', // background — hero/healthcare sections
-        coral: '#F4664F', // accent/CTA — used sparingly, per spec ("avoid excessive orange")
-        'charcoal-teal': '#183D42', // primary text
-        'slate-teal': '#6B8587', // muted text
-        'pale-sage': '#D9E7E3', // borders
+        // KarienLabs Storefront design system mapped to CSS variables
+        'deep-teal': 'var(--color-bg-section)', // Light: #FFF0E8, Dark: #0D282D
+        'healthcare-teal': 'var(--color-primary)', // Light: #FF8000, Dark: #FF8A1F
+        'soft-mint': 'var(--color-bg-main)', // Light: #FFF7F2, Dark: #081C20
+        coral: 'var(--color-secondary)', // Light: #FF4B33, Dark: #FF5A45
+        'charcoal-teal': 'var(--color-text-main)', // Light: #172B2F, Dark: #F8F5F2
+        'slate-teal': 'var(--color-text-muted)', // Muted text
+        'pale-sage': 'var(--color-border)', // Light: #F3D8CC, Dark: #24464B
 
-        // Dark-mode counterparts to the palette above. Deliberately a deep,
-        // desaturated GREEN rather than near-black (`gray-950`) — dark mode
-        // must still read as "the same healthcare brand", not a generic
-        // dark-SaaS shell. `deep-teal`/`healthcare-teal`/`coral` above are
-        // reused as-is for dark-mode chrome/CTA (they're already dark/vivid
-        // enough); these four are the ones with no light-mode equivalent.
-        night: '#071F22', // dark page background (NOT pure black)
-        'night-surface': '#102A2E', // dark card/section surface
-        'night-elevated': '#15353A', // dark elevated surface (modals, popovers, hovered rows)
-        'night-border': '#285054', // dark borders/dividers
-        'night-text': '#F3FAF8', // dark-mode primary text
-        'night-muted': '#A9BFBD', // dark-mode muted/secondary text
+        // Short semantic aliases used across Button/Header/Footer/HomePage/
+        // ProductCard/ProductDetailPage/SearchResultsPage — same underlying
+        // variables as above, just the shorter names those call sites use.
+        primary: 'var(--color-primary)',
+        accent: 'var(--color-secondary)',
+        // Static navbar/footer chrome — intentionally does NOT track the
+        // light/dark text color (see index.css's --color-ink comment).
+        ink: 'var(--color-ink)',
+
+        // Dark-mode counterparts mapped to same variables for backward compatibility
+        night: 'var(--color-bg-main)', // Dark: #081C20
+        'night-surface': 'var(--color-bg-card)', // Dark: #12343A
+        'night-elevated': 'var(--color-bg-section)', // Dark: #0D282D
+        'night-border': 'var(--color-border)', // Dark: #24464B
+        'night-text': 'var(--color-text-main)', // Dark: #F8F5F2
+        'night-muted': 'var(--color-text-muted)', // Dark: #A4BCBA
       },
     },
   },

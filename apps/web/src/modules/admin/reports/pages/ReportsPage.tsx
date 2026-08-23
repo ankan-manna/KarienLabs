@@ -122,7 +122,7 @@ function SalesReportTab() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="revenue" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -669,7 +669,7 @@ function OrderReportTab() {
                     labelStyle={tooltipLabelStyle}
                     itemStyle={tooltipItemStyle}
                   />
-                  <Bar dataKey="count" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </Card>
@@ -687,7 +687,7 @@ function OrderReportTab() {
                     labelStyle={tooltipLabelStyle}
                     itemStyle={tooltipItemStyle}
                   />
-                  <Bar dataKey="revenue" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="revenue" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </Card>
@@ -832,7 +832,7 @@ function ReturnReportTab() {
   );
 }
 
-/** Prompt 22 Part 24 — verification counts + real turnaround-time metric, never file/document contents. */
+/** Part 24 — verification counts + real turnaround-time metric, never file/document contents. */
 function PrescriptionReportTab() {
   const { from, to, setFrom, setTo } = useDateRange();
   const { data, isLoading } = useQuery({
@@ -867,7 +867,7 @@ function PrescriptionReportTab() {
   );
 }
 
-/** Prompt 22 Part 19/20 — real delivery-duration + on-time-rate metrics derived from shipment timestamps this codebase already records. */
+/** Part 19/20 — real delivery-duration + on-time-rate metrics derived from shipment timestamps this codebase already records. */
 function ShipmentReportTab() {
   const { from, to, setFrom, setTo } = useDateRange();
   const { data, isLoading } = useQuery({
@@ -912,7 +912,7 @@ function ShipmentReportTab() {
   );
 }
 
-/** Prompt 22 Part 14 — category revenue/units/order-count, categoryName resolved via a live $lookup so a later category rename is reflected, never a stale copy. */
+/** Part 14 — category revenue/units/order-count, categoryName resolved via a live $lookup so a later category rename is reflected, never a stale copy. */
 function CategoryReportTab() {
   const { from, to, setFrom, setTo } = useDateRange();
   const { data, isLoading } = useQuery({
@@ -954,7 +954,7 @@ function CategoryReportTab() {
   );
 }
 
-/** Reports hub — one page, tabbed by report type, each independently date-filterable and (where it makes sense) Excel-exportable, per the Prompt 5 "Reports" spec section. */
+/** Reports hub — one page, tabbed by report type, each independently date-filterable and (where it makes sense) Excel-exportable, per the "Reports" spec section. */
 export default function ReportsPage() {
   const [tab, setTab] = useState('sales');
 

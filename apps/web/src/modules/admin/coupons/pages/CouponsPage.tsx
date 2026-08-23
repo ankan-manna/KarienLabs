@@ -105,7 +105,7 @@ export default function CouponsPage() {
   const updateMutation = couponHooks.useUpdate();
   const removeMutation = couponHooks.useRemove();
 
-  // Scoping pickers (Prompt 19 fields the form never exposed) — each product
+  // Scoping pickers ( 19 fields the form never exposed) — each product
   // picker gets its own search-as-you-type state since "applicable" and
   // "excluded" are independent searches over the same product list endpoint.
   const [productSearch, setProductSearch] = useState('');

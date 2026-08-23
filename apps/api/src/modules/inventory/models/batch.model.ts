@@ -28,7 +28,7 @@ const batchSchema = new Schema({
     index: true,
   },
 
-  // Prompt 12 (CAT-04) — the MRP legally printed on THIS specific pack, when
+  // (CAT-04) — the MRP legally printed on THIS specific pack, when
   // it differs from the catalog Product.mrp (real pharma packs can carry a
   // different MRP per batch/print-run). `null`/unset means "no override — use
   // Product.mrp" (see batch-pricing.util.ts's resolveEffectiveBatchMrp,

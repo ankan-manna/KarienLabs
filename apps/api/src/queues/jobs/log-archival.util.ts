@@ -1,7 +1,7 @@
 import { BUCKET_FILE_PATTERN } from '../../config/log-rotation';
 
 /**
- * Prompt 18 Part 36 — pure retry/backoff math, split out from
+ * Part 36 — pure retry/backoff math, split out from
  * log-archival.job.ts (which touches fs/S3) so it's unit-testable without
  * mocking either, mirroring the established pure/impure split used
  * throughout this codebase (e.g. prescription-config.util.ts).

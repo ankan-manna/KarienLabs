@@ -7,7 +7,7 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 32 — real HTTP-level tests (same pattern as Prompt 6/31's
+ * real HTTP-level tests (same pattern as  6/31's
  * registration-address-verification suite) against the actual Express app +
  * a real, ephemeral MongoDB + Redis. Covers: guest/authenticated enquiry
  * creation, product-snapshot immutability, the three hard isolation
@@ -15,7 +15,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * 15-19), malicious-input rejection, admin RBAC, internal-note privacy, and
  * config-driven enable/disable + OTP gating.
  */
-describe('Prompt 32 — Distributor/Bulk Purchase enquiries', () => {
+describe('Distributor/Bulk Purchase enquiries', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let extra: {
@@ -180,7 +180,7 @@ describe('Prompt 32 — Distributor/Bulk Purchase enquiries', () => {
     assert.equal(count, 0);
   });
 
-  test('inventory is never touched by an enquiry (Part 15/16/66)', async () => {
+  test('inventory is never touched by an enquiry', async () => {
     const product = await seedProduct();
     const batch = await seedBatch(product._id, 200);
 
@@ -193,7 +193,7 @@ describe('Prompt 32 — Distributor/Bulk Purchase enquiries', () => {
     assert.equal(refreshedBatch?.quantityAvailable, 200);
   });
 
-  test('no Order, Payment, or Shipment is ever created by an enquiry (Part 15/17-19/67/68)', async () => {
+  test('no Order, Payment, or Shipment is ever created by an enquiry (19/67/68)', async () => {
     const product = await seedProduct();
     const res = await request(ctx.app)
       .post('/api/v1/distributor-enquiries')

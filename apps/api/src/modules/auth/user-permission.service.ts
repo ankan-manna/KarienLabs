@@ -7,7 +7,7 @@ import { recordAudit } from '../audit/audit.service';
 import { UserPermissionModel } from './models/user-permission.model';
 
 /**
- * Prompt 24 Part 15/16/64 — per-user permission overrides (the finest-grained
+ * Part 15/16/64 — per-user permission overrides (the finest-grained
  * escalation surface in this codebase: a GRANT override adds a permission
  * a user's ROLE doesn't otherwise carry). This was previously implemented
  * directly in the controller with:

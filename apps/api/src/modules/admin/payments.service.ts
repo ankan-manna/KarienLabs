@@ -49,7 +49,7 @@ interface RefundInput {
  * (previously this only mutated Payment/Order with no standalone Refund history).
  * Full refund when `amountInPaise` is omitted.
  *
- * Prompt 16 Part 20/40 — idempotent when scoped to a `returnId`: a retried
+ * Part 20/40 — idempotent when scoped to a `returnId`: a retried
  * call for a return that already has a non-FAILED Refund record returns
  * that existing record instead of calling Razorpay (and therefore Refund.create)
  * a second time. Not scoped this way for plain admin-initiated refunds

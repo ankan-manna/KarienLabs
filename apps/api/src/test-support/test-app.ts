@@ -15,8 +15,8 @@ export interface TestAppContext {
 
 /**
  * Boots the REAL Express app (createApp()) against a real, ephemeral MongoDB
- * replica set and a real Redis instance — no mocks, mirroring how Prompt 21's
- * one-off verify-prompt21.ts script exercised the actual service functions
+ * replica set and a real Redis instance — no mocks, mirroring how  21's
+ * one-off verify-21.ts script exercised the actual service functions
  * against a real MongoDB connection, just now at the HTTP layer and as a
  * repeatable, automated test fixture instead of a deleted one-off script.
  *
@@ -47,7 +47,7 @@ export async function setupTestApp(): Promise<TestAppContext> {
   process.env.RAZORPAY_KEY_ID = 'rzp_test_dummy';
   process.env.RAZORPAY_KEY_SECRET = 'test-razorpay-key-secret';
   process.env.RAZORPAY_WEBHOOK_SECRET = 'test-razorpay-webhook-secret';
-  // Prompt 24 Part 29 — a real (throwaway, test-only) 32-byte key so
+  // Part 29 — a real (throwaway, test-only) 32-byte key so
   // integration tests can exercise Configuration field-encryption
   // end-to-end (field-encryption.util.ts) against the real ephemeral
   // MongoDB, not just the pure-function unit tests. Dummy/self-disabling

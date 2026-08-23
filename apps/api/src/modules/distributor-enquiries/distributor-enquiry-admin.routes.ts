@@ -22,7 +22,7 @@ import {
 
 export const distributorEnquiryAdminRouter = Router();
 
-// Prompt 32 Part 35 — its own RESOURCES.DISTRIBUTOR_ENQUIRIES scope, same
+// Part 35 — its own RESOURCES.DISTRIBUTOR_ENQUIRIES scope, same
 // precedent as RETURNS/PRESCRIPTIONS: a Super Admin controls Platform Admin
 // visibility into this business-lead domain independently of
 // ORDERS/CUSTOMERS permissions, via the SAME RBAC engine (no new

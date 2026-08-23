@@ -15,10 +15,10 @@ const couponSchema = new Schema({
   applicableProductIds: { type: [Schema.Types.ObjectId], ref: 'Product', default: [] },
   applicableCategoryIds: { type: [Schema.Types.ObjectId], ref: 'Category', default: [] },
   applicableUserIds: { type: [Schema.Types.ObjectId], ref: 'User', default: [] }, // empty = all users
-  // Prompt 19 Part 29 — takes precedence over any product/category match;
+  // Part 29 — takes precedence over any product/category match;
   // lets a category-wide coupon carve out specific excluded products.
   excludedProductIds: { type: [Schema.Types.ObjectId], ref: 'Product', default: [] },
-  // Prompt 19 Part 14 — null = platform-wide (any/no seller). When set, only
+  // Part 14 — null = platform-wide (any/no seller). When set, only
   // applicable when the checkout's resolved seller matches (see
   // order.service.ts's resolveCheckoutSeller / coupon-validation.service.ts).
   sellerId: { type: Schema.Types.ObjectId, ref: 'Seller', default: null, index: true },
@@ -27,10 +27,10 @@ const couponSchema = new Schema({
   usageLimitPerUser: { type: Number, default: 1 },
   usageCount: { type: Number, default: 0 },
 
-  // Prompt 19 Part 15 — only applicable to a customer with no prior
+  // Part 15 — only applicable to a customer with no prior
   // qualifying order (see isFirstOrderEligible in coupon-validation.service.ts).
   firstOrderOnly: { type: Boolean, default: false },
-  // Prompt 19 Part 28 — deterministic ordering for the customer-facing
+  // Part 28 — deterministic ordering for the customer-facing
   // "available coupons" listing today; the documented, principled seam a
   // future multi-coupon stacking feature would use to decide application
   // order (this codebase's cart/order schema has exactly ONE coupon slot

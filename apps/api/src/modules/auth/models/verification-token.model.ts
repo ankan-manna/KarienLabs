@@ -9,23 +9,23 @@ export const VERIFICATION_PURPOSES = {
   LOGIN_OTP: 'login_otp',
   PASSWORD_RESET: 'password_reset', // link-based (existing) flow — unchanged
   // Distinct purpose from PASSWORD_RESET above so a code generated for the new
-  // OTP-based reset flow (Prompt 10, config-gated by
+  // OTP-based reset flow ( 10, config-gated by
   // authentication.otp.passwordReset.enabled) can never be replayed against
   // the older emailed-link flow or vice versa.
   PASSWORD_RESET_OTP: 'password_reset_otp',
   EMAIL_VERIFICATION: 'email_verification',
   PHONE_VERIFICATION: 'phone_verification',
-  // Prompt 31 — gates account creation itself (register() withholds real
+  // gates account creation itself (register() withholds real
   // session tokens until this is consumed). Distinct from EMAIL_VERIFICATION
   // above (the older, unenforced link-based flow, left untouched) and from
   // LOGIN_OTP (issued only after an account already exists/is verified).
   REGISTRATION_OTP: 'registration_otp',
-  // Prompt 31 — verifies a per-ADDRESS contact number, not the account-level
+  // verifies a per-ADDRESS contact number, not the account-level
   // phone (see profile.service.ts's PHONE_VERIFICATION, which is scoped to
   // (userId, purpose) and would otherwise collide/invalidate concurrently
   // with an in-flight address verification for the same user).
   ADDRESS_MOBILE_VERIFICATION: 'address_mobile_verification',
-  // Prompt 32 — the first purpose with no User document at all: a guest
+  // the first purpose with no User document at all: a guest
   // distributor verifying contact ownership before submitting a bulk-purchase
   // enquiry. Scoped by (contact, purpose) via `userId: null` — see
   // otp.service.ts's guest-mode branch.
@@ -39,7 +39,7 @@ export const OTP_CHANNELS = {
 } as const;
 
 const verificationTokenSchema = new Schema({
-  // Prompt 32 — relaxed from `required: true` to support guest (no User
+  // relaxed from `required: true` to support guest (no User
   // document) verification: `null` means this record is scoped by `contact`
   // instead (see the `{contact, purpose}` index below and otp.service.ts's
   // guest-mode branch). Every PRE-EXISTING purpose still always sets a real
@@ -53,7 +53,7 @@ const verificationTokenSchema = new Schema({
   consumedAt: { type: Date, default: null },
   expiresAt: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
-  // OTP-lifecycle fields (Prompt 10). Left unset/defaulted for the pre-existing
+  // OTP-lifecycle fields ( 10). Left unset/defaulted for the pre-existing
   // link-based purposes (PASSWORD_RESET, EMAIL_VERIFICATION) — only
   // LOGIN_OTP/PASSWORD_RESET_OTP/PHONE_VERIFICATION populate them.
   channel: { type: String, enum: Object.values(OTP_CHANNELS), default: OTP_CHANNELS.EMAIL },
@@ -63,7 +63,7 @@ const verificationTokenSchema = new Schema({
 });
 
 verificationTokenSchema.index({ userId: 1, purpose: 1 });
-// Prompt 32 — the guest-mode lookup path: every guest record has
+// the guest-mode lookup path: every guest record has
 // `userId: null`, so `{userId:1, purpose:1}` alone would match every guest
 // verification for a purpose regardless of WHICH contact — this compound
 // index is what otp.service.ts's guest branch actually queries against.

@@ -19,7 +19,7 @@ const verifyPaymentSchema = z.object({
 });
 
 /**
- * Prompt 2 (prepaid-only redesign) — checkout Phase 1. Replaces the old
+ * (prepaid-only redesign) — checkout Phase 1. Replaces the old
  * `POST /orders/checkout` + `POST /payments/razorpay/order` two-step (which
  * created a real Order before any payment happened — the exact bug this
  * redesign eliminates). Validates the cart/address/coupon/combo/GST/shipping

@@ -6,7 +6,7 @@ import { test } from 'node:test';
 
 import { BUCKET_FILE_PATTERN, RotatingLogDestination, bucketFilePath, formatBucketLabel } from './log-rotation';
 
-// Prompt 18 Part 1/28/29/50 — wall-clock-aligned 6-hour rotation.
+ // Part 1/28/29/50 — wall-clock-aligned 6-hour rotation.
 
 test('formatBucketLabel: buckets align to wall-clock 6-hour boundaries, not startup time', () => {
   assert.equal(formatBucketLabel(new Date('2026-08-08T00:00:00Z'), 'UTC', 6), '2026-08-08-00');
@@ -18,7 +18,7 @@ test('formatBucketLabel: buckets align to wall-clock 6-hour boundaries, not star
   assert.equal(formatBucketLabel(new Date('2026-08-08T23:59:59Z'), 'UTC', 6), '2026-08-08-18');
 });
 
-test('formatBucketLabel: respects a non-UTC configured timezone (Part 28)', () => {
+test('formatBucketLabel: respects a non-UTC configured timezone', () => {
   // 03:30 UTC = 09:00 IST (Asia/Kolkata, UTC+5:30) -> bucket "06" in IST, not "00" as it would be in UTC.
   const label = formatBucketLabel(new Date('2026-08-08T03:30:00Z'), 'Asia/Kolkata', 6);
   assert.equal(label, '2026-08-08-06');
@@ -28,7 +28,7 @@ test('formatBucketLabel: a different rotation window (e.g. 1 hour) still buckets
   assert.equal(formatBucketLabel(new Date('2026-08-08T14:45:00Z'), 'UTC', 1), '2026-08-08-14');
 });
 
-test('BUCKET_FILE_PATTERN matches the documented deterministic filename shape (Part 29)', () => {
+test('BUCKET_FILE_PATTERN matches the documented deterministic filename shape', () => {
   const match = 'api-application-2026-08-08-06.log'.match(BUCKET_FILE_PATTERN);
   assert.ok(match);
   assert.equal(match![1], 'api-application');

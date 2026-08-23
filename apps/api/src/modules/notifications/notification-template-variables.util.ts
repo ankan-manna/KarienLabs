@@ -1,5 +1,5 @@
 /**
- * Prompt 20 Part 18/19 — safe placeholder validation for admin-authored
+ * Part 18/19 — safe placeholder validation for admin-authored
  * Handlebars notification templates. Two layers:
  *
  * 1. A GLOBAL blocklist — these variable names are never allowed in ANY
@@ -50,11 +50,11 @@ const OTP_TEMPLATE_KEYS = new Set([
   'login_otp',
   'password_reset_otp',
   'phone_verification_otp',
-  // Prompt 31 — registration-gate OTP; address-mobile verification
+  // registration-gate OTP; address-mobile verification
   // deliberately reuses `phone_verification_otp` above rather than adding a
   // second template key (see otp.service.ts's templateKeyFor).
   'registration_otp',
-  // Prompt 32 — guest distributor contact-verification OTP (Part 10/11).
+   // guest distributor contact-verification OTP (Part 10/11).
   'distributor_enquiry_verification',
 ]);
 
@@ -63,7 +63,7 @@ const OTP_TEMPLATE_KEYS = new Set([
  * call site passes (not guessed) — customer-facing templates driven by
  * `notifyOrderStatusChange`/`notifyReturnEvent`/similar shared helpers pass
  * the customer's name as `name`, NOT `customerName`; only the NEW
- * Prompt-20-authored helpers (prescription/payment/admin-* notifications)
+ * -20-authored helpers (prescription/payment/admin-* notifications)
  * use `customerName`. A few additional, safe, currently-unused-but-
  * documented field names from Part 7/9/18's example lists are also allowed
  * per key (e.g. `orderDate`, `trackingNumber`) — an admin referencing one
@@ -87,7 +87,7 @@ const TEMPLATE_VARIABLE_WHITELIST: Record<string, string[]> = {
   refund_failed_admin: ['returnNumber', 'reason'],
   payment_success: ['customerName', 'orderNumber', 'amount'],
   payment_failed_admin: ['orderNumber', 'customerName', 'reason'],
-  // Prompt 2 (prepaid-only redesign) — a failed/cancelled payment no longer
+  // (prepaid-only redesign) — a failed/cancelled payment no longer
   // has an order to reference (the whole point of the redesign: no Order
   // exists until payment is captured), so this is deliberately narrower
   // than payment_failed_admin (no orderNumber).
@@ -105,7 +105,7 @@ const TEMPLATE_VARIABLE_WHITELIST: Record<string, string[]> = {
   phone_verification_otp: ['code', 'expiryMinutes'],
   registration_otp: ['code', 'expiryMinutes'],
   distributor_enquiry_verification: ['code', 'expiryMinutes'],
-  // Prompt 32 — new business-enquiry notification pair (Part 27/28).
+   // new business-enquiry notification pair (Part 27/28).
   distributor_enquiry_new: [
     'enquiryNumber',
     'companyName',

@@ -1,10 +1,3 @@
-/**
- * Prompt 13 (TAX-01) — pure, deterministic GST split math. Kept side-effect
- * free (no DB access) so it's trivially unit-testable and reusable from both
- * the backend tax-calculation service and, if useful later, an admin preview
- * UI — mirrors the resolveProductDefaults/resolveEffectiveBatchMrp pattern
- * from Prompt 12.
- */
 
 export type GstTaxType = 'intra_state' | 'inter_state' | 'unknown';
 

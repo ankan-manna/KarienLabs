@@ -4,7 +4,7 @@ import { test } from 'node:test';
 
 import { sanitizeForLogging } from './log-sanitizer';
 
-// Prompt 18 Part 22/23/50 — never log passwords/OTP/JWT/API keys/AWS
+// Part 22/23/50 — never log passwords/OTP/JWT/API keys/AWS
 // creds/card data/prescription content/raw auth headers, at ANY depth.
 
 test('masks a top-level password field', () => {

@@ -9,16 +9,16 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 3 (inventory lifecycle) — real HTTP/DB/Redis-level tests against
+ * (inventory lifecycle) — real HTTP/DB/Redis-level tests against
  * the actual Express app, a real ephemeral MongoDB replica set, and a real
  * ephemeral Redis (same fixtures `prepaid-checkout.integration.test.ts`
- * uses). Focused specifically on what Prompt 2's tests didn't already
+ * uses). Focused specifically on what  2's tests didn't already
  * cover: concurrency/oversell prevention under REAL concurrent HTTP
  * requests (not mocked), combo required-quantity math, the new
  * pre-payment stock revalidation, the recalled-batch availability fix, and
  * the inventory-changed realtime event.
  */
-describe('Inventory lifecycle (Prompt 3)', () => {
+describe('Inventory lifecycle', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let extra: {
@@ -265,7 +265,7 @@ describe('Inventory lifecycle (Prompt 3)', () => {
   // Part 6/34 — combo availability with DIFFERING required quantities per
   // component, both at read time and after a real purchase.
   // ---------------------------------------------------------------------
-  test('combo availability respects differing required quantities per component (Part 34 worked example)', async () => {
+  test('combo availability respects differing required quantities per component (worked example)', async () => {
     const category = await seedCategory();
     const sku1 = await seedProduct(category._id, { basePrice: 50, mrp: 50 });
     const sku2 = await seedProduct(category._id, { basePrice: 30, mrp: 30 });
@@ -340,7 +340,7 @@ describe('Inventory lifecycle (Prompt 3)', () => {
 
   // ---------------------------------------------------------------------
   // Part 13 — failed/cancelled payment must leave inventory byte-for-byte
-  // unchanged (extends Prompt 2's "no order" assertion with an explicit
+  // unchanged (extends  2's "no order" assertion with an explicit
   // stock-number check).
   // ---------------------------------------------------------------------
   test('a failed payment leaves Batch.quantityAvailable completely unchanged', async () => {

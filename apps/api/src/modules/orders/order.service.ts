@@ -138,8 +138,8 @@ async function restockOrderSales(
  * seller-selection UI:
  *
  *  - Zero enabled Sellers exist yet -> `null` (pre-migration / no Seller
- *    entity set up at all). Checkout behaves exactly as it did before Prompt
- *    11 — fully backward compatible, unrestricted batch selection.
+ *    entity set up at all). Checkout behaves exactly as it did before —
+ *    fully backward compatible, unrestricted batch selection.
  *  - Exactly one enabled Seller exists -> that Seller. The common case for
  *    this client (docs/DEVELOPMENT_TASKS.md: "2-3 sellers", one operating at
  *    a time today).
@@ -150,7 +150,7 @@ async function restockOrderSales(
  *    mapping" case, surfaced via `sellerId: null` rather than a fabricated guess.
  */
 /**
- * Exported (Prompt 19 Part 14) so coupon validation (cart.service.ts's
+ * Exported ( 19 Part 14) so coupon validation (cart.service.ts's
  * applyCouponToCart / coupon.service.ts's previewCouponForCart) can resolve
  * the SAME seller checkout() itself would use, rather than a second,
  * possibly-inconsistent resolution — required for seller-scoped coupon
@@ -194,7 +194,7 @@ export async function resolveCheckoutSeller(): Promise<{
  * resolved — see `resolveCheckoutSeller`).
  */
 /**
- * Exported (Prompt 16 Part 27) so replacement-order stock reservation
+ * Exported ( 16 Part 27) so replacement-order stock reservation
  * (return.service.ts's resolveReturnReplacement) reuses the exact same
  * FEFO/recall-safe selection logic checkout() uses — never a second,
  * possibly-inconsistent stock-picking implementation.
@@ -214,7 +214,7 @@ export async function decrementStockFifo(
     variantId: variantId ?? null,
     quantityAvailable: { $gt: 0 },
     deletedAt: null,
-    // Prompt 12 Part 5/FEFO connection — a recalled batch may still exist
+    // Part 5/FEFO connection — a recalled batch may still exist
     // physically (never deleted, never zeroed out) but must never be picked
     // for a NEW sale/reservation. `$ne: true` also matches batches predating
     // this field (recallFlag undefined) so it's a no-op for existing data.
@@ -288,7 +288,7 @@ export interface CheckoutInput {
 }
 
 /**
- * Prompt 2 (prepaid-only redesign) — the frozen, fully-validated checkout
+ * (prepaid-only redesign) — the frozen, fully-validated checkout
  * plan: everything `checkout()` used to compute (cart/address/combo/coupon/
  * GST/shipping/prescription-gate validation, per-line pricing, the FEFO
  * stock plan) BEFORE it used to create an Order. Now this is a pure,
@@ -366,7 +366,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   }).lean();
   const productMap = new Map(products.map((p) => [String(p._id), p]));
 
-  // Bundle expansion (Prompt 12 Part 7) — resolved up front, outside the
+  // Bundle expansion ( 12 Part 7) — resolved up front, outside the
   // transaction (read-only), for every cart line whose product is a bundle SKU.
   const bundleByProductId = new Map<string, Awaited<ReturnType<typeof getBundleForCheckout>>>();
   for (const item of cart.items) {
@@ -410,7 +410,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   let prescriptionRequired = false;
   let subtotal = 0;
   let gstTotal = 0;
-  // Prompt 30 — sum of every line's `product.shippingCharge * quantity`
+  // sum of every line's `product.shippingCharge * quantity`
   // (round2'd) — a SEPARATE, ADDITIVE component from the pre-existing
   // zone/weight-based `calculateShippingCharge` below, not a replacement
   // for it (Part 7/47: the zone engine models "courier cost by
@@ -419,7 +419,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   // independently-configured business charges, summed into one
   // `totals.shipping`).
   let productShippingTotal = 0;
-  // Prompt 14 Part 3/6 — parcel weight for weight-based shipping rules
+  // Part 3/6 — parcel weight for weight-based shipping rules
   // (ShippingRule.minWeightGrams/maxWeightGrams already existed and were
   // simply never fed a real value; calculateShippingCharge below silently
   // ignored weight-tiered rules for every checkout until now).
@@ -429,7 +429,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   // component instead of one entry for the (non-stocked) bundle product
   // itself — "must not create fake physical stock for the bundle" (Part 7).
   const stockPlan: { productId: string; variantId: string | null; quantity: number; sku: string }[][] = [];
-  // Prompt 19 Part 12/13/30 — 1:1 with draftItems by index; the coupon
+  // Part 12/13/30 — 1:1 with draftItems by index; the coupon
   // eligibility/discount-allocation context, built from the SAME per-line
   // GST-exclusive subtotal already being accumulated below (never a second,
   // independently-computed subtotal).
@@ -497,7 +497,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
       const lineGst = (lineSubtotal * weightedGstRate) / 100;
       subtotal += lineSubtotal;
       gstTotal += lineGst;
-      // Prompt 30 Part 10 — the COMBO product's own configured
+      // Part 10 — the COMBO product's own configured
       // `shippingCharge`, never summed/derived from components — mirrors
       // exactly how the combo's own `sellingPrice` (not a component sum) is
       // already the commercial basis (Part 7 above). Shipping is a
@@ -512,7 +512,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
       });
 
       return {
-        // Prompt 2 — explicitly stringified (never a raw Mongoose ObjectId):
+        // explicitly stringified (never a raw Mongoose ObjectId):
         // this object is persisted onto `Payment.checkoutSnapshot` (a plain
         // Mixed/JSON field) at checkout-intent time and read back verbatim
         // at order-finalization time, potentially much later and via a
@@ -542,7 +542,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     const lineGst = (lineSubtotal * gstRate) / 100;
     subtotal += lineSubtotal;
     gstTotal += lineGst;
-    // Prompt 30 — this plain product's own configured `shippingCharge`,
+    // this plain product's own configured `shippingCharge`,
     // per unit (Part 8's worked example: shippingCharge=₹20, qty=3 -> ₹60).
     const lineShipping = Math.round((product.shippingCharge ?? 0) * item.quantity * 100) / 100;
     productShippingTotal = Math.round((productShippingTotal + lineShipping) * 100) / 100;
@@ -565,7 +565,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     });
 
     return {
-      // Prompt 2 — see the bundle-line branch above for why these are
+      // see the bundle-line branch above for why these are
       // explicitly stringified.
       productId: String(item.productId),
       variantId: item.variantId ? String(item.variantId) : null,
@@ -579,7 +579,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     };
   });
 
-  // Prompt 3 (inventory lifecycle) Part 22/23 — "revalidate inventory using
+  // (inventory lifecycle) Part 22/23 — "revalidate inventory using
   // the canonical inventory service before payment, reject if requested
   // exceeds available." This is a NEW check: previously nothing validated
   // stock until `decrementStockFifo` ran inside `finalizeOrderFromDraft`,
@@ -624,7 +624,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     }
   }
 
-  // Prompt 19 Part 14 — resolved BEFORE coupon validation (moved up from
+  // Part 14 — resolved BEFORE coupon validation (moved up from
   // its previous position right before order-number generation) so a
   // seller-scoped coupon's eligibility can be checked against the actual
   // checkout seller, not validated blind.
@@ -637,7 +637,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   let appliedCoupon: Awaited<ReturnType<typeof validateCouponForCart>>['coupon'] | null = null;
 
   if (couponCode) {
-    // Prompt 19 Part 22 — this is the AUTHORITATIVE, checkout-time
+    // Part 22 — this is the AUTHORITATIVE, checkout-time
     // revalidation. Whatever `applyCouponToCart` validated earlier when the
     // coupon was first added to the cart is NOT trusted here — usage limits,
     // dates, and eligibility can all have changed since then.
@@ -651,7 +651,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     appliedCouponId = String(validation.coupon._id);
     appliedCoupon = validation.coupon;
     couponAllocationByProductId = new Map(validation.allocation.map((a) => [a.productId, a.amount]));
-    // Prompt 19 Part 30/34/35 — freeze each line's exact discount share onto
+    // Part 30/34/35 — freeze each line's exact discount share onto
     // the order item itself now, at the only point the eligible-vs-ineligible
     // split is known, so refund/return math never has to re-derive it later.
     for (const draftItem of draftItems) {
@@ -660,7 +660,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     }
   }
 
-  // Prompt 30 — two INDEPENDENT, ADDITIVE shipping components: the
+  // two INDEPENDENT, ADDITIVE shipping components: the
   // pre-existing zone/weight-based engine (destination + parcel weight —
   // unchanged, still authoritative for "what does it cost to actually
   // courier this order") plus the new per-product `shippingCharge` sum
@@ -677,7 +677,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
   const shipping = Math.round((zoneShipping + productShippingTotal) * 100) / 100;
   const grandTotal = Math.round((subtotal + gstTotal + shipping - discount) * 100) / 100;
 
-  // Prompt 17 Part 7/8/16 — an ADDITIONAL, stricter checkout-time gate,
+  // Part 7/8/16 — an ADDITIONAL, stricter checkout-time gate,
   // off by default (RX-01's documented gate is at fulfillment/packed, not
   // here) but a real, working toggle for a business that wants to require
   // at least one prescription on file BEFORE a checkout-intent can even be
@@ -698,7 +698,7 @@ export async function buildCheckoutDraft(userId: string, input: CheckoutInput): 
     }
   }
 
-  // Prompt 2 — deliberately does NOT touch the cart, create an Order, or
+  // deliberately does NOT touch the cart, create an Order, or
   // deduct any inventory here. Everything below this point is pure,
   // serializable data — every id a plain string, never a Mongoose ObjectId —
   // so it survives being stored on `Payment.checkoutSnapshot` (Mixed) and
@@ -801,7 +801,7 @@ export async function finalizeOrderFromDraft(
               sellerId: draft.sellerId,
               items: draft.items,
               shippingAddress: draft.shippingAddress,
-              // Prompt 2 — an Order now only ever comes into existence AFTER
+              // an Order now only ever comes into existence AFTER
               // payment is verified captured, so its FIRST status is still
               // the existing "placed" (no new/renamed order status — Part
               // 20: preserve the existing state machine unchanged), but
@@ -814,7 +814,7 @@ export async function finalizeOrderFromDraft(
               ],
               totals: draft.totals,
               couponCode: draft.couponCode,
-              // Prompt 19 Part 31 / Prompt 2 Part 14 — the snapshot frozen at
+              // Part 31 / Part 14 — the snapshot frozen at
               // checkout-INTENT time, reused verbatim — never recomputed
               // from the coupon's current state at finalize time. A coupon
               // later disabled/edited/archived, or a combo/product whose
@@ -864,7 +864,7 @@ export async function finalizeOrderFromDraft(
       }
       await order.save({ session });
 
-      // Prompt 2 — link the Payment BACK to the order it produced, inside
+      // link the Payment BACK to the order it produced, inside
       // the same transaction as the order creation itself. Several existing,
       // unrelated modules (admin/payments.service.ts's refund flow chief
       // among them) already read `Payment.orderId` directly and predate this
@@ -934,7 +934,7 @@ export async function finalizeOrderFromDraft(
 
   const order = createdOrder!;
 
-  // Prompt 3 Part 16/19/28 — fired ONLY on the winning path that actually
+  // Part 16/19/28 — fired ONLY on the winning path that actually
   // just deducted stock (never for the `alreadyExisted`/raceLost early
   // returns above — those performed no new deduction, so there is nothing
   // new to announce). Strictly AFTER the transaction committed (Part 19:
@@ -980,7 +980,7 @@ export async function getOrderById(id: string, requester: { id: string; role: st
 }
 
 /**
- * Prompt 21 Part 10/11/13/46 — the customer order-DETAIL view composed from
+ * Part 10/11/13/46 — the customer order-DETAIL view composed from
  * the SAME authoritative services/models every other part of this codebase
  * already reads from (never a second calculation): the order's own frozen
  * `totals`/`couponSnapshot`/`items[].couponDiscountAmount` (Part 11/13 —
@@ -1052,7 +1052,7 @@ export function listOrders(query: ListQuery) {
 }
 
 /**
- * `actorId` is nullable (Prompt 14) so automated fulfillment transitions
+ * `actorId` is nullable ( 14) so automated fulfillment transitions
  * (Shiprocket AWB assignment, webhook-driven SHIPPED/OUT_FOR_DELIVERY/
  * DELIVERED updates — see shiprocket-fulfillment.service.ts) can advance the
  * order lifecycle without a human in the loop, exactly like invoice
@@ -1077,10 +1077,10 @@ export async function updateOrderStatus(
     );
   }
 
-  // Prompt 17 / RX-01 — the documented, previously-missing enforcement:
-  // `order.prescriptionVerified` existed since Prompt 11 but was never read
+  // RX-01 — the documented, previously-missing enforcement:
+  // `order.prescriptionVerified` existed but was never read
   // anywhere. A prescription-required order cannot progress to PACKED (the
-  // same fulfillment gate point Prompt 13 attaches invoice generation to)
+  // same fulfillment gate point that attaches invoice generation to)
   // while unverified — configuration-driven (Part 15/43), not hardcoded, so
   // it can only ever be reached when BOTH prescription management and the
   // order-blocking rule are enabled; a business that hasn't turned this
@@ -1105,7 +1105,7 @@ export async function updateOrderStatus(
 
   await notifyOrderStatusChange(order, newStatus, actorId);
 
-  // Prompt 13 Part 10 — invoice generation is now aligned with the
+  // Part 10 — invoice generation is now aligned with the
   // documented pack-complete business flow (Order -> Payment confirmed ->
   // Inventory reservation -> Picking -> Packing complete -> Invoice
   // generation -> Shipment creation), not payment capture (see
@@ -1159,7 +1159,7 @@ export async function cancelOrder(id: string, requester: { id: string; role: str
   return order;
 }
 
-// Prompt 2 (prepaid-only redesign) — the old `failOrder()` compensated an
+// (prepaid-only redesign) — the old `failOrder()` compensated an
 // optimistic stock deduction that happened at checkout time, before payment.
 // That no longer happens: an Order/stock deduction now only ever exists
 // AFTER payment is verified captured (see `finalizeOrderFromDraft` above),

@@ -91,9 +91,9 @@ export const authRateLimiter = createConfigurableLimiter('login', {
 });
 
 /**
- * Prompt 24 Part 2 — a distinct, tighter category from `authRateLimiter`
+ * Part 2 — a distinct, tighter category from `authRateLimiter`
  * for OTP verify/resend specifically (previously shared the same 20/15min
- * bucket as login/register/refresh, which the prompt's own "do not apply
+ * bucket as login/register/refresh, which the 's own "do not apply
  * one identical limit to every endpoint" instruction flags as too coarse).
  * `otp.service.ts` already enforces its OWN attempt-limit lockout and
  * resend cooldown internally (the actual brute-force defense for the OTP
@@ -110,7 +110,7 @@ export const otpRateLimiter = createConfigurableLimiter('otp', {
 });
 
 /**
- * Prompt 24 Part 2 — distinct category for the password-reset flow
+ * Part 2 — distinct category for the password-reset flow
  * (forgot-password / forgot-password-verify-otp / reset-password), separate
  * from ordinary login attempts: this flow can both enumerate accounts
  * (mitigated separately — see auth.service.ts's identical-response
@@ -125,10 +125,10 @@ export const passwordResetRateLimiter = createConfigurableLimiter('passwordReset
 });
 
 /**
- * Prompt 20 Part 33 — protects providers from a malicious/misbehaving
+ * Part 33 — protects providers from a malicious/misbehaving
  * caller triggering unlimited manual sends via `POST /notifications/send`.
  * OTP's own request/resend cooldown+max-resend limits (otp.service.ts,
- * Prompt 10/34) already cover the OTP path independently — this is
+ *  10/34) already cover the OTP path independently — this is
  * specifically for the admin-triggered manual-send endpoint, keyed per
  * admin account (`req.user.id`) via `keyGenerator` rather than per-IP, since
  * this is an authenticated admin action, not a public one. Not part of the
@@ -150,7 +150,7 @@ export const notificationSendRateLimiter = rateLimit({
 });
 
 /**
- * Prompt 21 Part 40 — protects security-sensitive, authenticated self-service
+ * Part 40 — protects security-sensitive, authenticated self-service
  * customer actions from being hammered (account deactivation is a
  * password-guessing surface; address creation is a spam surface). Keyed per
  * authenticated user, same reasoning as notificationSendRateLimiter above.
@@ -171,7 +171,7 @@ export const sensitiveAccountActionRateLimiter = rateLimit({
 });
 
 /**
- * Prompt 23 Part 39 — search/suggestion endpoints are public and unauthenticated
+ * Part 39 — search/suggestion endpoints are public and unauthenticated
  * (no `req.user` to key on), so this is per-IP like `globalRateLimiter` but
  * meaningfully stricter — a scraping/enumeration script hammering
  * `/search/autocomplete` with thousands of single-character queries is a
@@ -185,7 +185,7 @@ export const searchRateLimiter = createConfigurableLimiter('search', {
 });
 
 /**
- * Prompt 24 Part 2 — the webhook router (`/api/v1/webhooks/*`) is mounted
+ * Part 2 — the webhook router (`/api/v1/webhooks/*`) is mounted
  * BEFORE `globalRateLimiter` (app.ts — it needs the raw request body ahead
  * of `express.json()`), so it previously had zero rate limiting of its
  * own. Signature/token verification (webhook.routes.ts) already rejects
@@ -213,7 +213,7 @@ export const webhookRateLimiter = rateLimit({
 });
 
 /**
- * Prompt 24 Part 2 — bulk export/import (Excel product import, product/
+ * Part 2 — bulk export/import (Excel product import, product/
  * coupon/report exports) are the heaviest per-request operations in this
  * API (full-collection scans, spreadsheet generation/parsing) and were
  * previously covered only by the shared `globalRateLimiter` (100/window,
@@ -229,7 +229,7 @@ export const exportImportRateLimiter = createConfigurableLimiter('exportImport',
 });
 
 /**
- * Prompt 24 Part 2 — a broader-than-global, per-actor ceiling on the
+ * Part 2 — a broader-than-global, per-actor ceiling on the
  * `/admin/*` surface as a whole. This is layered ON TOP of (not instead
  * of) `globalRateLimiter` and every endpoint-specific limiter already
  * applied to individual admin routes — RBAC/authentication remain the
@@ -245,7 +245,7 @@ export const adminApiRateLimiter = createConfigurableLimiter('adminApi', {
 });
 
 /**
- * Prompt 32 Part 12 — the public Distributor/Bulk Purchase enquiry-create
+ * Part 12 — the public Distributor/Bulk Purchase enquiry-create
  * endpoint writes to the database and enqueues admin/confirmation emails on
  * every hit, so it needs its own bound distinct from the generic
  * `globalRateLimiter` (a cheap `GET /products` tolerates far more traffic

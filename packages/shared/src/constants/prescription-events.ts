@@ -1,8 +1,7 @@
 /**
- * Prompt 17 — named audit actions for the prescription lifecycle, mirroring
  * RETURN_AUDIT_ACTIONS/SHIPMENT_AUDIT_ACTIONS/INVOICE_AUDIT_ACTIONS: specific
  * action strings for recordAudit() instead of relying purely on the generic
- * auditPlugin change-tracking prescription.service.ts used before this prompt.
+ * auditPlugin change-tracking prescription.service.ts used before this.
  */
 export const PRESCRIPTION_AUDIT_ACTIONS = {
   PRESCRIPTION_UPLOADED: 'PRESCRIPTION_UPLOADED',

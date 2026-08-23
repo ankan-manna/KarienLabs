@@ -66,7 +66,7 @@ export async function getRazorpayCredentials(): Promise<RazorpayCredentials> {
 /**
  * Lazily constructed — the Razorpay SDK throws synchronously if `key_id` is empty,
  * which would crash the whole process on boot in any environment where payment
- * keys aren't configured yet (local dev, a fresh staging box before Prompt 8's
+ * keys aren't configured yet (local dev, a fresh staging box before  8's
  * configuration UI is wired up). Deferring construction to first use means the
  * rest of the API stays up; only payment routes fail until keys are set. Also
  * rebuilds the client whenever the resolved credentials change (e.g. an admin

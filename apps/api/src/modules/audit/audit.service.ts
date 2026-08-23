@@ -53,7 +53,7 @@ interface RecordAuditInput {
   after?: unknown;
   ip?: string;
   requestId?: string;
-  // Actor-context (Prompt 10) — all optional so every pre-Prompt-10 call site
+  // Actor-context ( 10) — all optional so every pre--10 call site
   // (config/role/order/return/... services) is unaffected.
   actorType?: ActorType;
   actorName?: string;
@@ -67,13 +67,13 @@ interface RecordAuditInput {
 
 /**
  * Fire-and-forget audit trail write — called from service-layer mutations
- * on sensitive collections (wired up per-domain from Prompt 3 onward), and
- * from Prompt 10 onward also from authentication events (login/OTP/Google/
+ * on sensitive collections (wired up per-domain from onward), and
+ * from onward also from authentication events (login/OTP/Google/
  * password-reset).
  *
- * Prompt 24 Part 42/44/64 — `before`/`after`/`metadata` are run through the
+ * Part 42/44/64 — `before`/`after`/`metadata` are run through the
  * SAME recursive field-name-based redaction `sanitizeForLogging()` already
- * applies to production logs (Prompt 18), reused here rather than
+ * applies to production logs ( 18), reused here rather than
  * duplicated. This was a genuine gap: audit records previously stored
  * whatever a caller passed verbatim, with zero redaction — most callers
  * only ever pass safe, already-curated summaries (e.g. `{role, isActive}`),

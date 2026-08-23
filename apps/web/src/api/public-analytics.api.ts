@@ -3,7 +3,7 @@ import type { ApiResponse } from '@medcommerce/shared';
 import { httpClient } from './http-client';
 
 /**
- * Prompt 34 Part 13/14/19 — anonymous-readable GA4 enablement check. Backs
+ * Part 13/14/19 — anonymous-readable GA4 enablement check. Backs
  * `apps/web/src/lib/analytics.ts`'s dual gate (this DB-backed flag AND the
  * build-time `VITE_GA_MEASUREMENT_ID` must both be present before gtag.js
  * loads). Callers must treat a failed fetch as "disabled" — never let this

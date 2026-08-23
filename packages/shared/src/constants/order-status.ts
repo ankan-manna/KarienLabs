@@ -1,7 +1,7 @@
 /**
  * Fulfillment lifecycle for an order. Payment state is tracked separately on
  * `order.paymentStatus` (see PAYMENT_STATUS below) — "Payment Pending" / "Payment
- * Success" from the Prompt 7 spec map onto that existing field rather than being
+ * Success" from the spec map onto that existing field rather than being
  * duplicated here, since an order is only ever created (checkout()) after the cart
  * has already resolved to a definite order record; payment capture/failure is then
  * layered on top via the payments module and doesn't change the *order* lifecycle

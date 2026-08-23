@@ -64,7 +64,7 @@ export interface AdminInvoice {
   finalAmount: number;
   invoiceDate: string | null;
   status: string;
-  // Prompt 15 — for S3-backed invoices this is the private object key, not
+  // for S3-backed invoices this is the private object key, not
   // a directly-fetchable URL. Use fetchAdminInvoiceDownloadUrl for a real link.
   pdfUrl: string | null;
   storageProvider?: 'cloudinary' | 's3';
@@ -92,7 +92,7 @@ export async function regenerateInvoiceForOrder(orderId: string): Promise<AdminI
   return unwrap(data);
 }
 
-/** Prompt 15 Part 9/26 — admin document-download action; returns a short-lived presigned URL for S3-backed invoices. */
+/** Part 9/26 — admin document-download action; returns a short-lived presigned URL for S3-backed invoices. */
 export async function fetchAdminInvoiceDownloadUrl(
   id: string,
 ): Promise<{ url: string; expiresInSeconds: number }> {

@@ -30,9 +30,9 @@ import {
 
 export const prescriptionRouter = Router();
 
-// Prompt 17 Part 25/35/42 — its own RESOURCES.PRESCRIPTIONS scope (was
-// piggybacked on RESOURCES.CUSTOMERS + ACTIONS.APPROVE before this prompt),
-// same rationale/precedent as Prompt 16's RESOURCES.RETURNS. `update` guards
+// Part 25/35/42 — its own RESOURCES.PRESCRIPTIONS scope (was
+// piggybacked on RESOURCES.CUSTOMERS + ACTIONS.APPROVE before this ),
+// same rationale/precedent as  16's RESOURCES.RETURNS. `update` guards
 // the Super-Admin-controlled configuration surface specifically (Part 42) —
 // distinct from `approve`, which guards the day-to-day review workflow, so a
 // role can be granted one without the other.

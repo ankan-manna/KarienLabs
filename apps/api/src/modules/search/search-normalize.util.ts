@@ -1,5 +1,5 @@
 /**
- * Prompt 23 Part 3/39 — the ONE place user search input is normalized before
+ * Part 3/39 — the ONE place user search input is normalized before
  * it touches any MongoDB query, used by every search entry point
  * (product search, suggestions/autocomplete, global search). Two concerns:
  *
@@ -27,6 +27,26 @@ export function normalizeSearchQuery(input: string): string {
 /** Escapes every regex metacharacter so the string can safely be used as a `$regex` operand without being interpreted as a pattern. */
 export function escapeRegexLiteral(input: string): string {
   return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Splits an already-normalized query into individual search tokens for
+ * AND-based multi-word matching. Root-cause fix for a real bug: every
+ * search entry point used to run the WHOLE query string as a single
+ * phrase-substring regex, so a query like "extra paracetamol" (reordered)
+ * or "paracetamol caffeine" (words separated by other text/characters in
+ * the actual product name, e.g. "Paracetamol 500mg + Caffeine Tablets")
+ * matched ZERO results even though every word was genuinely present —
+ * confirmed live: `q=extra+paracetamol` returned 0 while `q=paracetamol+extra`
+ * (the in-order substring) returned 1. Tokenizing and requiring each token
+ * to independently match (AND across tokens, OR across fields per token)
+ * fixes this without needing `$text`/full-text infrastructure. Capped at
+ * `maxTokens` (default 6) so a pathological query can't blow up into dozens
+ * of `$and` clauses — same abuse-protection spirit as `isQueryLengthValid`.
+ */
+export function tokenizeQuery(normalizedQuery: string, maxTokens = 6): string[] {
+  if (!normalizedQuery) return [];
+  return normalizedQuery.split(' ').filter(Boolean).slice(0, maxTokens);
 }
 
 /**

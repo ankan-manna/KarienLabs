@@ -13,9 +13,9 @@ export interface Address {
   pincode: string;
   phone: string;
   isDefault: boolean;
-  /** Prompt 31 — set by the backend after a successful Postal PIN Code cross-check; cleared automatically whenever `pincode` is edited. Never client-settable. */
+  /** set by the backend after a successful Postal PIN Code cross-check; cleared automatically whenever `pincode` is edited. Never client-settable. */
   pincodeVerified: boolean;
-  /** Prompt 31 — set by the backend after a successful mobile-OTP confirmation for THIS address; cleared automatically whenever `phone` is edited. Never client-settable. */
+  /** set by the backend after a successful mobile-OTP confirmation for THIS address; cleared automatically whenever `phone` is edited. Never client-settable. */
   mobileVerified: boolean;
 }
 

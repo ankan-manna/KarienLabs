@@ -32,7 +32,7 @@ export interface UploadedAsset {
   url: string;
 }
 
-/** Signs with the API, then uploads the file bytes directly to Cloudinary — the API never proxies the file (see Prompt 1's upload architecture). */
+/** Signs with the API, then uploads the file bytes directly to Cloudinary — the API never proxies the file (see  1's upload architecture). */
 export async function uploadImageDirect(
   file: File,
   preset: UploadPreset,

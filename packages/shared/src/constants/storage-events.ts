@@ -1,5 +1,4 @@
 /**
- * Prompt 15 — centralized document storage (S3) vocabulary. Shared between
  * the invoice, shipment-label, and log-upload flows so all three speak the
  * same status/provider vocabulary instead of each inventing its own.
  */
@@ -16,7 +15,7 @@ export const DOCUMENT_STATUS = {
   AVAILABLE: 'available',
   FAILED: 'failed',
   RETRYING: 'retrying',
-  // Prompt 27 (fulfillment automation) — the S3 object was deleted by the
+
   // retention sweep after its configured retention window; the DB record
   // (and everything needed to regenerate it — invoice tax snapshot / label
   // provider identifiers) deliberately still exists. NOT the same as
@@ -31,11 +30,11 @@ export const DOCUMENT_TYPES = {
   INVOICE: 'invoice',
   SHIPPING_LABEL: 'shipping_label',
   LOG_BUNDLE: 'log_bundle',
-  // Prompt 16 — reverse-pickup shipping label, stored through the SAME
+
   // StorageService/Document pipeline as a forward shipping label, just a
   // distinct documentType so it's never confused with the outbound one.
   RETURN_LABEL: 'return_label',
-  // Prompt 17 — customer-uploaded prescription image/PDF. Migrates
+
   // prescription storage off the old Cloudinary-only direct-upload path
   // onto the same private-S3 StorageService pipeline every other business
   // document already uses (Part 10/11/47).
@@ -50,7 +49,7 @@ export const STORAGE_AUDIT_ACTIONS = {
   LOG_BATCH_UPLOADED: 'LOG_BATCH_UPLOADED',
   LOG_RETENTION_SWEEP_RAN: 'LOG_RETENTION_SWEEP_RAN',
   LOG_LIFECYCLE_RULE_CONFIGURED: 'LOG_LIFECYCLE_RULE_CONFIGURED',
-  // Prompt 18 Part 34/35 — structured archival-pipeline event names, one
+
   // per observable stage, so an operator can trace a single rotated file's
   // journey (compress -> upload -> cleanup, or a failure at any stage)
   // straight from the audit trail rather than only from raw log lines.

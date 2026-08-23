@@ -13,14 +13,14 @@ async function nextSeq(key: string): Promise<number> {
 /**
  * e.g. generateSequenceNumber('order', 'ORD') -> "ORD-2026-000123"
  *
- * `scope` (optional, Prompt 11) namespaces the counter — e.g.
+ * `scope` (optional,  11) namespaces the counter — e.g.
  * generateSequenceNumber('invoice', 'INV', sellerId) uses a distinct counter
  * per seller instead of one global counter, so seller-scoped numbering
  * (INV-A-000001 / INV-B-000001, per docs/DEVELOPMENT_TASKS.md's seller
  * invoice-numbering requirement) is a call-site change, not a new counter
  * mechanism. Callers that don't pass `scope` keep using the single global
  * counter exactly as before — this is purely additive. The actual GST/invoice
- * prompt is what will start passing `scope`; this prompt only prepares the
+ *  is what will start passing `scope`; this  only prepares the
  * capability.
  */
 export async function generateSequenceNumber(

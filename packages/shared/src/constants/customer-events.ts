@@ -1,5 +1,5 @@
 /**
- * Prompt 21 — customer self-service account audit actions, same
+ * customer self-service account audit actions, same
  * named-audit-action-string-per-domain pattern as every other domain
  * (PRESCRIPTION_AUDIT_ACTIONS, RETURN_AUDIT_ACTIONS, COUPON_AUDIT_ACTIONS, ...).
  */
@@ -12,7 +12,7 @@ export const CUSTOMER_AUDIT_ACTIONS = {
   ADDRESS_DELETED: 'ADDRESS_DELETED',
   DEFAULT_ADDRESS_CHANGED: 'DEFAULT_ADDRESS_CHANGED',
   ACCOUNT_DEACTIVATED: 'ACCOUNT_DEACTIVATED',
-  // Prompt 31 — address-scoped mobile-OTP verification (address-verification.service.ts).
+   // address-scoped mobile-OTP verification (address-verification.service.ts).
   ADDRESS_MOBILE_VERIFIED: 'ADDRESS_MOBILE_VERIFIED',
 } as const;
 export type CustomerAuditAction = (typeof CUSTOMER_AUDIT_ACTIONS)[keyof typeof CUSTOMER_AUDIT_ACTIONS];

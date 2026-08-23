@@ -62,7 +62,7 @@ async function hasQualifyingPriorOrder(userId: string): Promise<boolean> {
 }
 
 /**
- * Prompt 19 Part 19/20/22 — the SINGLE authoritative validation pipeline.
+ * Part 19/20/22 — the SINGLE authoritative validation pipeline.
  * Called from cart.service.ts's applyCouponToCart, coupon.service.ts's
  * previewCouponForCart, AND order.service.ts's checkout() (which re-runs
  * this at order-creation time — Part 22's explicit "cart validation !=
@@ -142,7 +142,7 @@ export async function validateCouponForCart(
 }
 
 /**
- * Prompt 19 Part 17/42/56 — the AUTHORITATIVE, concurrency-safe usage
+ * Part 17/42/56 — the AUTHORITATIVE, concurrency-safe usage
  * commit. Must run inside the SAME transaction/session as order creation.
  * Both guards are atomic conditional updates — `findOneAndUpdate` with a
  * filter that re-checks the limit at write time, not a

@@ -50,7 +50,7 @@ notificationsRouter.use(
     repository: notificationTemplateRepository,
     createSchema: createTemplateSchema,
     label: 'Notification template',
-    // Prompt 20 Part 44 — previously had ZERO audit trail (createCrudRouter
+    // Part 44 — previously had ZERO audit trail (createCrudRouter
     // didn't audit create/update/delete at all). Activate/deactivate goes
     // through the dedicated /status route below for a precise
     // ACTIVATED/DEACTIVATED action name rather than the generic UPDATED.

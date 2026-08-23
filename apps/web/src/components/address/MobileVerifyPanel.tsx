@@ -16,7 +16,7 @@ import { Input } from '../common/Input';
 
 /**
  * Inline mobile-OTP verification for one address card — its own small form.
- * Shared between the account Addresses page and Checkout (Prompt 1: checkout
+ * Shared between the account Addresses page and Checkout ( 1: checkout
  * must show the SAME verification flow in place, not a second implementation
  * of it, since checkout gates on this exact per-address `mobileVerified` flag).
  */

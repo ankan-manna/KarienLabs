@@ -53,7 +53,7 @@ export interface InvoiceLineTax {
   sgstAmount: number;
   igstRate: number;
   igstAmount: number;
-  /** Prompt 30 — this line's frozen product-level shipping contribution, read verbatim from `order.items[].shippingAmount` (never recomputed from the product's CURRENT shippingCharge — Part 16/17 immutability). */
+  /** this line's frozen product-level shipping contribution, read verbatim from `order.items[].shippingAmount` (never recomputed from the product's CURRENT shippingCharge — Part 16/17 immutability). */
   shippingAmount: number;
   bundleComponents?: InvoiceComponentTaxLine[];
 }
@@ -182,7 +182,7 @@ export async function calculateOrderTax(
         sgstAmount: lineSgst,
         igstRate: 0,
         igstAmount: lineIgst,
-        // Historical orders predating Prompt 30 have no `shippingAmount`
+        // Historical orders predating have no `shippingAmount`
         // stored on their items — `?? 0` matches the schema's own
         // `default: 0`, never treated as a gap to backfill/recalculate.
         shippingAmount: item.shippingAmount ?? 0,

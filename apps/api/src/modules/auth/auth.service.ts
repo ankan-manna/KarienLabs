@@ -98,7 +98,7 @@ export type RegisterResult =
     };
 
 /**
- * Prompt 31 — registration OTP always goes to the account's own email (the
+ * registration OTP always goes to the account's own email (the
  * only contact point that exists at registration time; no phone field on
  * `registerSchema`), regardless of the configured `otpChannel` used for
  * login/password-reset OTP.
@@ -154,10 +154,10 @@ async function resumePendingRegistration(
 }
 
 /**
- * When `registrationOtpEnabled` is on (Prompt 31, default ON — see
+ * When `registrationOtpEnabled` is on ( 31, default ON — see
  * auth-config.service.ts), a new account is created but withheld real
  * session tokens until its email is OTP-verified (`verifyRegistrationOtp`
- * below); when off, behavior is byte-for-byte the pre-Prompt-22 flow
+ * below); when off, behavior is byte-for-byte the pre--22 flow
  * (immediate token issuance), so existing deployments/tests that never
  * touch this config are unaffected.
  */
@@ -295,11 +295,11 @@ export type LoginResult =
     };
 
 /**
- * Credential check, unchanged in spirit from Prompt 1-9 — the only new
+ * Credential check, unchanged in spirit from  1-9 — the only new
  * behavior is that when `authentication.otp.login.enabled` is on (Configuration
  * Engine, default OFF), a verified password does not yet issue tokens: it
  * issues an OTP and a short-lived challenge token, and the real session is
- * only created by `verifyLoginOtp` below (Prompt 10 Part 1).
+ * only created by `verifyLoginOtp` below ( 10 Part 1).
  */
 export async function login(input: LoginInput, meta: SessionMeta): Promise<LoginResult> {
   const user = await UserModel.findOne({ email: input.email, deletedAt: null }).select(
@@ -393,7 +393,7 @@ export async function login(input: LoginInput, meta: SessionMeta): Promise<Login
 
   const otpCfg = await getAuthConfig();
 
-  // Prompt 31 — an account created while `registrationOtpEnabled` was on but
+  // an account created while `registrationOtpEnabled` was on but
   // never OTP-verified cannot log in. Scoped to CUSTOMER only: `register()`
   // (self-service, public) is the only creation path this OTP gate governs —
   // admin/seller/platform-admin accounts are created by an already-
@@ -635,7 +635,7 @@ const VERIFY_TOKEN_TTL_HOURS = 24;
 
 /**
  * Always succeeds from the caller's perspective, whether or not the email
- * exists — avoids leaking account existence (Prompt 10 Part 2 explicit
+ * exists — avoids leaking account existence ( 10 Part 2 explicit
  * requirement, same as the pre-existing behavior). When
  * `authentication.otp.passwordReset.enabled` is on, sends an OTP instead of
  * the emailed reset link; the frontend already knows which flow to render

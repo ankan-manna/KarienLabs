@@ -1,7 +1,7 @@
 import { AppError } from '../../utils/app-error';
 
 /**
- * Prompt 22 Part 4/5/43 — the ONE authoritative date-range resolver for
+ * Part 4/5/43 — the ONE authoritative date-range resolver for
  * every analytics/report endpoint, replacing the ad-hoc `{from?, to?}`
  * optional-string handling previously duplicated (with slightly different
  * behavior — some naive-local-time, some not) across reports.service.ts,
@@ -9,7 +9,7 @@ import { AppError } from '../../utils/app-error';
  *
  * Two things this fixes for real:
  * 1. Timezone consistency (Part 5) — this project has no project-wide
- *    business timezone configured anywhere (confirmed: Prompt 18's
+ *    business timezone configured anywhere (confirmed:  18's
  *    LOG_TIMEZONE defaults to UTC and nothing else in the codebase
  *    references a different zone) — so UTC is the documented, deterministic
  *    choice here, used consistently via `Date.UTC(...)`/`getUTCFullYear()`

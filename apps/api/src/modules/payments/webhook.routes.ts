@@ -47,7 +47,7 @@ webhookRouter.post(
  * every event is deduplicated/audited inside processShiprocketWebhookEvent
  * before any shipment/order state changes.
  *
- * Prompt 24 fix — this previously FAILED OPEN: `if (expectedToken && ...)`
+ * fix — this previously FAILED OPEN: `if (expectedToken && ...)`
  * skipped the whole check (accepting ANY unauthenticated payload) whenever
  * the webhook token wasn't configured yet. An unconfigured secret must
  * reject every request, not silently trust them — same "fail closed"

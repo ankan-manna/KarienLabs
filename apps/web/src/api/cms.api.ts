@@ -60,7 +60,9 @@ export interface Blog {
   title: string;
   excerpt: string;
   content: string;
+  coverImageUrl: string;
   isPublished: boolean;
+  publishedAt: string | null;
   tags: string[];
 }
 

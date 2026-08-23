@@ -8,7 +8,7 @@ import {
   parseBucketFileName,
 } from './log-archival.util';
 
-// Prompt 18 Part 36/50 — retry/backoff policy is pure math, tested without any fs/S3.
+ // Part 36/50 — retry/backoff policy is pure math, tested without any fs/S3.
 
 test('computeBackoffDelayMs: grows exponentially with attempts (fixed jitter=1 for a deterministic upper bound)', () => {
   const fixedRandom = () => 1; // pins jitterFactor to 1.0 (the max of the 0.5-1.0 range)

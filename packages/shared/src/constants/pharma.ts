@@ -16,12 +16,11 @@ export const PRESCRIPTION_REQUIRED_SCHEDULES: DrugSchedule[] = [
 ];
 
 /**
- * Prompt 17 — extends the pre-existing PENDING/APPROVED/REJECTED machine
+ * Extends the pre-existing PENDING/APPROVED/REJECTED machine
  * (real data already depends on these three — never rename/remove them)
- * with EXPIRED (Part 20 — a verified prescription past its validity window)
- * and CANCELLED (Part 13 — customer/admin withdraws an upload before
- * review). "PENDING" already covers the generic prompt template's
- * UPLOADED/PENDING_REVIEW/UNDER_REVIEW distinction (Part 13 explicitly says
+ * with EXPIRED (a verified prescription past its validity window)
+ * and CANCELLED (customer/admin withdraws an upload before review). "PENDING" already covers the generic template's
+ * UPLOADED/PENDING_REVIEW/UNDER_REVIEW distinction (explicitly says
  * to prefer existing naming conventions where one is already present).
  */
 export const PRESCRIPTION_STATUS = {

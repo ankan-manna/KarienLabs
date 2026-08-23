@@ -10,6 +10,7 @@ import { slugify } from '../../utils/slugify';
 import { recordAudit } from '../audit/audit.service';
 import { actorTypeForRole } from '../auth/actor-context.util';
 import { getSeoConfig, resolveCanonicalBase } from '../search/seo-config.service';
+import { escapeRegexLiteral, normalizeSearchQuery, tokenizeQuery } from '../search/search-normalize.util';
 import { buildFaqStructuredData, buildProductStructuredData } from '../search/structured-data.util';
 
 import { resolveProductAvailability } from './bundle.service';
@@ -79,7 +80,7 @@ export async function updateProduct(
   if (!updated) throw new NotFoundError('Product');
 
   const actorType = actorRole ? actorTypeForRole(actorRole) : undefined;
-  // Prompt 30 Part 31 — price/GST/shipping are financially sensitive
+  // Part 31 — price/GST/shipping are financially sensitive
   // (they flow directly into what a customer is charged); extended
   // alongside the pre-existing barcode/mrp/isActive audit fields rather
   // than adding a second, parallel audit call for the same update.
@@ -108,7 +109,7 @@ export async function updateProduct(
     },
   });
 
-  // Prompt 23 Part 18/40/41 — a DISTINCT, specifically-named audit record
+  // Part 18/40/41 — a DISTINCT, specifically-named audit record
   // whenever SEO/AEO content changes, so an admin reviewing the audit trail
   // can filter "who changed this product's SEO metadata" without having to
   // diff the generic ADMIN_UPDATED_PRODUCT record's full before/after every
@@ -146,7 +147,7 @@ export async function getProductById(id: string) {
  * which only need `images` and shouldn't pay for two extra lookups + a stock
  * aggregation on every write).
  *
- * Prompt 23 Part 14/21 — accepts EITHER the raw `_id` (every pre-existing
+ * Part 14/21 — accepts EITHER the raw `_id` (every pre-existing
  * bookmark/internal link keeps working, zero regression) OR the SEO-friendly
  * `slug` (what new storefront links use going forward) via
  * `findByIdOrSlug`.
@@ -181,7 +182,7 @@ export async function getPublicProductDetail(idOrSlug: string) {
     // read this directly instead of re-fetching the category and
     // re-implementing resolveProductDefaults themselves.
     effective: resolveProductDefaults(product, category),
-    // Prompt 23 Part 25/27/28/46/47 — structured data + FAQ, computed from
+    // Part 25/27/28/46/47 — structured data + FAQ, computed from
     // the SAME authoritative price/stock this response already returns
     // (never a second source of truth), gated by Configuration so a Super
     // Admin can turn structured-data markup off platform-wide.
@@ -212,7 +213,7 @@ export async function getPublicProductDetail(idOrSlug: string) {
 /**
  * `priceMin`/`priceMax`/`minDiscountPct` are pulled out of the generic equality-match
  * `filter` bag and translated into range/derived-field queries — the storefront's
- * price and discount filters (Prompt 6) need this, since a plain key=value filter
+ * price and discount filters ( 6) need this, since a plain key=value filter
  * can't express "basePrice between X and Y" or "discount >= N%" (discount isn't a
  * stored field, it's derived from mrp vs basePrice at query time via `$expr`).
  *
@@ -231,10 +232,36 @@ export async function getPublicProductDetail(idOrSlug: string) {
  * `resolveProductAvailability` bundle.service.ts also uses for product
  * detail and search, so "in stock" can never disagree between surfaces.
  */
+/**
+ * Root-cause fix for the Admin Panel product search bug (confirmed live:
+ * `GET /products?search=vit` returned 0 results even though 6 active
+ * Vitamin products exist, while `search=vitamin` — the full word — returned
+ * 6). The admin listing endpoint (shared by Admin → Catalog → Products,
+ * Admin → Inventory → Add Inventory's product picker, and every other
+ * `productHooks.useList({ search })` consumer — Coupons' product-scoping
+ * pickers, etc.) used `filter.$text = { $search: query.search }`, and
+ * MongoDB `$text` does whole-word STEMMED matching only — a partial
+ * "as-you-type" query can never match. Same bug class already fixed in the
+ * customer-facing search (`search-normalize.util.ts`'s `tokenizeQuery` +
+ * regex), reused here rather than reinvented: AND-of-tokens, each token
+ * matched via regex across name/SKU/generic name/tags. Fixing this ONE
+ * function fixes every admin screen that calls it, since none of them
+ * duplicate this query logic — they all go through `productApi`/
+ * `productHooks` → this same backend function.
+ */
+function buildProductSearchClauses(rawSearch: string): Record<string, unknown>[] {
+  const tokens = tokenizeQuery(normalizeSearchQuery(rawSearch));
+  return tokens.map((token) => {
+    const safeToken = escapeRegexLiteral(token);
+    const regex = { $regex: safeToken, $options: 'i' };
+    return { $or: [{ name: regex }, { sku: regex }, { 'medicine.genericName': regex }, { tags: regex }] };
+  });
+}
+
 export async function listProducts(query: ListQuery) {
   const { priceMin, priceMax, minDiscountPct, ...rest } = query.filter as Record<string, string>;
   const filter: Record<string, unknown> = { ...rest };
-  if (query.search) filter.$text = { $search: query.search };
+  if (query.search) filter.$and = buildProductSearchClauses(query.search);
 
   if (priceMin || priceMax) {
     const range: Record<string, number> = {};
@@ -339,7 +366,7 @@ interface ProductImageRef {
 }
 
 /**
- * Prompt (Product Image Management) Part 5/6/22 — "conceptually" mainImage +
+ *  (Product Image Management) Part 5/6/22 — "conceptually" mainImage +
  * subImages, computed from the SAME `images` array that's always been the
  * single stored source of truth (Part 5: "do not blindly create duplicate
  * image fields"). No schema/migration needed (Part 23): a legacy product
@@ -393,7 +420,7 @@ function renumberSubImages(images: ProductImage[]): ProductImage[] {
 }
 
 /**
- * Prompt (Product Image Management) Part 18/19/20 — the ONLY way to set or
+ *  (Product Image Management) Part 18/19/20 — the ONLY way to set or
  * replace the main image. Unlike the old `addProductImage({isPrimary:true})`
  * behavior (which just flipped a flag and left the previous main image
  * sitting in the array as an orphaned extra "sub" image, silently eating
@@ -440,7 +467,7 @@ export async function setMainProductImage(
   return withImageView(updated!);
 }
 
-/** Prompt (Product Image Management) Part 4/21/27 — backend-enforced sub-image cap; never trusts the frontend to have already limited the count. */
+/**  (Product Image Management) Part 4/21/27 — backend-enforced sub-image cap; never trusts the frontend to have already limited the count. */
 export async function addSubProductImage(
   productId: string,
   image: ProductImageRef,
@@ -475,7 +502,7 @@ export async function addSubProductImage(
   return withImageView(updated!);
 }
 
-/** Prompt (Product Image Management) Part 19 — the main image can never be removed via this route; it must be replaced via `setMainProductImage` instead, so a product is never left without one. */
+/**  (Product Image Management) Part 19 — the main image can never be removed via this route; it must be replaced via `setMainProductImage` instead, so a product is never left without one. */
 export async function removeSubProductImage(productId: string, publicId: string, actorId: string) {
   const product = await getProductById(productId);
   const images: ProductImage[] = (product.images ?? []).map((img) => ({ ...img }));
@@ -502,7 +529,7 @@ export async function removeSubProductImage(productId: string, publicId: string,
   return withImageView(updated!);
 }
 
-/** Prompt (Product Image Management) Part 18 — "reorder sub-images if practical." `publicIds` must be exactly the product's current sub-image set (any order); mismatches (stale client state, tampering) are rejected rather than silently dropping/duplicating entries. */
+/**  (Product Image Management) Part 18 — "reorder sub-images if practical." `publicIds` must be exactly the product's current sub-image set (any order); mismatches (stale client state, tampering) are rejected rather than silently dropping/duplicating entries. */
 export async function reorderSubProductImages(
   productId: string,
   publicIds: string[],
@@ -541,7 +568,7 @@ const EXCEL_COLUMNS = [
   { header: 'basePrice', key: 'basePrice', width: 12 },
   { header: 'mrp', key: 'mrp', width: 12 },
   { header: 'gstRate', key: 'gstRate', width: 10 },
-  // Prompt 30 — per-unit commercial shipping charge, same bulk-upload
+  // per-unit commercial shipping charge, same bulk-upload
   // treatment as gstRate (optional column, numeric, non-negative).
   { header: 'shippingCharge', key: 'shippingCharge', width: 14 },
   { header: 'genericName', key: 'genericName', width: 25 },
@@ -550,7 +577,7 @@ const EXCEL_COLUMNS = [
 ];
 
 /**
- * Prompt 30 Part 26 — a bulk-upload row's `gstRate`/`shippingCharge`/
+ * Part 26 — a bulk-upload row's `gstRate`/`shippingCharge`/
  * `basePrice`/`mrp` cell skips the Zod HTTP validator entirely
  * (`importProductsFromExcel` calls `createProduct()` directly, not the
  * `POST /products` route), so Mongoose's own `min`/`max` schema validators
@@ -620,7 +647,7 @@ export async function importProductsFromExcel(
 
 export async function exportProductsToExcel(query: ListQuery): Promise<Buffer> {
   const filter: Record<string, unknown> = { ...query.filter };
-  if (query.search) filter.$text = { $search: query.search };
+  if (query.search) filter.$and = buildProductSearchClauses(query.search);
 
   const products = await productRepository.find(filter, { sort: { createdAt: -1 } });
   const rows = products.map((p) => ({

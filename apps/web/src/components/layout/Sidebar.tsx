@@ -10,13 +10,13 @@ interface SidebarProps {
   title: string;
   sections: { label?: string; items: MenuItem[] }[];
   /**
-   * Prompt 33 Part 13/44 — off-canvas drawer state on mobile/tablet (no
+   * Part 13/44 — off-canvas drawer state on mobile/tablet (no
    * hover there). Strictly OPT-IN: only supplied by AdminLayout.tsx. A
    * second consumer of this shared component, CustomerLayout.tsx, does not
    * pass these — passing neither is how this component detects that and
    * falls back to its exact pre-existing behavior (always the full flex-
    * column sidebar, no responsive hiding) so that unrelated, un-migrated
-   * caller is never regressed by this prompt's admin-only navigation work.
+   * caller is never regressed by this 's admin-only navigation work.
    */
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
@@ -25,7 +25,7 @@ interface SidebarProps {
 }
 
 /**
- * Prompt 33, revised by the Admin Control Panel + Sidebar Navigation prompt
+ *  33, revised by the Admin Control Panel + Sidebar Navigation 
  * — categorized navigation shell. Each `section` (already the project's
  * existing grouping decision — see layouts/AdminLayout.tsx, one `label` per
  * RBAC-documented module group) renders as ONE of:

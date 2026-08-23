@@ -26,14 +26,14 @@ test('computeEligibleLines: no restriction -> every line eligible', () => {
   assert.equal(eligibleSubtotal, 2000);
 });
 
-test('computeEligibleLines: product restriction excludes unrestricted products (Part 12)', () => {
+test('computeEligibleLines: product restriction excludes unrestricted products', () => {
   const rules: CouponRules = { ...baseRules, applicableProductIds: ['A', 'B'] };
   const { eligibleLines, eligibleSubtotal } = computeEligibleLines(rules, lines);
   assert.deepEqual(eligibleLines.map((l) => l.productId), ['A', 'B']);
   assert.equal(eligibleSubtotal, 1000);
 });
 
-test('computeEligibleLines: category restriction excludes other categories (Part 13)', () => {
+test('computeEligibleLines: category restriction excludes other categories', () => {
   const rules: CouponRules = { ...baseRules, applicableCategoryIds: ['cat1'] };
   const { eligibleLines, eligibleSubtotal } = computeEligibleLines(rules, lines);
   assert.deepEqual(eligibleLines.map((l) => l.productId), ['A', 'B']);
@@ -49,7 +49,7 @@ test('computeEligibleLines: product and category restrictions are OR-ed', () => 
   );
 });
 
-test('computeEligibleLines: exclusion takes precedence over a category match (Part 29)', () => {
+test('computeEligibleLines: exclusion takes precedence over a category match', () => {
   const rules: CouponRules = { ...baseRules, applicableCategoryIds: ['cat1'], excludedProductIds: ['B'] };
   const { eligibleLines } = computeEligibleLines(rules, lines);
   assert.deepEqual(eligibleLines.map((l) => l.productId), ['A']);
@@ -79,14 +79,14 @@ test('calculateCouponDiscount: percentage discount computed against ELIGIBLE sub
   assert.equal(result.discountAmount, 100);
 });
 
-test('calculateCouponDiscount: maxDiscountAmount caps a percentage discount (Part 5)', () => {
+test('calculateCouponDiscount: maxDiscountAmount caps a percentage discount', () => {
   const rules: CouponRules = { ...baseRules, type: 'percentage', value: 10, maxDiscountAmount: 50 };
   const eligibility = computeEligibleLines(rules, lines); // eligibleSubtotal = 2000, 10% = 200
   const result = calculateCouponDiscount(rules, eligibility);
   assert.equal(result.discountAmount, 50);
 });
 
-test('calculateCouponDiscount: a flat discount never exceeds the eligible subtotal (Part 5)', () => {
+test('calculateCouponDiscount: a flat discount never exceeds the eligible subtotal', () => {
   const rules: CouponRules = { ...baseRules, type: 'flat', value: 99999 };
   const eligibility = computeEligibleLines(rules, lines);
   const result = calculateCouponDiscount(rules, eligibility);
@@ -100,7 +100,7 @@ test('calculateCouponDiscount: discount is never negative', () => {
   assert.ok(result.discountAmount >= 0);
 });
 
-test('calculateCouponDiscount: allocation sums EXACTLY to discountAmount despite rounding (Part 30)', () => {
+test('calculateCouponDiscount: allocation sums EXACTLY to discountAmount despite rounding', () => {
   const rules: CouponRules = { ...baseRules, type: 'percentage', value: 33.333 };
   const threeLines = [
     { productId: 'X', categoryId: 'c', lineSubtotal: 333.33 },

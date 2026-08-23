@@ -7,7 +7,7 @@ export const QUEUE_NAMES = {
   MAINTENANCE: 'maintenance',
   NOTIFICATION_DISPATCH: 'notification-dispatch',
   SHIPMENT_FULFILLMENT: 'shipment-fulfillment',
-  // Prompt 27 — one job per eligible order, enqueued by the maintenance
+  // one job per eligible order, enqueued by the maintenance
   // sweep below (FULFILLMENT_AUTOMATION_SWEEP) rather than doing the actual
   // per-order work inside the cron/sweep itself (Part 3/21: "do not create
   // a single huge cron request that processes thousands of orders
@@ -66,7 +66,7 @@ export interface ShipmentFulfillmentJobData {
 }
 
 /**
- * Prompt 14 — Shiprocket order creation runs here, off the request/response
+ * Shiprocket order creation runs here, off the request/response
  * cycle, same reasoning as invoice-generation above (external API calls are
  * too slow/unreliable to run inline). Enqueued from invoice.worker.ts right
  * after a successful invoice generation (Part 12/14's documented
@@ -95,7 +95,7 @@ export interface OrderFulfillmentAutomationJobData {
 }
 
 /**
- * Prompt 27 — advances ONE eligible paid order through
+ * advances ONE eligible paid order through
  * PLACED -> CONFIRMED -> PACKED (order-fulfillment-automation.service.ts),
  * which — unchanged — is exactly what already triggers invoice generation
  * (order.service.ts's updateOrderStatus), which — unchanged — is exactly
@@ -137,17 +137,17 @@ export const MAINTENANCE_JOB_NAMES = {
   COUPON_EXPIRY_SWEEP: 'coupon-expiry-sweep',
   CLEANUP_STALE_RECORDS: 'cleanup-stale-records',
   WEEKLY_SALES_REPORT: 'weekly-sales-report',
-  // Prompt 15 introduced a LOG_BATCH_UPLOAD entry here as a single
-  // centralized BullMQ job; Prompt 18 replaced it with a PER-PROCESS
+  // Introduced a LOG_BATCH_UPLOAD entry here as a single
+  // centralized BullMQ job; replaced it with a PER-PROCESS
   // in-process scheduler (queues/jobs/log-archival.scheduler.ts) — a
   // single worker-only BullMQ job structurally can't reach the `api`
   // container's separate local filesystem in this Docker topology. The
   // S3-side retention SWEEP below is unaffected (it only touches S3, never
   // local disk) and correctly stays centralized here.
   LOG_RETENTION_SWEEP: 'log-retention-sweep',
-  // Prompt 17 — expires verified prescriptions past their configured validity window.
+   // expires verified prescriptions past their configured validity window.
   PRESCRIPTION_EXPIRY_SWEEP: 'prescription-expiry-sweep',
-  // Prompt 27 — ticks frequently (every 15 min, see scheduleMaintenanceJobs
+  // ticks frequently (every 15 min, see scheduleMaintenanceJobs
   // below) but only actually does anything once the configurable
   // ~6-hour/±30-min window has elapsed since the last run (Part 2/3/25) —
   // the frequent tick + internal self-pacing check is deliberately safer
@@ -156,7 +156,7 @@ export const MAINTENANCE_JOB_NAMES = {
   // to pick up an admin's changed interval) and naturally self-heals after
   // a missed tick (Part 25: "the next cycle MUST pick it up").
   FULFILLMENT_AUTOMATION_SWEEP: 'fulfillment-automation-sweep',
-  // Prompt 27 Part 19/37 — S3 retention sweep for invoice/label documents,
+  // Part 19/37 — S3 retention sweep for invoice/label documents,
   // mirroring LOG_RETENTION_SWEEP's existing daily-safety-net pattern.
   DOCUMENT_RETENTION_SWEEP: 'document-retention-sweep',
 } as const;

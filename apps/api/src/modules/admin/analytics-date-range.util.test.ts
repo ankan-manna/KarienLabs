@@ -75,7 +75,7 @@ test('custom range rejects "from" after "to"', () => {
   );
 });
 
-test('custom range rejects a range exceeding the max allowed days (Part 43 — abuse protection)', () => {
+test('custom range rejects a range exceeding the max allowed days (abuse protection)', () => {
   assert.throws(
     () => resolveAnalyticsDateRange({ preset: 'custom', from: '2020-01-01', to: '2026-01-01' }, NOW),
     /cannot exceed/,

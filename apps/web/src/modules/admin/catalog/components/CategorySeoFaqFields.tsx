@@ -18,7 +18,7 @@ interface CategoryFormShape {
 }
 
 /**
- * Prompt 23 Part 15/18/28/29/40 (wired up here, follow-up to Prompt 23) —
+ * Part 15/18/28/29/40 (wired up here, follow-up to  23) —
  * Category's `seo`/`faq` fields already existed on the backend model and
  * were already accepted by `category.validator.ts`/audited by
  * `category.service.ts` (`CATEGORY_SEO_UPDATED`), but had no admin UI: the

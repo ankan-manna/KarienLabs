@@ -31,7 +31,7 @@ const CheckoutPage = lazy(() => import('../modules/storefront/pages/CheckoutPage
 // Public content (CMS-driven)
 const AboutPage = lazy(() => import('../modules/storefront/pages/AboutPage'));
 const ContactPage = lazy(() => import('../modules/storefront/pages/ContactPage'));
-// Prompt 32 — standalone Distributor/Bulk Purchase enquiry page, deliberately
+// standalone Distributor/Bulk Purchase enquiry page, deliberately
 // separate from ContactPage above (Part 59: never merged into Contact Us).
 const BulkPurchasePage = lazy(() => import('../modules/storefront/pages/BulkPurchasePage'));
 const FaqPage = lazy(() => import('../modules/storefront/pages/FaqPage'));
@@ -156,7 +156,7 @@ function PageFallback() {
 export function AppRouter() {
   const location = useLocation();
 
-  // Prompt 34 Part 15/16 — init once (initAnalytics is itself dedupe-guarded
+  // Part 15/16 — init once (initAnalytics is itself dedupe-guarded
   // against being called more than once), then track a page_view on every
   // SPA navigation. Deliberately fire-and-forget: analytics must never
   // delay or block rendering (Part 20). initAnalytics resolves only after

@@ -5,7 +5,7 @@ import { auditPlugin } from '../../../plugins/audit.plugin';
 
 /**
  * Unifies the Razorpay Order + Payment lifecycle into one record per checkout
- * attempt. Prompt 2 (prepaid-only redesign) — `orderId` is now `default: null`
+ * attempt. (prepaid-only redesign) — `orderId` is now `default: null`
  * (was `required: true`): a Payment is created BEFORE any Order exists (at
  * checkout-intent time), and is only ever linked to an Order once payment is
  * verified/captured AND the order has actually been finalized. A Payment
@@ -33,7 +33,7 @@ const paymentSchema = new Schema({
   },
   failureReason: { type: String, default: '' },
 
-  // Prompt 2 — the frozen checkout draft (validated cart/address/coupon/GST/
+  // the frozen checkout draft (validated cart/address/coupon/GST/
   // shipping/combo pricing, computed ONCE at checkout-intent time) this
   // payment is FOR. Order finalization (on payment capture) reuses this
   // EXACT snapshot rather than recomputing pricing — so the order total can
@@ -43,7 +43,7 @@ const paymentSchema = new Schema({
   // `select: false` — large, internal-only, never needed on a normal read.
   checkoutSnapshot: { type: Schema.Types.Mixed, default: null, select: false },
 
-  // Prompt 2 Part 24 — "payment succeeded at Razorpay but order finalization
+  // Part 24 — "payment succeeded at Razorpay but order finalization
   // failed" (inventory race, DB failure, coupon race). Payment.status stays
   // CAPTURED (the money genuinely was captured — never misrepresented as
   // failed), but this field being non-null flags the payment as needing
@@ -52,7 +52,7 @@ const paymentSchema = new Schema({
   reconciliationError: { type: String, default: null },
 });
 
-// Prompt 2 — at most ONE order may ever be created from a given payment,
+// at most ONE order may ever be created from a given payment,
 // enforced at the DATABASE level (not just an application-level `if`
 // check), exactly the same partial-unique-index + duplicate-key-catch
 // pattern already used for Shiprocket's `shiprocketOrderId` idempotency

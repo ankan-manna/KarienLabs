@@ -15,7 +15,7 @@ import { OrderModel } from '../orders/models/order.model';
 import { PaymentModel } from '../payments/models/payment.model';
 
 /**
- * Prompt 22 Part 5 — explicit UTC date math, replacing the previous
+ * Part 5 — explicit UTC date math, replacing the previous
  * local-server-timezone `setHours`/`setDate`/`setMonth` mutation chain (a
  * real bug: it silently disagreed with the UTC-implicit `$dateToString`/
  * `$isoWeek` grouping used throughout this file whenever the Node process
@@ -238,7 +238,7 @@ async function outOfStockCount() {
 
 /**
  * Computed live rather than read from the DashboardStatistic cache collection —
- * populating that cache on a schedule is background-job work (Prompt 9's
+ * populating that cache on a schedule is background-job work ( 9's
  * scheduling story); this gives correct numbers today at the cost of a few
  * aggregation queries per dashboard load, acceptable for admin-panel traffic.
  */

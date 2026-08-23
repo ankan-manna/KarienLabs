@@ -7,7 +7,7 @@ export const createSellerSchema = z.object({
   gstin: gstinSchema,
   drugLicenseNumber: z.string().trim().min(2).max(60),
   enabled: z.boolean().optional(),
-  // Prompt 13 — invoice display/numbering.
+   // invoice display/numbering.
   address: z.string().trim().max(500).optional(),
   invoiceCode: z
     .string()

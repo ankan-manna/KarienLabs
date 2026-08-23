@@ -70,7 +70,7 @@ export default function OrderDetailPage() {
   const [evidenceUrls, setEvidenceUrls] = useState<string[]>([]);
   const [uploadingEvidence, setUploadingEvidence] = useState(false);
 
-  // Prompt 21 Part 10 — ONE composed request instead of four (order +
+  // Part 10 — ONE composed request instead of four (order +
   // separate invoice/shipment/return round-trips); the backend now enriches
   // GET /orders/:id with invoice availability, shipment tracking, return
   // history, and refund status for the customer role — see

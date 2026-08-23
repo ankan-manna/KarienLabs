@@ -1,9 +1,9 @@
 import { UnprocessableEntityError } from '../../utils/app-error';
 
 /**
- * Prompt 19 Part 8/9/52 — pure, DB/Redis-free config shape + validation,
+ * Part 8/9/52 — pure, DB/Redis-free config shape + validation,
  * split out from coupon-config.service.ts for the same reason
- * prescription-config.util.ts is split from its service (Prompt 17): the
+ * prescription-config.util.ts is split from its service ( 17): the
  * Configuration service transitively imports the Redis-backed
  * maintenance-mode cache, and importing that as a side effect of a plain
  * unit test opens a real Redis connection.

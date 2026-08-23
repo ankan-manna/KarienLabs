@@ -111,7 +111,7 @@ export const CUSTOMER_MENU: MenuItem[] = [
     key: 'prescriptions',
     label: 'Prescriptions',
     path: '/admin/customers/prescriptions',
-    // Prompt 17 — its own RBAC resource (was piggybacked on "customers"
+    // its own RBAC resource (was piggybacked on "customers"
     // before). Super Admin controls Platform Admin visibility the same way
     // every other nav entry already works.
     requiredPermission: { resource: 'prescriptions', action: 'read' },
@@ -120,7 +120,7 @@ export const CUSTOMER_MENU: MenuItem[] = [
     key: 'distributor-enquiries',
     label: 'Distributor Enquiries',
     path: '/admin/distributor-enquiries',
-    // Prompt 32 — its own RBAC resource from the start, same precedent as
+    // its own RBAC resource from the start, same precedent as
     // RETURNS/PRESCRIPTIONS above.
     requiredPermission: { resource: 'distributor_enquiries', action: 'read' },
   },
@@ -137,7 +137,7 @@ export const ORDER_MENU: MenuItem[] = [
     key: 'returns',
     label: 'Returns',
     path: '/admin/orders/returns',
-    // Prompt 16 — Returns now has its own RBAC resource (was piggybacked on
+    // Returns now has its own RBAC resource (was piggybacked on
     // "orders" before). Super Admin controls Platform Admin visibility via
     // the same role-permission mechanism as every other nav entry.
     requiredPermission: { resource: 'returns', action: 'read' },
@@ -312,7 +312,7 @@ export const SUPER_ADMIN_MENU: MenuItem[] = [
     key: 'medical-compliance',
     label: 'Medical Compliance',
     path: '/admin/super/medical-compliance',
-    // Prompt 17 Part 39/42 — permission-gated (not requiredRole), so Super
+    // Part 39/42 — permission-gated (not requiredRole), so Super
     // Admin can grant a specific Platform Admin visibility into this
     // configuration section without granting the full raw Configuration
     // resource or Super Admin role itself.
@@ -322,7 +322,7 @@ export const SUPER_ADMIN_MENU: MenuItem[] = [
     key: 'coupon-settings',
     label: 'Coupon Settings',
     path: '/admin/super/coupon-settings',
-    // Prompt 19 Part 9/54 — same permission-gated (not requiredRole)
+    // Part 9/54 — same permission-gated (not requiredRole)
     // pattern as Medical Compliance above.
     requiredPermission: { resource: 'coupons', action: 'update' },
   },
@@ -330,7 +330,7 @@ export const SUPER_ADMIN_MENU: MenuItem[] = [
     key: 'fulfillment-automation',
     label: 'Fulfillment Automation',
     path: '/admin/super/fulfillment-automation',
-    // Prompt 27 Part 30/31 — same permission-gated (not requiredRole)
+    // Part 30/31 — same permission-gated (not requiredRole)
     // pattern; reuses `orders:update`, the SAME permission that already
     // gates the manual order-status-transition action this page automates.
     requiredPermission: { resource: 'orders', action: 'update' },
@@ -339,14 +339,14 @@ export const SUPER_ADMIN_MENU: MenuItem[] = [
     key: 'notification-settings',
     label: 'Notification Settings',
     path: '/admin/super/notification-settings',
-    // Prompt 20 Part 9/15 — same permission-gated (not requiredRole) pattern.
+     // Part 9/15 — same permission-gated (not requiredRole) pattern.
     requiredPermission: { resource: 'notifications', action: 'update' },
   },
   {
     key: 'analytics-settings',
     label: 'Analytics Settings',
     path: '/admin/super/analytics-settings',
-    // Prompt 22 Part 9/46 — same permission-gated (not requiredRole) pattern
+    // Part 9/46 — same permission-gated (not requiredRole) pattern
     // as Coupon/Notification Settings; reuses `reports:update`, the same
     // permission the Reports/Analytics screens already require for admin
     // configuration, rather than inventing a new permission vocabulary.
@@ -356,7 +356,7 @@ export const SUPER_ADMIN_MENU: MenuItem[] = [
     key: 'seo-settings',
     label: 'SEO Settings',
     path: '/admin/super/seo-settings',
-    // Prompt 23 Part 9/46/49 — same permission-gated (not requiredRole)
+    // Part 9/46/49 — same permission-gated (not requiredRole)
     // pattern; reuses `configuration:update` (seo-admin.routes.ts's exact
     // backend gate), not a new permission.
     requiredPermission: { resource: 'configuration', action: 'update' },

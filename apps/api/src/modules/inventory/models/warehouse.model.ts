@@ -23,9 +23,9 @@ const warehouseSchema = new Schema({
   },
   status: { type: String, enum: WAREHOUSE_STATUSES, default: 'operational' },
 
-  // Prompt 11 — Seller/Warehouse relationship (CAT-01/CAT-02). `default: null`
+  // Seller/Warehouse relationship (CAT-01/CAT-02). `default: null`
   // (not `required: true`) at the schema level so pre-existing warehouses
-  // created before this prompt don't fail Mongoose validation on unrelated
+  // created before this  don't fail Mongoose validation on unrelated
   // partial updates; `sellerId` IS required by the Zod validator on new
   // warehouse creation (see warehouse.validator.ts) and backfilled for
   // existing rows by scripts/migrate-seller-backfill.ts. Ownership changes
@@ -39,7 +39,7 @@ const warehouseSchema = new Schema({
   gstin: { type: String, default: '', trim: true, uppercase: true },
   stateCode: { type: String, default: '', trim: true },
 
-  // Prompt 14 — Shiprocket pickup-location registration requires a contact
+  // Shiprocket pickup-location registration requires a contact
   // phone/email for the warehouse (their "add pickup location" API schema).
   // Optional/defaulted so existing warehouses remain valid without a backfill;
   // shipment creation surfaces a clear error if these are missing on the

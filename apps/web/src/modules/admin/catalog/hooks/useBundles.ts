@@ -9,7 +9,7 @@ import { toast } from '../../../../utils/toast';
  * implement bulk-edit/bulk-delete/export/import (no backend support for
  * those on this resource yet) — `createCrudHooks` is typed against the full
  * `createCrudApi` shape, so it doesn't fit here without adding endpoints
- * this prompt doesn't call for. Same react-query patterns either way.
+ * this  doesn't call for. Same react-query patterns either way.
  */
 export const bundleHooks = {
   useList(params: ListQueryParams) {

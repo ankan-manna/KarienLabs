@@ -5,7 +5,7 @@ import { asyncHandler } from '../../utils/async-handler';
 import { checkPincodeServiceability } from '../orders/shiprocket-fulfillment.service';
 
 /**
- * Public, backend-only serviceability check (Prompt 14 Part 2). Never
+ * Public, backend-only serviceability check ( 14 Part 2). Never
  * exposes Shiprocket credentials or raw API responses — see
  * checkPincodeServiceability's own doc comment for the fallback strategy
  * when Shiprocket isn't configured/reachable.

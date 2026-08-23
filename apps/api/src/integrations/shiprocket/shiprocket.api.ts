@@ -151,7 +151,7 @@ export async function trackByAwb(awbCode: string): Promise<TrackByAwbResponse> {
 }
 
 /**
- * Prompt 16 / SHIP-05 — Shiprocket's dedicated reverse-pickup ("return
+ * / SHIP-05 — Shiprocket's dedicated reverse-pickup ("return
  * order") endpoint. Structurally the mirror image of
  * CreateShiprocketOrderPayload: `pickup_*` is where the courier collects the
  * package FROM (the customer's address) and `shipping_*` is where it's

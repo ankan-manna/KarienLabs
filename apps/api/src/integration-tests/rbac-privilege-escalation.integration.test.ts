@@ -7,8 +7,8 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 24 Part 16/64/71/72 — real HTTP-level regression tests for the
- * privilege-escalation gap found during this prompt's security audit:
+ * Part 16/64/71/72 — real HTTP-level regression tests for the
+ * privilege-escalation gap found during this 's security audit:
  * an actor holding only `users:update`/`roles:update` (a plausible,
  * non-super_admin real-world delegation) could previously:
  *   1. create a brand-new super_admin account,
@@ -23,7 +23,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * Super Admin account-management functionality (Part 77's "no business
  * logic regression" requirement).
  */
-describe('RBAC privilege-escalation protection (Prompt 24)', () => {
+describe('RBAC privilege-escalation protection', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let RoleModel: typeof import('../modules/auth/models/role.model').RoleModel;

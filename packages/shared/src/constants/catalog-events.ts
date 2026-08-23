@@ -1,5 +1,5 @@
 /**
- * Prompt 12 Part 13 — named audit actions for catalog/batch/bundle admin
+ * Part 13 — named audit actions for catalog/batch/bundle admin
  * operations, distinct from the generic 'create'/'update'/'delete' verbs
  * already used elsewhere, so an audit-log reader can tell "a product was
  * edited" apart from "a batch's MRP override was changed" or "a batch was

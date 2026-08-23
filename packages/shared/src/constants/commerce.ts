@@ -6,7 +6,7 @@ export const COUPON_TYPES = {
 export type CouponType = (typeof COUPON_TYPES)[keyof typeof COUPON_TYPES];
 
 /**
- * Prompt 16 — extends the pre-existing REQUESTED/APPROVED/REJECTED/PICKED_UP/
+ * extends the pre-existing REQUESTED/APPROVED/REJECTED/PICKED_UP/
  * RECEIVED/REFUNDED machine (do not remove any of those — RECEIVED and
  * REFUNDED already have real historical data and code depending on them)
  * with an explicit inspection gate (RECEIVED -> INSPECTED) and a second

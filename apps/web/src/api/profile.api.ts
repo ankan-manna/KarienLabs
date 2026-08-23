@@ -23,7 +23,7 @@ export interface CustomerProfile {
   notificationPreferences: NotificationPreferences;
 }
 
-// Prompt 21 Part 3 — `phone` is deliberately NOT patchable here anymore; it
+// Part 3 — `phone` is deliberately NOT patchable here anymore; it
 // can only change via requestPhoneChange/confirmPhoneChange below (OTP-verified).
 export type ProfilePatch = Partial<Pick<CustomerProfile, 'avatarUrl' | 'gender' | 'preferredLanguage'>> & {
   notificationPreferences?: Partial<NotificationPreferences>;

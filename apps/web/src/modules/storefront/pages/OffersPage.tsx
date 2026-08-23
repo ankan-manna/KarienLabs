@@ -19,7 +19,7 @@ export default function OffersPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
         Offers & Deals
       </h1>
       {isLoading ? (
@@ -35,7 +35,7 @@ export default function OffersPage() {
             <Link
               key={banner._id}
               to={banner.linkUrl || '/products'}
-              className="block overflow-hidden rounded-lg border border-gray-100 dark:border-gray-800"
+              className="block overflow-hidden rounded-lg border border-gray-100 dark:border-night-border"
             >
               <img src={banner.imageUrl} alt={banner.title} className="w-full object-cover" />
             </Link>

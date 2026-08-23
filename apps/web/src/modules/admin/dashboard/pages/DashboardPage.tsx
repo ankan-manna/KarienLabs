@@ -201,7 +201,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="revenue" fill="#FF8000" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -306,7 +306,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Line type="monotone" dataKey="newCustomers" stroke="#FF8000" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="newCustomers" stroke="var(--color-primary)" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>

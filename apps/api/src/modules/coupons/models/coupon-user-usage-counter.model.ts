@@ -1,7 +1,7 @@
 import { Schema, model, type InferSchemaType } from 'mongoose';
 
 /**
- * Prompt 19 Part 16/42 — a dedicated, tiny counter collection purely for
+ * Part 16/42 — a dedicated, tiny counter collection purely for
  * ATOMIC per-user usage-limit enforcement. `CouponUsageModel` (the
  * append-only audit trail) can't safely gate concurrency on its own: two
  * concurrent transactions both reading `countDocuments({couponId,userId})`

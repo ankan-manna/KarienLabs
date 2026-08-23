@@ -7,9 +7,9 @@ import { isSeoDomainEnabled } from './seo-config.service';
 import type { SeoConfig } from './seo-config.util';
 
 /**
- * Prompt 23 Part 2/17/49 — backend enforcement of the SEO Configuration
- * toggles, same shape as requireAnalyticsEnabled (Prompt 22) /
- * requireCouponManagementEnabled (Prompt 19). Super Admin always retains
+ * Part 2/17/49 — backend enforcement of the SEO Configuration
+ * toggles, same shape as requireAnalyticsEnabled ( 22) /
+ * requireCouponManagementEnabled ( 19). Super Admin always retains
  * access (otherwise there'd be no way to reach `/admin/seo/config` to turn a
  * domain back on once disabled — that config route itself is gated by the
  * `configuration:update` PERMISSION, not this middleware).

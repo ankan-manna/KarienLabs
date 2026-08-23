@@ -1,5 +1,6 @@
 import { blogApi, type Blog } from '../../../../api/cms.api';
 import { ConfigEntityPage, type ConfigField } from '../../../../components/table/ConfigEntityPage';
+import { BlogImageFields } from '../components/BlogImageFields';
 import { blogHooks } from '../hooks/useCms';
 
 const fields: ConfigField[] = [
@@ -18,6 +19,11 @@ export default function BlogsPage() {
       fields={fields}
       api={blogApi}
       hasActiveToggle={false}
+      renderExtraFields={() => <BlogImageFields />}
+      extraDefaultValues={(blog) => ({
+        coverImageUrl: blog?.coverImageUrl ?? '',
+        tags: blog?.tags?.[0] ?? '',
+      })}
     />
   );
 }

@@ -2,7 +2,7 @@ import { logger } from '../../config/logger';
 import { logThirdPartyApiCall } from '../logging/third-party-metrics.logger';
 
 /**
- * Prompt 31 Part 3 — thin client for India Post's public pincode-lookup API
+ * Part 3 — thin client for India Post's public pincode-lookup API
  * (`https://api.postalpincode.in/pincode/{code}`). No API key/auth exists
  * for this service. Deliberately narrow surface (one function, one shape)
  * mirroring the existing shiprocket.client.ts's separation of "talk to the

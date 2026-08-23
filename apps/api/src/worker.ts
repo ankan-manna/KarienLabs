@@ -22,11 +22,11 @@ async function bootstrap(): Promise<void> {
   const shipmentWorker = startShipmentWorker();
   const orderFulfillmentWorker = startOrderFulfillmentWorker();
   await scheduleMaintenanceJobs();
-  // Prompt 15 Part 14 — idempotent; a no-op when S3 isn't configured, so
+  // Part 14 — idempotent; a no-op when S3 isn't configured, so
   // this never blocks worker boot in dev/self-disabled deployments.
   await configureLogLifecycleRule();
 
-  // Prompt 18 Part 17/20/38 — this process's OWN local logs/pool-stats
+  // Part 17/20/38 — this process's OWN local logs/pool-stats
   // (see log-archival.scheduler.ts for why this runs per-process).
   const stopLogArchival = startLogArchivalScheduler();
   startPoolStatsSampler();

@@ -104,7 +104,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden rounded-2xl bg-deep-teal outline-none"
+      className="relative overflow-hidden rounded-2xl bg-ink outline-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -135,7 +135,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
               animate={{ scale: 1 }}
               transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-deep-teal/85 via-deep-teal/25 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
             <motion.div
               className="absolute inset-x-0 bottom-0 p-6 sm:p-10"
               variants={prefersReducedMotion ? undefined : textContainerVariants}

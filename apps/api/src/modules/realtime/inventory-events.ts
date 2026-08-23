@@ -7,7 +7,7 @@ import { BundleItemModel } from '../catalog/models/bundle-item.model';
 import { BundleModel } from '../catalog/models/bundle.model';
 
 /**
- * Prompt 3 (inventory lifecycle) — there is no Socket.IO/SSE/pub-sub layer
+ * (inventory lifecycle) — there is no Socket.IO/SSE/pub-sub layer
  * anywhere in this codebase (confirmed by inspection: no `socket.io` or
  * `ws` dependency, no existing publisher). `ioredis` (already a dependency,
  * already connected — `config/redis.ts`) is the smallest available building
@@ -37,7 +37,7 @@ export interface InventoryUpdatedEvent {
 /**
  * Reverse lookup for Part 17/18 — "SKU-1 changed -> find affected combos ->
  * recalculate -> publish." `BundleItem.componentProductId` already carries
- * an index (bundle-item.model.ts, from Prompt 1), so this is a single
+ * an index (bundle-item.model.ts, from  1), so this is a single
  * indexed query, not a collection scan, and requires no new index.
  */
 async function findAffectedComboProductIds(componentProductIds: string[]): Promise<string[]> {

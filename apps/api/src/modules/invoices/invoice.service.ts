@@ -34,7 +34,7 @@ import { InvoiceModel, type InvoiceDocument } from './models/invoice.model';
 /** Presigned expiry used specifically for the async/email delivery context — longer than the ~5-minute default used for interactive downloads (getInvoiceDownloadUrl) since an email may not be opened immediately, still far short of a permanent public link. */
 const EMAIL_LINK_TTL_SECONDS = 24 * 60 * 60;
 
-/** Reads the "Invoice Prefix" from Business Configuration (`invoicePrefix`), falling back to the default 'INV' when unset — unchanged from before Prompt 13, just now combined with a per-seller code (see resolveSellerInvoiceCode). */
+/** Reads the "Invoice Prefix" from Business Configuration (`invoicePrefix`), falling back to the default 'INV' when unset — unchanged from before  13, just now combined with a per-seller code (see resolveSellerInvoiceCode). */
 async function getInvoiceNumberPrefix(): Promise<string> {
   const config = await getConfiguration('business');
   const prefix = (config as { invoicePrefix?: unknown }).invoicePrefix;
@@ -49,12 +49,12 @@ function resolveSellerInvoiceCode(seller: { invoiceCode?: string | null; legalNa
 }
 
 /**
- * Prompt 13 Part 14 — seller-scoped invoice numbering. Each seller gets its
+ * Part 14 — seller-scoped invoice numbering. Each seller gets its
  * own atomic counter (`generateSequenceNumber`'s `scope` param, added in
- * Prompt 11 for exactly this) so e.g. Seller A and Seller B both issuing
+ * for exactly this) so e.g. Seller A and Seller B both issuing
  * their first invoice on the same day both correctly get "...-000001"
  * instead of competing for one global sequence. Orders with no resolvable
- * seller (pre-Prompt-11 legacy data, or genuinely ambiguous multi-seller
+ * seller (pre--11 legacy data, or genuinely ambiguous multi-seller
  * checkout — see order.service.ts's resolveCheckoutSeller) fall back to the
  * original single global counter, unchanged.
  */
@@ -112,7 +112,7 @@ async function renderInvoicePdfBuffer(
       address: data.sellerAddressSnapshot,
       gstin: data.sellerGstinSnapshot,
       drugLicense: data.sellerDrugLicenseSnapshot,
-      // Prompt 20 Part 38 — the project logo, served as a plain static
+      // Part 38 — the project logo, served as a plain static
       // asset by the web app (apps/web/public/logo.jpg), never a
       // filesystem path baked into this (API-side) application code.
       logoUrl: `${env.WEB_BASE_URL}/logo.jpg`,
@@ -216,7 +216,7 @@ export async function generateInvoiceForOrder(orderId: string): Promise<string> 
       invoiceDate = new Date();
       pdfData = snapshot;
 
-      // Prompt 15 Part 19 — the invoice row (with its frozen tax snapshot) is
+      // Part 19 — the invoice row (with its frozen tax snapshot) is
       // persisted BEFORE attempting the S3 upload, in `documentStatus:
       // GENERATING`. If the upload then fails, the invoice is still
       // identifiable/queryable as "tax data generated, storage pending" —
@@ -309,7 +309,7 @@ export function listMyInvoices(customerId: string) {
 }
 
 /**
- * Prompt 27 Part 12/13/38 — silent, system-triggered recovery for an invoice
+ * Part 12/13/38 — silent, system-triggered recovery for an invoice
  * whose S3 object was already deleted by the retention sweep
  * (document-retention-sweep.job.ts): re-renders from the SAME frozen tax
  * snapshot `regenerateInvoice` re-renders from (never recomputes tax, never
@@ -376,7 +376,7 @@ export async function ensureInvoicePdfAvailable(invoice: HydratedDocument<Invoic
 }
 
 /**
- * Prompt 15 Part 9/10 — the ONLY path that ever turns a stored invoice
+ * Part 9/10 — the ONLY path that ever turns a stored invoice
  * reference into an actually-fetchable link. List/detail reads above return
  * raw metadata (`pdfUrl` there is the private S3 object key, not a working
  * URL, for S3-backed invoices); this generates a fresh short-lived presigned

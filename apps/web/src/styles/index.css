@@ -18,6 +18,41 @@
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
   }
+
+  /* KARIEN theme system — single source of truth for both the customer
+     storefront and the admin Control Panel. Every semantic color token in
+     tailwind.config.js (primary/accent/coral/deep-teal/soft-mint/
+     charcoal-teal/slate-teal/pale-sage/night*) resolves through these
+     custom properties, so toggling `.dark` on `<html>` (see
+     ThemeContext.tsx) repaints the whole app to the KARIEN DARK palette
+     with no `dark:` variant needed at every call site. Colors are fixed,
+     exact hex values — never time-of-day or system-color-temperature
+     derived; only an explicit user toggle (or the one-time, storage-less
+     first-load fallback in ThemeContext.tsx) changes which block applies. */
+  :root {
+    --color-primary: #ff8000;
+    --color-secondary: #ff4b33;
+    --color-text-main: #172b2f;
+    --color-text-muted: #5b7370;
+    --color-bg-main: #fff7f2;
+    --color-bg-card: #ffffff;
+    --color-bg-section: #fff0e8;
+    --color-border: #f3d8cc;
+    /* Static navbar/footer chrome color — deliberately does NOT flip in
+       .dark below (Header.tsx/Button.tsx/Footer.tsx already treat `ink` as
+       a fixed dark navy that reads correctly against either theme). */
+    --color-ink: #172b2f;
+  }
+  .dark {
+    --color-primary: #ff8a1f;
+    --color-secondary: #ff5a45;
+    --color-text-main: #f8f5f2;
+    --color-text-muted: #a4bcba;
+    --color-bg-main: #081c20;
+    --color-bg-card: #12343a;
+    --color-bg-section: #0d282d;
+    --color-border: #24464b;
+  }
 }
 
 @layer utilities {
@@ -25,7 +60,7 @@
    * Reusable themed scrollbar — currently used by the admin sidebar's
    * hover-flyout submenu (Sidebar.tsx) so a long menu's scrollbar matches
    * the app's own gray palette instead of the browser default, in both
-   * themes. Not hidden (Part 7 of the sidebar-scroll prompt: hiding it
+   * themes. Not hidden (Part 7 of the sidebar-scroll : hiding it
    * would hurt discoverability) — just thin and unobtrusive. Reuse this
    * class for any other internally-scrolling panel instead of duplicating
    * the rule.

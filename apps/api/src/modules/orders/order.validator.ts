@@ -18,7 +18,7 @@ export const cancelOrderSchema = z.object({
   reason: z.string().trim().min(3).max(500),
 });
 
-// Prompt 27 Part 30/42 — mirrors prescription.validator.ts's
+// Part 30/42 — mirrors prescription.validator.ts's
 // setPrescriptionConfigSchema (every field optional/partial-mergeable,
 // `.strict()` rejects unknown keys before they ever reach the service's own
 // whitelist check in fulfillment-config.util.ts).

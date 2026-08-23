@@ -8,7 +8,7 @@ import { env, isProduction, isTest } from './env';
 import { RotatingLogDestination } from './log-rotation';
 import { getRequestContext } from './request-context';
 
-// Prompt 15 Part 13/21 originally, extended by Prompt 18 Part 1/28/29 —
+// Part 13/21 originally, extended by Part 1/28/29 —
 // local NDJSON application log files, now rotated at 6-hour WALL-CLOCK
 // boundaries (see log-rotation.ts) rather than once per calendar day.
 // 'api' vs 'worker' (by entry script) keeps the two processes' logs in
@@ -37,7 +37,7 @@ const REDACT_PATHS = [
   '*.refreshToken',
   '*.razorpay_signature',
   '*.cardNumber',
-  // Prompt 10 — OTP codes, OTP challenge/reset-session tokens, and
+  // OTP codes, OTP challenge/reset-session tokens, and
   // anything Google-OAuth-shaped must never reach log output either.
   '*.code',
   '*.otp',
@@ -50,7 +50,7 @@ const REDACT_PATHS = [
   '*.googleIdToken',
   '*.access_token',
   '*.refresh_token',
-  // Prompt 15 Part 12 — Shiprocket/AWS/Razorpay secrets must never reach a
+  // Part 12 — Shiprocket/AWS/Razorpay secrets must never reach a
   // log file that later gets uploaded to S3, same as any other secret above.
   '*.awsSecretAccessKey',
   '*.secretAccessKey',
@@ -58,7 +58,7 @@ const REDACT_PATHS = [
   '*.shiprocketPassword',
   '*.webhookSecret',
   '*.keySecret',
-  // Prompt 18 Part 22/23 — cards/bank details, presigned URLs (a signed S3
+  // Part 22/23 — cards/bank details, presigned URLs (a signed S3
   // URL IS a bearer credential for the duration of its validity), and any
   // field literally carrying document/prescription bytes.
   '*.cvv',
@@ -91,7 +91,7 @@ function contextMixin(): Record<string, unknown> {
 let applicationDestination: RotatingLogDestination | null = null;
 
 function buildDestination(): pino.DestinationStream | undefined {
-  if (isTest) return undefined; // No file I/O in unit tests — matches the pre-Prompt-18 behavior exactly.
+  if (isTest) return undefined; // No file I/O in unit tests — matches the pre--18 behavior exactly.
 
   applicationDestination = new RotatingLogDestination({
     logDir: LOG_DIR,

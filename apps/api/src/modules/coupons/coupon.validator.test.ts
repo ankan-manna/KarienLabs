@@ -11,7 +11,7 @@ const validBase = {
   validTo: '2026-12-31T00:00:00Z',
 };
 
-// Prompt 19 Part 39 — invalid combinations the admin form must never submit.
+ // Part 39 — invalid combinations the admin form must never submit.
 
 test('accepts a well-formed percentage coupon', () => {
   const result = createCouponSchema.safeParse(validBase);

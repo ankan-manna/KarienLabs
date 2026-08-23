@@ -7,7 +7,7 @@ export interface Invoice {
   invoiceNumber: string;
   orderId: string;
   totals: { grandTotal: number };
-  // Prompt 15 — for S3-backed invoices this is the private object key, NOT
+  // for S3-backed invoices this is the private object key, NOT
   // a directly-fetchable URL; a truthy value still means "the PDF exists",
   // it's just only fetched via getInvoiceDownloadUrl below.
   pdfUrl: string | null;
@@ -23,7 +23,7 @@ export async function listMyInvoices(): Promise<Invoice[]> {
   return data.data;
 }
 
-/** Prompt 15 Part 9 — the only path that returns an actually-fetchable link (short-lived presigned URL when S3-backed). */
+/** Part 9 — the only path that returns an actually-fetchable link (short-lived presigned URL when S3-backed). */
 export async function getInvoiceDownloadUrl(
   orderId: string,
 ): Promise<{ url: string; expiresInSeconds: number }> {

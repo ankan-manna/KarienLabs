@@ -13,7 +13,7 @@ import {
 export { DEFAULT_FULFILLMENT_CONFIG, validateFulfillmentConfig, type FulfillmentConfig };
 
 /**
- * Prompt 27 — every automated-fulfillment business behavior is read from
+ * every automated-fulfillment business behavior is read from
  * HERE, never hardcoded at the call site. Uses the EXISTING Configuration
  * engine (`fulfillment` namespace) — not a second settings store, reachable
  * through the already-generic `GET/PUT /configuration/:namespace` admin API

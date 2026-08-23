@@ -43,7 +43,7 @@ export interface VerifiedGoogleIdentity {
  * Exchanges the OAuth `code` for tokens, then verifies the returned ID
  * token's signature/issuer/audience/expiry server-side via google-auth-library
  * (never trusts anything the frontend might claim about the Google profile —
- * Prompt 10's explicit requirement). Deliberately returns only the minimal
+ *  10's explicit requirement). Deliberately returns only the minimal
  * identity fields and discards the access/id/refresh tokens immediately —
  * nothing Google-issued is persisted or logged past this function returning.
  */
@@ -87,7 +87,7 @@ export class GoogleAdminResolutionError extends Error {
 }
 
 /**
- * Account-linking policy (Prompt 10 Part 3): a Google identity is only ever
+ * Account-linking policy ( 10 Part 3): a Google identity is only ever
  * mapped onto an EXISTING, already-authorized admin/super_admin/
  * inventory_manager User document — never auto-provisioned, never silently
  * merged onto an unrelated account, and never able to elevate a customer

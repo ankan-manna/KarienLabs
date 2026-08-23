@@ -767,7 +767,7 @@ export async function resolveReturnReplacement(id: string, actorId: string, acto
 
   // Fast-tracks the replacement straight to PACKED (payment/picking already
   // implicit — the goods are simply being re-sent) so it flows through the
-  // EXISTING invoice-generation + Shiprocket-shipment automation (Prompt
+  // EXISTING invoice-generation + Shiprocket-shipment automation (
   // 13/14) exactly like any other order reaching that status, with zero
   // duplicated fulfillment logic (Part 29).
   const { updateOrderStatus } = await import('./order.service');

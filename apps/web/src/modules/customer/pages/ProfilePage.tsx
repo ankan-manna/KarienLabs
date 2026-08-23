@@ -88,7 +88,7 @@ function ChangePasswordCard() {
   );
 }
 
-/** Prompt 21 Part 3 — OTP-verified phone change (reuses the existing OTP system, never a blind write). */
+/** Part 3 — OTP-verified phone change (reuses the existing OTP system, never a blind write). */
 function PhoneChangeCard({ currentPhone }: { currentPhone: string }) {
   const queryClient = useQueryClient();
   const [newPhone, setNewPhone] = useState(currentPhone);
@@ -155,7 +155,7 @@ function PhoneChangeCard({ currentPhone }: { currentPhone: string }) {
   );
 }
 
-/** Prompt 21 Part 35 — safe, reversible-by-admin self-deactivation (never a hard delete). */
+/** Part 35 — safe, reversible-by-admin self-deactivation (never a hard delete). */
 function DeactivateAccountCard() {
   const { logout } = useAuth();
   const navigate = useNavigate();

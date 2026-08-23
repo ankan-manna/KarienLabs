@@ -20,7 +20,7 @@ interface GrnReceivedItemInput {
   expiryDate: Date;
   quantityReceived: number;
   unitCost: number;
-  // Prompt 12 (CAT-04) — the MRP printed on this specific pack/print-run,
+  // (CAT-04) — the MRP printed on this specific pack/print-run,
   // when known at receipt time. Optional; `undefined` leaves batch.mrp unset
   // (falls back to Product.mrp — see batch-pricing.util.ts). Only applied on
   // first receipt of a given (product, warehouse, batchNumber) — see

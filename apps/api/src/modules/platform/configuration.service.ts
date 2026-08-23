@@ -1,12 +1,27 @@
+import { s3ConfigSchema } from '@medcommerce/shared';
+
 import { invalidateMaintenanceModeCache } from '../../middlewares/maintenance-mode.middleware';
 import { invalidateRateLimitConfigCache } from '../../middlewares/rate-limit-config.util';
+import { ValidationError } from '../../utils/app-error';
 import { decryptSensitiveConfigFields, encryptSensitiveConfigFields } from '../../utils/field-encryption.util';
 import { recordAudit } from '../audit/audit.service';
 
 import { ConfigurationModel } from './models/configuration.model';
 
 /**
- * Prompt 24 Part 29 — the ONE chokepoint every namespace's config reads/
+ * Per-namespace shape validation, applied on write only (existing stored
+ * documents from before a namespace had a schema are read back unchanged —
+ * this never retroactively invalidates data, only new writes). Most
+ * namespaces still have no schema here and keep the pre-existing
+ * accept-any-object behavior; add an entry as each namespace's shape gets
+ * hardened, same pattern as env.schema.ts already does for process env vars.
+ */
+const NAMESPACE_SCHEMAS: Partial<Record<string, { safeParse: (v: unknown) => { success: boolean; error?: unknown } }>> = {
+  s3: s3ConfigSchema,
+};
+
+/**
+ * Part 29 — the ONE chokepoint every namespace's config reads/
  * writes already flow through (razorpay.client.ts, cloudinary.client.ts,
  * shiprocket.client.ts, S3/SMTP config, ...), so encrypting specific
  * secret-shaped field names here (field-encryption.util.ts) is fully
@@ -19,6 +34,14 @@ export async function getConfiguration(namespace: string) {
 }
 
 export async function setConfiguration(namespace: string, value: unknown, actorId: string) {
+  const schema = NAMESPACE_SCHEMAS[namespace];
+  if (schema) {
+    const result = schema.safeParse(value);
+    if (!result.success) {
+      throw new ValidationError(`Invalid configuration for namespace "${namespace}"`, result.error);
+    }
+  }
+
   const before = await ConfigurationModel.findOne({ namespace }).select('value').lean();
   const encryptedValue = encryptSensitiveConfigFields(value);
   const config = await ConfigurationModel.findOneAndUpdate(

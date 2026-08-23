@@ -3,8 +3,8 @@ import { logThirdPartyApiCall } from '../logging/third-party-metrics.logger';
 
 import { getCloudinaryClient } from './cloudinary.client';
 
-// Prompt (Order/Shiprocket/Invoice/Image bugfix) Part 6 — `return_evidence`
-// (Prompt 16 Part 3/33, customer return-photo uploads) is already accepted
+// (Order/Shiprocket/Invoice/Image bugfix) Part 6 — `return_evidence`
+// (Part 3/33, customer return-photo uploads) is already accepted
 // by uploads.routes.ts's Zod schema but was missing from this type, which
 // meant `ensureUploadPreset` below would never have provisioned it.
 export type UploadPreset =
@@ -39,7 +39,7 @@ const confirmedPresets = new Set<string>();
  * Cloudinary itself ("Upload preset not found") at the browser's direct
  * POST, by which point our own endpoint has already returned 200 — exactly
  * the "200 from /uploads/signature does not mean the upload will succeed"
- * gap this prompt calls out. Fixed at the root: ensure the preset exists
+ * gap this  calls out. Fixed at the root: ensure the preset exists
  * (idempotent get-or-create) before ever handing out a signature for it,
  * rather than adding a second upload mechanism or silently swallowing the
  * eventual Cloudinary-side failure.

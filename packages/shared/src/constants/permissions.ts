@@ -32,22 +32,22 @@ export const RESOURCES = {
   AUDIT_LOGS: 'audit_logs',
   FILES: 'files',
   REVIEWS: 'reviews',
-  // Prompt 11 — Seller entity (legal/business entity distinct from Supplier/Vendor/Warehouse).
+
   SELLERS: 'sellers',
-  // Prompt 12 — Bundle/combo-pack admin CRUD (bundle wraps an existing Product, but has its own admin section/permission).
+
   BUNDLES: 'bundles',
-  // Prompt 16 — Return/Replacement/Refund workflow. Previously piggybacked on
+
   // RESOURCES.ORDERS + ACTIONS.APPROVE; given its own resource so seller-scoped
   // and Platform-Admin-vs-Super-Admin visibility can be controlled independently
   // of general order permissions (Part 35/36) — still the same RBAC engine,
   // just a new resource value like SELLERS/BUNDLES were before it.
   RETURNS: 'returns',
-  // Prompt 17 — prescription review workflow. Previously piggybacked on
+
   // RESOURCES.CUSTOMERS + ACTIONS.APPROVE; given its own resource for the
   // same reason RETURNS was (Part 25/30: seller-scoped and Platform-Admin-
   // vs-Super-Admin visibility independent of general customer permissions).
   PRESCRIPTIONS: 'prescriptions',
-  // Prompt 32 — Distributor/Bulk Purchase enquiry management, its own
+
   // resource from the start (same rationale as RETURNS/PRESCRIPTIONS before
   // it): a Super Admin controls Platform Admin visibility into this
   // business-lead domain independently of ORDERS/CUSTOMERS permissions.

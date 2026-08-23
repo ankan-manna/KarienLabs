@@ -8,7 +8,7 @@ import {
   updateRequestContext,
 } from './request-context';
 
-// Prompt 18 Part 4/30/31/32/50 — AsyncLocalStorage-based correlation, the
+// Part 4/30/31/32/50 — AsyncLocalStorage-based correlation, the
 // mechanism that lets requestId/actor/job identity reach every log line
 // without threading parameters through every service function signature.
 
@@ -24,7 +24,7 @@ test('runWithRequestContext: the context is visible inside the callback', () => 
   });
 });
 
-test('runWithRequestContext: the SAME context object survives across await boundaries (Part 30 — one requestId per request, not per log line)', async () => {
+test('runWithRequestContext: the SAME context object survives across await boundaries (one requestId per request, not per log line)', async () => {
   async function nestedServiceCall() {
     await new Promise((resolve) => setTimeout(resolve, 5));
     return getRequestContext()?.requestId;
@@ -66,7 +66,7 @@ test('contexts do not leak between two concurrent runs (no shared mutable state 
   assert.ok(results.includes('req-B'));
 });
 
-test('runWithJobContext: background jobs identify themselves as BACKGROUND_JOB, never a human actor (Part 31)', () => {
+test('runWithJobContext: background jobs identify themselves as BACKGROUND_JOB, never a human actor', () => {
   runWithJobContext('log-archival', 123, () => {
     const ctx = getRequestContext();
     assert.equal(ctx?.actorType, 'BACKGROUND_JOB');

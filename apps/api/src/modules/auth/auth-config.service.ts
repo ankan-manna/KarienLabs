@@ -2,14 +2,14 @@ import { env } from '../../config/env';
 import { getConfiguration } from '../platform/configuration.service';
 
 /**
- * Shape of the `authentication` Configuration namespace (Prompt 10 Part 9),
+ * Shape of the `authentication` Configuration namespace ( 10 Part 9),
  * stored/edited through the EXISTING Configuration Engine (superadmin
  * ConfigurationPage -> PUT /platform/configuration/authentication) — not a
  * parallel config system, just another flat-keyed namespace alongside the
  * pre-existing business/invoice/payment/shipping/email/sms/razorpay/
  * cloudinary/gst/cms ones (see packages/shared/src/constants/notifications.ts
  * and apps/web/.../ConfigurationPage.tsx's NAMESPACE_FIELDS). Field names
- * match Prompt 10's "OTP CONFIGURATION" section verbatim.
+ * match  10's "OTP CONFIGURATION" section verbatim.
  */
 export interface AuthConfig {
   otpEnabled: boolean;
@@ -22,7 +22,7 @@ export interface AuthConfig {
   otpMaxResends: number;
   otpChannel: 'email' | 'sms' | 'whatsapp';
   googleAdminLoginEnabled: boolean;
-  // Prompt 31 — gates OTP-verified registration (register() withholds real
+  // gates OTP-verified registration (register() withholds real
   // session tokens until the code is confirmed). Deliberately its OWN
   // switch, independent of `otpEnabled` above: that master toggle exists
   // for OPTIONAL post-registration MFA convenience (login/reset OTP) on
@@ -36,7 +36,7 @@ export interface AuthConfig {
 export const DEFAULT_AUTH_CONFIG: AuthConfig = {
   // Off by default — existing password-only login/reset keeps working
   // unchanged for every current deployment until a super admin opts in
-  // (Prompt 10 Part 12, backward compatibility).
+  // ( 10 Part 12, backward compatibility).
   otpEnabled: false,
   otpLoginEnabled: false,
   otpPasswordResetEnabled: false,
@@ -47,7 +47,7 @@ export const DEFAULT_AUTH_CONFIG: AuthConfig = {
   otpMaxResends: 5,
   otpChannel: 'email',
   googleAdminLoginEnabled: false,
-  // On by default (unlike the flags above): Prompt 31's registration/address/
+  // On by default (unlike the flags above):  31's registration/address/
   // checkout verification requirements are treated as security-urgent, not
   // optional convenience — see the grandfather migration
   // (migrate-grandfather-verified-users.ts) that protects every EXISTING

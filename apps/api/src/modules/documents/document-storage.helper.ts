@@ -1,9 +1,9 @@
-import { STORAGE_PROVIDERS, type DocumentType, type StorageProvider } from '@medcommerce/shared';
+import { DOCUMENT_TYPES, STORAGE_PROVIDERS, type DocumentType, type StorageProvider } from '@medcommerce/shared';
 
 import { logger } from '../../config/logger';
 import { uploadBuffer } from '../../integrations/cloudinary/cloudinary.service';
 import { s3Ops } from '../../integrations/s3/s3-ops';
-import { isS3Configured } from '../../integrations/s3/s3.client';
+import { isS3Configured, shouldUploadInvoiceToS3, shouldUploadLabelToS3 } from '../../integrations/s3/s3.client';
 import {
   assertDocumentSizeWithinLimit,
   assertValidPdfBuffer,
@@ -45,7 +45,16 @@ export async function uploadAndRecordDocument(input: UploadAndRecordInput): Prom
   assertValidPdfBuffer(input.buffer);
   assertDocumentSizeWithinLimit(input.buffer);
 
-  if (await isS3Configured()) {
+  // Admin-facing "Upload Invoice/Label to S3" toggles (Control Panel ->
+  // Website Design -> Storage & Retention) — backend-enforced, not merely a
+  // frontend display concern: even when S3 credentials ARE configured, an
+  // admin can force everything onto the Cloudinary fallback per document
+  // type. Defaults to true when unset, so existing deployments that never
+  // touched this setting keep their current (S3-when-configured) behavior.
+  const uploadToggleForType =
+    input.documentType === DOCUMENT_TYPES.INVOICE ? shouldUploadInvoiceToS3 : shouldUploadLabelToS3;
+
+  if ((await isS3Configured()) && (await uploadToggleForType())) {
     try {
       const objectKey = buildDocumentObjectKey({
         documentType: input.documentType,
@@ -85,7 +94,8 @@ export async function uploadAndRecordDocument(input: UploadAndRecordInput): Prom
     }
   }
 
-  // S3 not configured — unchanged pre-Prompt-15 behavior.
+  // S3 not configured, or the admin has explicitly disabled S3 upload for
+  // this document type — same Cloudinary fallback either way.
   const cloudinaryFolder =
     input.documentType === 'invoice'
       ? 'invoices'

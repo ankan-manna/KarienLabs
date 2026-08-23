@@ -8,14 +8,14 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 27 (post-payment fulfillment automation) — real HTTP/DB/Redis-level
+ * (post-payment fulfillment automation) — real HTTP/DB/Redis-level
  * tests against the actual Express app and a real ephemeral MongoDB/Redis
- * (same fixtures the Prompt 2/3 integration tests use). Covers what's new in
- * this prompt: fulfillment eligibility, the per-order automation trigger,
+ * (same fixtures the  2/3 integration tests use). Covers what's new in
+ * this : fulfillment eligibility, the per-order automation trigger,
  * the sweep's self-pacing/distributed-lock behavior, the document retention
  * sweep, and transparent regeneration on an expired download — NOT the
  * invoice/Shiprocket/label generation internals themselves, which already
- * have their own coverage from earlier prompts and are reused unchanged
+ * have their own coverage from earlier s and are reused unchanged
  * here.
  *
  * S3 network calls (`deleteObject`/`objectExists`) are stubbed via
@@ -24,10 +24,10 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * inspection: no existing test configures AWS_* credentials), so the S3
  * *transport* is faked while every DB-state transition around it runs for
  * real, matching the same "test what we control, disclose what we can't
- * reach" approach the Prompt 2 report used for live Razorpay order
+ * reach" approach the report used for live Razorpay order
  * creation.
  */
-describe('Fulfillment automation (Prompt 4)', () => {
+describe('Fulfillment automation', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let extra: {
@@ -210,7 +210,7 @@ describe('Fulfillment automation (Prompt 4)', () => {
     );
   }
 
-  /** Produces a real, fully-finalized PAID order (PLACED + paymentStatus CAPTURED) by driving the actual Prompt 2/3 checkout+payment pipeline — never hand-crafted, so every eligibility/automation test exercises the REAL upstream shape. */
+  /** Produces a real, fully-finalized PAID order (PLACED + paymentStatus CAPTURED) by driving the actual  2/3 checkout+payment pipeline — never hand-crafted, so every eligibility/automation test exercises the REAL upstream shape. */
   async function seedPaidOrder(overrides: { prescriptionRequired?: boolean } = {}) {
     const customer = await createCustomer(m.UserModel);
     const token = bearerFor(m.signAccessToken, customer);
@@ -251,7 +251,7 @@ describe('Fulfillment automation (Prompt 4)', () => {
       assert.equal(result.eligible, true);
     });
 
-    test('an order already advanced past PLACED is not eligible (Part 26 — no reprocessing)', async () => {
+    test('an order already advanced past PLACED is not eligible (no reprocessing)', async () => {
       const { orderId } = await seedPaidOrder();
       await extra.processOrderFulfillmentAutomation(orderId); // advances to PACKED
       const order = await m.OrderModel.findById(orderId).lean();
@@ -344,7 +344,7 @@ describe('Fulfillment automation (Prompt 4)', () => {
       assert.equal(second, 0, 'the sweep window has not elapsed again yet — must not re-discover/re-enqueue');
     });
 
-    test('two concurrent sweep calls never both claim the same window (Part 29)', async () => {
+    test('two concurrent sweep calls never both claim the same window', async () => {
       await seedPaidOrder();
       const [a, b] = await Promise.all([
         extra.runFulfillmentAutomationSweepJob(),
@@ -354,7 +354,7 @@ describe('Fulfillment automation (Prompt 4)', () => {
       assert.equal(total, 1, 'exactly one of the two concurrent calls may claim and enqueue — never both, never neither');
     });
 
-    test('automationEnabled: false stops the sweep from enqueueing anything (Part 30/31 — backend-enforced, not just hidden UI)', async () => {
+    test('automationEnabled: false stops the sweep from enqueueing anything (backend-enforced, not just hidden UI)', async () => {
       await extra.setFulfillmentConfig({ automationEnabled: false }, systemActorId);
       await seedPaidOrder();
       const enqueued = await extra.runFulfillmentAutomationSweepJob();
@@ -442,7 +442,7 @@ describe('Fulfillment automation (Prompt 4)', () => {
       assert.deepEqual(deleteCalls, []);
     });
 
-    test('a failed S3 delete leaves the document AVAILABLE for the next run (Part 37)', async (t) => {
+    test('a failed S3 delete leaves the document AVAILABLE for the next run', async (t) => {
       t.mock.method(extra.s3Ops, 'isS3Configured', async () => true);
       t.mock.method(extra.s3Ops, 'getDocumentRetentionDays', async () => 30);
       t.mock.method(extra.s3Ops, 'deleteObject', async () => {

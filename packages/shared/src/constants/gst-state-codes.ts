@@ -1,12 +1,12 @@
 /**
- * Prompt 13 (TAX-01) — the standard, government-defined GST state/UT code
+ * (TAX-01) — the standard, government-defined GST state/UT code
  * table (Schedule III of the CGST Rules). This is a FIXED geographic/legal
  * reference list, not configurable business data — the same category as a
  * country-code table, not the kind of "hardcoded tax rate/split" the spec
  * warns against. It exists so a customer's free-text shipping-address state
  * name (see customer-address.model.ts's plain-string `state` field — there's
  * no state dropdown in this codebase) can be normalized into the same
- * 2-digit code format already stored on `warehouse.stateCode` (Prompt 11),
+ * 2-digit code format already stored on `warehouse.stateCode` ( 11),
  * making warehouse-vs-customer state comparison possible at all.
  */
 export const GST_STATE_CODES: Record<string, string> = {

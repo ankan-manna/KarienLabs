@@ -2,7 +2,7 @@ import { ACTOR_TYPES, ROLES, type ActorType, type Role } from '@medcommerce/shar
 
 /**
  * Maps a User's `role` (RBAC field) to the coarser actor-context vocabulary
- * (Prompt 10 Part 4) used on audit rows. Deliberately not 1:1 with `Role` —
+ * ( 10 Part 4) used on audit rows. Deliberately not 1:1 with `Role` —
  * `inventory_manager` is still a platform-admin-panel actor for audit
  * purposes, and there is no `seller` role yet (tracked separately in
  * docs/DEVELOPMENT_TASKS.md as AUTH-01/CAT-01) so ACTOR_TYPES.SELLER is

@@ -71,7 +71,7 @@ export async function verifyPaymentSignature({
 /**
  * Verifies the `X-Razorpay-Signature` header on incoming webhooks.
  *
- * Prompt 24 Part 34 fix — fail CLOSED when `webhookSecret` is unconfigured
+ * Part 34 fix — fail CLOSED when `webhookSecret` is unconfigured
  * (empty string). Previously an empty secret would still compute
  * `hmac('', rawBody)` and compare it against the caller-supplied header —
  * HMAC with a known/empty key is just a deterministic function of the
@@ -91,7 +91,7 @@ export async function verifyWebhookSignature(rawBody: string, signatureHeader: s
 }
 
 /**
- * Prompt 2 Part 4 — explicit, belt-and-suspenders confirmation that the
+ * Part 4 — explicit, belt-and-suspenders confirmation that the
  * amount actually captured at Razorpay matches what we expect (our own
  * server-computed `Payment.amount`, never a client-supplied figure).
  * Razorpay already structurally prevents a payment from capturing against

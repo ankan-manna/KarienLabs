@@ -1,7 +1,7 @@
 import { COUPON_TYPES, type CouponType } from '@medcommerce/shared';
 
 /**
- * Prompt 19 Part 12/13/29/30 — pure, DB-free eligibility + discount-allocation
+ * Part 12/13/29/30 — pure, DB-free eligibility + discount-allocation
  * math, split out from coupon-validation.service.ts (which needs Mongo for
  * existence/date/usage-limit checks) so this — the actual pricing-engine
  * component — is unit-testable without mocking Mongoose, mirroring the

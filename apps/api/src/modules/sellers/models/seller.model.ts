@@ -23,11 +23,11 @@ const sellerSchema = new Schema({
   gstin: { type: String, required: true, trim: true, uppercase: true },
   drugLicenseNumber: { type: String, required: true, trim: true },
   enabled: { type: Boolean, default: true },
-  // Prompt 13 — legal/registered address, shown on invoices (Part 13:
-  // "Seller Address"). Optional since it didn't exist before this prompt;
+  // legal/registered address, shown on invoices (Part 13:
+  // "Seller Address"). Optional since it didn't exist before this update;
   // pre-existing sellers simply show a blank address until an admin fills it in.
   address: { type: String, default: '' },
-  // Prompt 13 (Part 14) — short code used to build this seller's invoice
+  // (Part 14) — short code used to build this seller's invoice
   // prefix (e.g. "A" -> INV-A-2026-000001). Optional: falls back to a
   // deterministic derivation from `legalName` when unset (see
   // invoice.service.ts's resolveSellerInvoiceCode) so numbering works

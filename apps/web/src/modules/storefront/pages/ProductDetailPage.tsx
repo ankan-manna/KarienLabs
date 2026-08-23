@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
     type: 'product',
   });
 
-  // Prompt 23 Part 25/46/47 — the backend computes this from the SAME
+  // Part 25/46/47 — the backend computes this from the SAME
   // authoritative `inStock`/`basePrice` this response already carries
   // (product-search.service.ts / structured-data.util.ts), respecting the
   // SEO Configuration's structuredDataEnabled toggle; this used to be
@@ -85,7 +85,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Prompt (Product Image Management) Part 10-14/22 — the gallery is driven
+  // (Product Image Management) Part 10-14/22 — the gallery is driven
   // by the server-computed main image + ordered sub images (Part 6's
   // sortOrder), never a raw re-read of the flat legacy `images` array; the
   // main image is always index 0 / the default-selected image (Part 11),
@@ -108,7 +108,7 @@ export default function ProductDetailPage() {
   return (
     <div className="flex flex-col gap-10">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {/* Prompt (Product Image Management) Part 10/15/16 — Amazon-style
+        {/*  (Product Image Management) Part 10/15/16 — Amazon-style
             layout as a UX reference only (own KarienLabs styling, not their
             branding): a thumbnail rail beside the large image on desktop
             (`md:flex-row`, rail on the left), collapsing to a horizontal,
@@ -132,7 +132,7 @@ export default function ProductDetailPage() {
                   aria-current={i === activeImage}
                   className={`h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
                     i === activeImage
-                      ? 'border-healthcare-teal'
+                      ? 'border-accent'
                       : 'border-gray-200 hover:border-gray-300 dark:border-night-border dark:hover:border-gray-600'
                   }`}
                 >
@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
           {product.medicine?.prescriptionRequired && (
             <Badge tone="yellow">Prescription Required</Badge>
           )}
-          <h1 className="text-2xl font-semibold text-charcoal-teal dark:text-night-text">{product.name}</h1>
+          <h1 className="text-2xl font-semibold text-ink dark:text-night-text">{product.name}</h1>
           {product.medicine?.genericName && (
             <p className="text-sm text-gray-500">Generic: {product.medicine.genericName}</p>
           )}
@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
           </Badge>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-charcoal-teal dark:text-night-text">
+            <span className="text-2xl font-bold text-ink dark:text-night-text">
               {formatCurrency(product.basePrice)}
             </span>
             {discountPct > 0 && (
@@ -234,7 +234,7 @@ export default function ProductDetailPage() {
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Brand</dt>
                 <dd className="text-gray-500">
-                  <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-healthcare-teal hover:underline">
+                  <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-accent hover:underline">
                     {product.brand.name}
                   </Link>
                 </dd>
@@ -246,7 +246,7 @@ export default function ProductDetailPage() {
                 <dd className="text-gray-500">
                   <Link
                     to={`/products?manufacturerId=${product.manufacturer._id}`}
-                    className="hover:text-healthcare-teal hover:underline"
+                    className="hover:text-accent hover:underline"
                   >
                     {product.manufacturer.name}
                   </Link>
@@ -283,10 +283,10 @@ export default function ProductDetailPage() {
 
       <ProductReviews productId={product._id} />
 
-      {/* Prompt 23 Part 28/29 — visible FAQ content, admin-authored only (never generated); the same entries also back the FAQPage JSON-LD above. */}
+      {/* Part 28/29 — visible FAQ content, admin-authored only (never generated); the same entries also back the FAQPage JSON-LD above. */}
       {!!product.faq?.length && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+          <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
             Frequently Asked Questions
           </h2>
           <dl className="flex flex-col gap-4">
@@ -302,7 +302,7 @@ export default function ProductDetailPage() {
 
       {relatedProducts.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-charcoal-teal dark:text-night-text">
+          <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
             Related Products
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

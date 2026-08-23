@@ -15,9 +15,9 @@ export const AUDIT_RESOURCES = [
   'admin_user',
   'configuration',
   'user',
-  // Prompt 10 — every login/OTP/Google/password-reset/session event.
+   // every login/OTP/Google/password-reset/session event.
   'auth',
-  // Prompt 11 — Seller entity + warehouse ownership changes + the one-time backfill migration.
+   // Seller entity + warehouse ownership changes + the one-time backfill migration.
   'seller',
   'warehouse',
   'seller_migration',
@@ -32,7 +32,7 @@ export const AUDIT_ACTIONS = [
   'config_change',
   'export',
   'import',
-  // Prompt 10 authentication events (packages/shared/src/constants/auth-events.ts).
+  // authentication events (packages/shared/src/constants/auth-events.ts).
   'login_attempt',
   'login_success',
   'login_failed',

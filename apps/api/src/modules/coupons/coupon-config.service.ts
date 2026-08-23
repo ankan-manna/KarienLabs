@@ -9,7 +9,7 @@ import { DEFAULT_COUPON_CONFIG, validateCouponConfig, type CouponConfig } from '
 export { DEFAULT_COUPON_CONFIG, validateCouponConfig, type CouponConfig };
 
 /**
- * Prompt 19 Part 8/9/53 — every coupon-management business behavior is read
+ * Part 8/9/53 — every coupon-management business behavior is read
  * from HERE, never hardcoded at the call site. Uses the EXISTING
  * Configuration engine (`coupon` namespace) — not a second settings store.
  */

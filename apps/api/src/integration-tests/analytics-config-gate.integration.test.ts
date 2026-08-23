@@ -7,13 +7,13 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * Prompt 22 — real HTTP-level verification that the analytics Configuration
+ * real HTTP-level verification that the analytics Configuration
  * gate (`requireAnalyticsEnabled`) actually blocks/allows requests through
  * the full middleware chain (auth -> RBAC -> config gate -> handler), not
  * just at the unit-tested service-function level. Mirrors the harness
  * customer-ownership.integration.test.ts already established.
  */
-describe('Analytics Configuration gate (Prompt 22)', () => {
+describe('Analytics Configuration gate', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let RoleModel: typeof import('../modules/auth/models/role.model').RoleModel;

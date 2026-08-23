@@ -305,8 +305,8 @@ export function ProductFormDrawer({ isOpen, onClose, product }: ProductFormDrawe
         <Checkbox label="Requires cold storage" {...register('coldStorage')} />
         <Checkbox label="Active" {...register('isActive')} />
 
-        {/* Prompt 23 Part 13/18/40 — product SEO metadata; the model field
-            already existed (Prompt 12) but was never editable until now. */}
+        {/* Part 13/18/40 — product SEO metadata; the model field
+            already existed ( 12) but was never editable until now. */}
         <div className="rounded-md border border-gray-200 p-3 dark:border-gray-800">
           <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">SEO</h3>
           <div className="flex flex-col gap-3">

@@ -16,7 +16,7 @@ import { logThirdPartyApiCall } from '../logging/third-party-metrics.logger';
 import { getLogRetentionDays, getS3Bucket, getS3Client, isS3Configured } from './s3.client';
 
 /**
- * Prompt 15 Part 1 — the ONE centralized storage abstraction every document
+ * Part 1 — the ONE centralized storage abstraction every document
  * flow (invoice PDFs, shipping labels, log bundles) goes through. No module
  * is allowed to import `@aws-sdk/client-s3` directly except this file and
  * `s3.client.ts` — see invoice.service.ts / shiprocket-fulfillment.service.ts /
@@ -87,7 +87,7 @@ export async function getPresignedDownloadUrl(
 const DEFAULT_UPLOAD_TTL_SECONDS = 300; // 5 minutes — long enough for a mobile-network image upload, short enough not to leak a standing write credential.
 
 /**
- * Prompt 17 Part 9/10/47 — a short-lived, backend-authorized PUT link so the
+ * Part 9/10/47 — a short-lived, backend-authorized PUT link so the
  * browser can upload a prescription file DIRECTLY to S3 (never proxied
  * through the API, never touching Cloudinary) without the frontend ever
  * holding real AWS credentials. Callers MUST validate the file (mime/

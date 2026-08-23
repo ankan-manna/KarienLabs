@@ -14,7 +14,7 @@ export const analyticsRouter = Router();
 
 analyticsRouter.use(requireAuth, authorize(permission(RESOURCES.REPORTS, ACTIONS.READ)));
 
-/** Prompt 22 Part 4/5/43 — same shared, UTC-consistent, abuse-protected resolver as reports.routes.ts; here the safe no-params default is `last30days` (unchanged behavior for callers already relying on the old 30-day default). */
+/** Part 4/5/43 — same shared, UTC-consistent, abuse-protected resolver as reports.routes.ts; here the safe no-params default is `last30days` (unchanged behavior for callers already relying on the old 30-day default). */
 function rangeFromQuery(req: { query: Record<string, unknown> }): ResolvedDateRange {
   return resolveAnalyticsDateRange({
     preset: typeof req.query.preset === 'string' ? req.query.preset : undefined,
@@ -62,7 +62,7 @@ analyticsRouter.get(
   asyncHandler(async (_req, res) => sendSuccess(res, await analyticsService.customerInsights())),
 );
 
-/** Prompt 34 Part 22/40 — Distributor/Bulk Purchase enquiry KPIs for the Analytics page (status breakdown, conversion rate, top requested SKUs). Read-only; never converts an enquiry into an order. */
+/** Part 22/40 — Distributor/Bulk Purchase enquiry KPIs for the Analytics page (status breakdown, conversion rate, top requested SKUs). Read-only; never converts an enquiry into an order. */
 analyticsRouter.get(
   '/distributor-enquiries',
   requireAnalyticsEnabled('distributorAnalyticsEnabled'),

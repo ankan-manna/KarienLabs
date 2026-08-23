@@ -26,7 +26,7 @@ adminInvoicesRouter.get(
   }),
 );
 
-/** Prompt 15 Part 9/26 — admin document-download action (short-lived presigned URL when S3-backed), gated by the same `invoices:read` permission as the list above (Super Admin controls Platform Admin access to this via the existing RBAC seed, Part 34). */
+/** Part 9/26 — admin document-download action (short-lived presigned URL when S3-backed), gated by the same `invoices:read` permission as the list above (Super Admin controls Platform Admin access to this via the existing RBAC seed, Part 34). */
 adminInvoicesRouter.get(
   '/:id/download-url',
   canRead,

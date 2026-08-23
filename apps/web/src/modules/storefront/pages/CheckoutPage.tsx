@@ -24,7 +24,7 @@ import { toast } from '../../../utils/toast';
 import { useCart } from '../hooks/useCart';
 
 /**
- * Prompt 2 (prepaid-only redesign) — the outcome of one "pay" attempt.
+ * (prepaid-only redesign) — the outcome of one "pay" attempt.
  * `cancelled` = the customer closed the Razorpay widget without paying.
  * `confirmed` = payment verified AND the order now exists.
  * `processing` = payment WAS captured, but order finalization hasn't
@@ -43,7 +43,7 @@ export default function CheckoutPage() {
     queryKey: ['addresses'],
     queryFn: listAddresses,
   });
-  // Prompt 31 Part 39/40 — each verification requirement is independently
+  // Part 39/40 — each verification requirement is independently
   // super-admin-toggleable server-side (address-verification-config.service.ts);
   // this is fetched so the warning banner below only appears for checks that
   // are ACTUALLY enforced right now, never a hardcoded assumption. The

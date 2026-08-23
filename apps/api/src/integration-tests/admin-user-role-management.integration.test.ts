@@ -7,7 +7,7 @@ import { bearerFor, createCustomer } from '../test-support/fixtures';
 import { loadAppModules, setupTestApp, type TestAppContext } from '../test-support/test-app';
 
 /**
- * PROMPT 1 (Admin Profile Access + User Role/Distributor Management) —
+ * (Admin Profile Access + User Role/Distributor Management) —
  * HTTP-level regression tests for the parts of that spec that are genuine
  * NEW behavior on top of the pre-existing RBAC system (already covered by
  * rbac-privilege-escalation.integration.test.ts): the `distributor` role,
@@ -16,7 +16,7 @@ import { loadAppModules, setupTestApp, type TestAppContext } from '../test-suppo
  * Step 4), and that a plain customer/distributor cannot reach the
  * role-update API at all (Part 9/TEST 6).
  */
-describe('Admin user role management (Prompt: Admin Profile + Role Management)', () => {
+describe('Admin user role management (Admin Profile + Role Management)', () => {
   let ctx: TestAppContext;
   let m: Awaited<ReturnType<typeof loadAppModules>>;
   let RefreshTokenModel: typeof import('../modules/auth/models/refresh-token.model').RefreshTokenModel;
@@ -161,7 +161,7 @@ describe('Admin user role management (Prompt: Admin Profile + Role Management)',
    * remaining Super Admin: if there's only one, only they can call this
    * endpoint, and guard #1 stops them touching themselves; if there are
    * two or more, demoting one always leaves at least the actor. The new
-   * `assertNotLastSuperAdmin` check added this prompt is real,
+   * `assertNotLastSuperAdmin` check added this  is real,
    * independently-correct defense-in-depth for a HYPOTHETICAL future
    * change to either guard above — it is not reachable today, which is
    * exactly what the "one of TWO" test above and the two self-block tests
