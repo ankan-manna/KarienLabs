@@ -124,7 +124,7 @@ export function Footer() {
 
   return (
     <footer className="bg-ink">
-      <div className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto max-w-[1920px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" aria-label="KarienLabs" className="inline-flex items-center">

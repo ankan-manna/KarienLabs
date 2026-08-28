@@ -14,7 +14,7 @@ export function selectionColumn<T>(): ColumnDef<T, unknown> {
           if (el) el.indeterminate = table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected();
         }}
         onChange={table.getToggleAllRowsSelectedHandler()}
-        className="h-4 w-4 rounded border-gray-300 text-brand-500"
+        className="h-4 w-4 rounded border-[var(--color-border)] accent-[var(--color-primary)]"
         onClick={(e) => e.stopPropagation()}
       />
     ),
@@ -23,7 +23,7 @@ export function selectionColumn<T>(): ColumnDef<T, unknown> {
         type="checkbox"
         checked={row.getIsSelected()}
         onChange={row.getToggleSelectedHandler()}
-        className="h-4 w-4 rounded border-gray-300 text-brand-500"
+        className="h-4 w-4 rounded border-[var(--color-border)] accent-[var(--color-primary)]"
         onClick={(e) => e.stopPropagation()}
       />
     ),

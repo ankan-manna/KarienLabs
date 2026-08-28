@@ -4,6 +4,13 @@ services:
   api:
     build:
       target: build
+    # The "build" stage's own WORKDIR is /app (its runtime-stage sibling
+    # switches to /app/apps/api, but that stage is never used here) — the
+    # command's relative "src/server.ts" resolved to the nonexistent
+    # /app/src/server.ts and crashed on every start. apps/api's actual
+    # source lives at /app/apps/api (bind-mounted below), so this stage
+    # needs its own working_dir override to match.
+    working_dir: /app/apps/api
     command: ["npx", "tsx", "watch", "src/server.ts"]
     volumes:
       - ../../apps/api:/app/apps/api
@@ -13,13 +20,30 @@ services:
       - "5000:5000"
     environment:
       NODE_ENV: development
+    # apps/api/Dockerfile's own HEALTHCHECK only exists in its final
+    # "runtime" stage; this service pins `build.target: build` (the
+    # intermediate stage, needed for `tsx watch` + the full source tree),
+    # which has no HEALTHCHECK at all. Without one, base docker-compose.yml's
+    # `nginx: depends_on: api: condition: service_healthy` can never be
+    # satisfied — nginx would wait forever. Same check as the Dockerfile's,
+    # via compose instead of the image, so it applies to this stage too.
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
       minio-init:
+        condition: service_completed_successfully
+      mongo-init:
         condition: service_completed_successfully
 
   worker:
     build:
       target: build
+    # Same working_dir fix as `api` above — same root cause.
+    working_dir: /app/apps/api
     command: ["npx", "tsx", "watch", "src/worker.ts"]
     volumes:
       - ../../apps/api:/app/apps/api
@@ -30,21 +54,76 @@ services:
     depends_on:
       minio-init:
         condition: service_completed_successfully
+      mongo-init:
+        condition: service_completed_successfully
 
   web:
     build:
+      # Unlike `api`/`worker` above (which merge `build.context: ../..`
+      # forward from their base docker-compose.yml entry), `web` has no
+      # base-file counterpart to inherit from — omitting this left it
+      # defaulting to this compose file's own directory (infra/docker/),
+      # so the build looked for apps/web/Dockerfile.dev at
+      # infra/docker/apps/web/... and failed with "no such file or
+      # directory" instead of resolving from the repo root.
+      context: ../..
       dockerfile: apps/web/Dockerfile.dev
     command: ["npm", "run", "dev", "--", "--host"]
+    # vite.config.ts's dev-server proxy defaults to localhost:5000, which
+    # inside THIS container refers to itself, not the `api` service —
+    # every /api/* request 500'd at the proxy even though `api` itself was
+    # healthy and reachable by hostname. `api` is this container's
+    # Docker-DNS name on the shared `medcommerce` network.
+    environment:
+      VITE_API_PROXY_TARGET: http://api:5000
     volumes:
       - ../../apps/web:/app/apps/web
       - ../../packages/shared:/app/packages/shared
       - /app/apps/web/node_modules
     ports:
       - "5173:5173"
+    networks: [medcommerce]
 
+  # Local dev-only Mongo — production/staging instead point MONGO_URI at a
+  # real Atlas cluster (see .env.example), so this service previously had no
+  # `image:` at all (only a port mapping), which made
+  # `docker compose -f docker-compose.yml -f docker-compose.dev.yml up` fail
+  # outright on this service (Compose requires `image` or `build`).
+  # Runs as a single-node replica set, not standalone: the app's inventory/
+  # order code uses real multi-document Mongo transactions (matching
+  # MongoDB Atlas, which is ALWAYS a replica set in staging/production), and
+  # transactions throw "Transaction numbers are only allowed on a replica
+  # set member or mongos" against a standalone `mongod` — quick-add-stock
+  # and any other transactional write fails outright without this.
   mongo:
+    image: mongo:7
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo-data:/data/db
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks: [medcommerce]
+
+  # One-shot: initiates the single-node replica set on first boot (safe to
+  # re-run — checks rs.status() first so it never re-initiates an
+  # already-initialized set on subsequent `docker compose up`s).
+  mongo-init:
+    image: mongo:7
+    restart: "no"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    entrypoint: >
+      mongosh --host mongo:27017 --quiet --eval
+      "try { rs.status(); print('replica set already initiated'); } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongo:27017'}]}); print('replica set initiated'); }"
+    networks: [medcommerce]
 
   redis:
     ports:
@@ -108,3 +187,4 @@ services:
 
 volumes:
   minio-data:
+  mongo-data:

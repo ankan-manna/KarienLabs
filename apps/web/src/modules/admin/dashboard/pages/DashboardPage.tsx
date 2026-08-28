@@ -117,7 +117,7 @@ const QUICK_ACTIONS = [
 
 export default function DashboardPage() {
   const { isSuperAdmin } = useAuth();
-  const { tooltipContentStyle, tooltipLabelStyle, tooltipItemStyle } = useChartTheme();
+  const { gridClassName, tooltipContentStyle, tooltipLabelStyle, tooltipItemStyle } = useChartTheme();
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin', 'dashboard'],
     queryFn: fetchDashboardStats,
@@ -193,7 +193,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.charts.dailySales ?? []}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
@@ -214,7 +214,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.charts.weeklySales ?? []}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis dataKey="week" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
@@ -222,7 +222,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="var(--color-secondary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -235,7 +235,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.charts.monthlySales ?? []}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis dataKey="month" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
@@ -243,7 +243,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -256,7 +256,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={stats?.charts.revenueGraph ?? []}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#f59e0b" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="revenue" stroke="var(--color-secondary)" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -277,7 +277,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.charts.inventoryGraph ?? []} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis type="category" dataKey="categoryName" width={100} tick={{ fontSize: 10 }} />
                 <Tooltip
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                   labelStyle={tooltipLabelStyle}
                   itemStyle={tooltipItemStyle}
                 />
-                <Bar dataKey="totalValue" fill="#ec4899" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="totalValue" fill="var(--color-secondary)" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -298,7 +298,7 @@ export default function DashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={stats?.charts.customerGrowth ?? []}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-gray-100 dark:stroke-gray-800" />
+                <CartesianGrid strokeDasharray="3 3" className={gridClassName} />
                 <XAxis dataKey="month" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip

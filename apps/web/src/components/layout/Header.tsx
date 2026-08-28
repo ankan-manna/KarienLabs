@@ -258,7 +258,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 bg-ink">
-      <div className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto flex max-w-[1920px] items-center gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <button
           type="button"
           onClick={() => setMobileNavOpen((o) => !o)}

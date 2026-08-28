@@ -19,7 +19,13 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           type="checkbox"
           id={checkId}
           className={cn(
-            'h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600',
+            // `text-brand-500` has no effect on a native, unstyled checkbox
+            // (this project has no @tailwindcss/forms plugin translating
+            // text-color into the check itself) — it was rendering with the
+            // browser/OS default blue accent regardless of theme.
+            // `accent-color` is the standards-based way to theme a native
+            // checkbox's checked state without a plugin.
+            'h-4 w-4 rounded border-[var(--color-border)] accent-[var(--color-primary)] focus:ring-[var(--color-primary)]',
             className,
           )}
           {...props}
