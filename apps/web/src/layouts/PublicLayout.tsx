@@ -11,7 +11,7 @@ export function PublicLayout() {
     <div className="flex min-h-screen flex-col bg-soft-mint dark:bg-night">
       <Header />
 
-      <main className="mx-auto w-full max-w-[1600px] flex-1 px-4 py-6 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <main className="mx-auto w-full max-w-[1920px] flex-1 px-4 py-6 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <Outlet />
       </main>
 

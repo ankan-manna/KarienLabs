@@ -114,7 +114,18 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
       aria-roledescription="carousel"
       aria-label="Featured promotions"
     >
-      <div className="relative h-64 sm:h-80 md:h-[26rem]">
+      {/*
+       * A definite `h-*` is required here, not `min-h`: the image and its
+       * `flex flex-col` slide wrapper are absolutely positioned, so
+       * `h-full` on them only resolves against a DEFINITE ancestor height —
+       * `min-height` alone leaves this box's height indeterminate, which
+       * silently falls back to the banner image's own intrinsic aspect
+       * ratio (rendering far taller than intended). The mobile height is
+       * sized generously for a 3-line heading; `line-clamp` on the
+       * heading/subtitle below caps growth so admin-entered copy can never
+       * exceed it and reproduce the original overlap bug.
+       */}
+      <div className="relative h-[420px] sm:h-[380px] md:h-[26rem]">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={active._id}
@@ -124,12 +135,12 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             animate={prefersReducedMotion ? { opacity: 1 } : 'center'}
             exit={prefersReducedMotion ? { opacity: 0 } : 'exit'}
             transition={transition}
-            className="absolute inset-0"
+            className="absolute inset-0 flex flex-col"
           >
             <motion.img
               src={active.imageUrl}
               alt={active.imageAlt || active.title}
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
               loading={safeIndex === 0 ? 'eager' : 'lazy'}
               initial={prefersReducedMotion ? false : { scale: 1.08 }}
               animate={{ scale: 1 }}
@@ -137,7 +148,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
             <motion.div
-              className="absolute inset-x-0 bottom-0 p-6 sm:p-10"
+              className="relative z-10 mt-auto p-5 pl-16 pr-16 sm:p-10 sm:pl-24 sm:pr-24"
               variants={prefersReducedMotion ? undefined : textContainerVariants}
               initial={prefersReducedMotion ? false : 'hidden'}
               animate="visible"
@@ -152,14 +163,14 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
               )}
               <motion.h2
                 variants={prefersReducedMotion ? undefined : textItemVariants}
-                className="max-w-xl text-2xl font-bold text-white sm:text-3xl md:text-4xl"
+                className="line-clamp-3 max-w-xl text-xl font-bold leading-tight text-white sm:text-3xl md:text-4xl"
               >
                 {active.title}
               </motion.h2>
               {active.subtitle && (
                 <motion.p
                   variants={prefersReducedMotion ? undefined : textItemVariants}
-                  className="mt-2 max-w-md text-sm text-white/90 sm:text-base"
+                  className="mt-2 line-clamp-2 max-w-md text-sm text-white/90 sm:text-base"
                 >
                   {active.subtitle}
                 </motion.p>

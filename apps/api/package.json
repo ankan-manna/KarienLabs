@@ -19,6 +19,7 @@
     "migrate:seller-backfill": "tsx src/scripts/migrate-seller-backfill.ts",
     "migrate:google-id-null": "tsx src/scripts/migrate-google-id-null.ts",
     "migrate:grandfather-verified-users": "tsx src/scripts/migrate-grandfather-verified-users.ts",
+    "migrate:demo-content": "tsx src/scripts/migrate-demo-content.ts",
     "test": "tsx --test $(find src -name '*.test.ts' -not -name '*.integration.test.ts')",
     "test:integration": "tsx --test --test-force-exit --test-concurrency=1 $(find src -name '*.integration.test.ts')"
   },
