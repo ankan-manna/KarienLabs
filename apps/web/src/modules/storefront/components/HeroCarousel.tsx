@@ -257,7 +257,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             type="button"
             onClick={() => goTo(safeIndex - 1)}
             aria-label="Previous slide"
-            className="absolute left-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:left-4"
+            className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:left-4"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
               <path
@@ -271,7 +271,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             type="button"
             onClick={() => goTo(safeIndex + 1)}
             aria-label="Next slide"
-            className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:right-4"
+            className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:right-4"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
               <path
@@ -282,7 +282,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             </svg>
           </button>
 
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5" role="tablist">
+          <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5" role="tablist">
             {banners.map((banner, i) => (
               <button
                 key={banner._id}
