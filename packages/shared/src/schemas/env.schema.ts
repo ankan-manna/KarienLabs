@@ -120,6 +120,16 @@ export const envSchema = z.object({
   LOG_ARCHIVAL_WORKER_INTERVAL_MINUTES: z.coerce.number().optional().default(15),
   LOG_MAX_PENDING_ARCHIVES: z.coerce.number().optional().default(500),
   LOG_UPLOAD_RETRY_LIMIT: z.coerce.number().optional().default(8),
+  // Local-disk safety valve, independent of S3 ever succeeding: a
+  // dead-lettered archive (exhausted LOG_UPLOAD_RETRY_LIMIT retries) or one
+  // created while S3 archival is disabled/unconfigured has no other path
+  // off local disk, so without a hard ceiling it accumulates forever.
+  // Never applied to a file still within its retry backoff window — only to
+  // ones that have either given up or were never going anywhere. Default
+  // exceeds AWS_S3_LOG_RETENTION_DAYS's own 20-day default so a working S3
+  // pipeline always evicts an object from the bucket before this local
+  // fallback would ever delete its last unsent copy.
+  LOG_LOCAL_MAX_RETENTION_DAYS: z.coerce.number().optional().default(30),
   LOG_POOL_STATS_INTERVAL_MINUTES: z.coerce.number().optional().default(5),
   // Part 5 — single, deployment-fixed tenant code (never trusted from the
   // frontend/request). Kept distinct from any business identifier; exists

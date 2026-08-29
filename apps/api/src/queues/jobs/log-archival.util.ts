@@ -40,6 +40,18 @@ export function isEligibleForRetry(state: ArchivalFileState | undefined, now: Da
   return now.getTime() >= new Date(state.nextRetryAt).getTime();
 }
 
+/**
+ * Local-disk retention ceiling for a `.gz` archive that has no path off this
+ * host anymore — either it's dead-lettered (exhausted every retry) or S3
+ * archival isn't enabled at all. Deliberately mirrors storage.util.ts's
+ * `isPastRetention` (same age-based math), kept separate because this one
+ * governs a local file's lifetime, not an S3 object's.
+ */
+export function isPastLocalRetention(fileDate: Date, maxRetentionDays: number, now: Date = new Date()): boolean {
+  const ageMs = now.getTime() - fileDate.getTime();
+  return ageMs >= maxRetentionDays * 24 * 60 * 60 * 1000;
+}
+
 /** `{category}-{YYYY-MM-DD-HH}.log` or `.log.gz` -> `{category, bucketLabel}`, or null if the filename doesn't match the deterministic rotation naming (Part 29). */
 export function parseBucketFileName(fileName: string): { category: string; bucketLabel: string } | null {
   const withoutGz = fileName.endsWith('.gz') ? fileName.slice(0, -3) : fileName;

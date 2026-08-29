@@ -5,6 +5,7 @@ import {
   computeBackoffDelayMs,
   isDeadLetter,
   isEligibleForRetry,
+  isPastLocalRetention,
   parseBucketFileName,
 } from './log-archival.util';
 
@@ -76,4 +77,22 @@ test('parseBucketFileName: parses a compressed .log.gz filename identically', ()
 
 test('parseBucketFileName: returns null for an unrelated filename (e.g. the sidecar state file)', () => {
   assert.equal(parseBucketFileName('.archival-state.json'), null);
+});
+
+test('isPastLocalRetention: false before the retention window elapses', () => {
+  const now = new Date('2026-08-08T12:00:00Z');
+  const fileDate = new Date('2026-08-01T12:00:00Z'); // 7 days old
+  assert.equal(isPastLocalRetention(fileDate, 30, now), false);
+});
+
+test('isPastLocalRetention: true once the file is older than the configured max', () => {
+  const now = new Date('2026-08-08T12:00:00Z');
+  const fileDate = new Date('2026-07-01T12:00:00Z'); // 38 days old
+  assert.equal(isPastLocalRetention(fileDate, 30, now), true);
+});
+
+test('isPastLocalRetention: exactly at the boundary counts as past retention', () => {
+  const now = new Date('2026-08-08T12:00:00Z');
+  const fileDate = new Date('2026-07-09T12:00:00Z'); // exactly 30 days
+  assert.equal(isPastLocalRetention(fileDate, 30, now), true);
 });

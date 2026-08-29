@@ -17,6 +17,7 @@ import {
   computeBackoffDelayMs,
   isDeadLetter,
   isEligibleForRetry,
+  isPastLocalRetention,
   parseBucketFileName,
   type ArchivalStateMap,
 } from './log-archival.util';
@@ -76,13 +77,87 @@ function markFailure(state: ArchivalStateMap, file: string, now: Date): boolean 
   return dead;
 }
 
-/** Part 40 — never deletes anything; just makes an over-accumulating backlog observable (e.g. sustained S3 outage, or archival disabled with S3 still generating traffic). */
-function checkDiskProtection(pendingCount: number): void {
-  if (pendingCount <= env.LOG_MAX_PENDING_ARCHIVES) return;
+/**
+ * Hard safety valve for a backlog that's grown past the configured limit
+ * (e.g. a sustained S3 outage/misconfiguration, or archival disabled while
+ * logs keep rotating) — always logs the breach, and additionally deletes
+ * the OLDEST dead-lettered archives (oldest mtime first) until the backlog
+ * is back under the limit or there are no more dead-lettered files left to
+ * remove. Never touches a file that's still within its retry backoff
+ * window or hasn't failed yet — only ones that have already exhausted
+ * every retry (`state[file].dead`), which by definition have no further
+ * automatic path to S3 anyway.
+ */
+function enforceDiskProtection(state: ArchivalStateMap, gzFiles: string[], rotatedLogFiles: string[]): number {
+  const pendingCount = gzFiles.length + rotatedLogFiles.length;
+  if (pendingCount <= env.LOG_MAX_PENDING_ARCHIVES) return 0;
+
   logger.error(
     { pendingCount, limit: env.LOG_MAX_PENDING_ARCHIVES, event: STORAGE_AUDIT_ACTIONS.LOG_ARCHIVE_DISK_PROTECTION_TRIGGERED },
     'Log archival backlog exceeds the configured safety limit — investigate S3 connectivity/credentials',
   );
+
+  const deadGzFiles = gzFiles
+    .filter((f) => state[f]?.dead)
+    .map((f) => ({ file: f, mtimeMs: fs.statSync(path.join(LOG_DIR, f)).mtimeMs }))
+    .sort((a, b) => a.mtimeMs - b.mtimeMs);
+
+  let removed = 0;
+  let excess = pendingCount - env.LOG_MAX_PENDING_ARCHIVES;
+  for (const { file } of deadGzFiles) {
+    if (excess <= 0) break;
+    try {
+      fs.unlinkSync(path.join(LOG_DIR, file));
+      delete state[file];
+      removed += 1;
+      excess -= 1;
+      logger.warn(
+        { file, event: STORAGE_AUDIT_ACTIONS.LOG_ARCHIVE_LOCAL_RETENTION_DELETED },
+        'Deleted dead-lettered log archive to bring the backlog back under the disk-protection limit',
+      );
+    } catch (error) {
+      logger.warn({ file, err: error }, 'Failed to delete dead-lettered archive during disk-protection enforcement');
+    }
+  }
+  return removed;
+}
+
+/**
+ * Local-only retention ceiling, independent of the disk-protection count
+ * above: a `.gz` archive with no further path off this host — either
+ * dead-lettered (exhausted every retry) or created while S3 archival is
+ * disabled/unconfigured entirely — is deleted once it's older than
+ * `LOG_LOCAL_MAX_RETENTION_DAYS`, so a permanently-broken or disabled S3
+ * pipeline still can't accumulate local archives forever. A file still
+ * actively retrying within its backoff window is never touched here
+ * regardless of age.
+ */
+function enforceLocalRetention(state: ArchivalStateMap, archivalEnabled: boolean, now: Date): number {
+  if (!fs.existsSync(LOG_DIR)) return 0;
+  const gzFiles = fs.readdirSync(LOG_DIR).filter((f) => f.endsWith('.log.gz'));
+  let deleted = 0;
+
+  for (const gzFile of gzFiles) {
+    const eligible = !archivalEnabled || state[gzFile]?.dead === true;
+    if (!eligible) continue;
+
+    const gzPath = path.join(LOG_DIR, gzFile);
+    const stat = fs.statSync(gzPath);
+    if (!isPastLocalRetention(stat.mtime, env.LOG_LOCAL_MAX_RETENTION_DAYS, now)) continue;
+
+    try {
+      fs.unlinkSync(gzPath);
+      delete state[gzFile];
+      deleted += 1;
+      logger.info(
+        { file: gzFile, event: STORAGE_AUDIT_ACTIONS.LOG_ARCHIVE_LOCAL_RETENTION_DELETED },
+        'Deleted local log archive past its local-only retention window',
+      );
+    } catch (error) {
+      logger.warn({ file: gzFile, err: error }, 'Failed to delete log archive past local retention window');
+    }
+  }
+  return deleted;
 }
 
 async function compressFile(logPath: string, gzPath: string): Promise<void> {
@@ -94,10 +169,11 @@ interface RunSummary {
   uploaded: number;
   failed: number;
   deadLettered: number;
+  localRetentionDeleted: number;
 }
 
 async function runOnce(): Promise<RunSummary> {
-  const summary: RunSummary = { compressed: 0, uploaded: 0, failed: 0, deadLettered: 0 };
+  const summary: RunSummary = { compressed: 0, uploaded: 0, failed: 0, deadLettered: 0, localRetentionDeleted: 0 };
   if (!fs.existsSync(LOG_DIR)) return summary;
 
   const now = new Date();
@@ -113,9 +189,6 @@ async function runOnce(): Promise<RunSummary> {
   // that hasn't been written to in a while is safe to treat as finalized —
   // see the mtime guard below).
   const rotatedLogFiles = entries.filter((f) => f.endsWith('.log'));
-  const gzFiles = entries.filter((f) => f.endsWith('.log.gz'));
-
-  checkDiskProtection(gzFiles.length + rotatedLogFiles.length);
 
   // --- Stage 1: compress finalized .log files into .gz ---
   for (const file of rotatedLogFiles) {
@@ -196,9 +269,28 @@ async function runOnce(): Promise<RunSummary> {
       }
     }
   }
-  // else: Part 27 — archival disabled or S3 not configured. Logs still
-  // rotate/compress locally (stage 1 always runs); they simply accumulate
-  // as local `.gz` files rather than being discarded.
+  // else: archival disabled or S3 not configured. Logs still rotate/
+  // compress locally (stage 1 always runs); they accumulate as local `.gz`
+  // files, bounded by the local-retention/disk-protection stages below
+  // rather than being discarded outright.
+
+  // --- Stage 3: local-only retention ceiling for undeliverable archives ---
+  // A dead-lettered file (exhausted every retry) or one produced while
+  // archival is disabled/unconfigured has no further automatic path to S3 —
+  // without this it would sit on local disk forever ("manual recovery").
+  // Never touches a file still within its retry backoff window.
+  summary.localRetentionDeleted += enforceLocalRetention(state, archivalEnabled, now);
+
+  // --- Stage 4: hard disk-protection ceiling ---
+  // Re-reads the directory since stages 1-3 may have changed it; only ever
+  // removes dead-lettered files, oldest first, and only enough to get back
+  // under the configured limit.
+  const finalEntries = fs.readdirSync(LOG_DIR);
+  summary.localRetentionDeleted += enforceDiskProtection(
+    state,
+    finalEntries.filter((f) => f.endsWith('.log.gz')),
+    finalEntries.filter((f) => f.endsWith('.log')),
+  );
 
   saveState(state);
   return summary;
@@ -209,7 +301,7 @@ export async function runLogArchivalJob(): Promise<number> {
   return runWithJobContext('log-archival', Date.now(), async () => {
     const summary = await runOnce();
     const total = summary.compressed + summary.uploaded;
-    if (total > 0 || summary.failed > 0 || summary.deadLettered > 0) {
+    if (total > 0 || summary.failed > 0 || summary.deadLettered > 0 || summary.localRetentionDeleted > 0) {
       await recordAudit({
         actorId: null,
         actorType: ACTOR_TYPES.BACKGROUND_JOB,
