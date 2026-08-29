@@ -16,7 +16,7 @@
 @layer base {
   html,
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+    @apply bg-soft-mint text-charcoal-teal;
   }
 
   /* KARIEN theme system — single source of truth for both the customer
