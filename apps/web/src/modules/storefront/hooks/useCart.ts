@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   addCartItem,
@@ -9,14 +9,21 @@ import {
   removeCartItem,
   updateCartItem,
 } from '../../../api/cart.api';
-import { useAuth } from '../../../context/AuthContext';
 import { toast } from '../../../utils/toast';
 
-const CART_KEY = ['cart'];
+export const CART_KEY = ['cart'];
 
+/**
+ * The backend resolves a cart for every visitor now — an authenticated
+ * user's own cart, or an anonymous guest's server-issued cart cookie (see
+ * `apps/api/src/modules/customers/cart.routes.ts`). So this always runs,
+ * regardless of auth state; `withCredentials: true` on the shared axios
+ * instance already carries whichever cookie is relevant. `AuthContext`
+ * invalidates `CART_KEY` on login/register so the guest-cart cache entry is
+ * replaced with the freshly-merged account cart rather than left stale.
+ */
 export function useCart() {
-  const { isAuthenticated } = useAuth();
-  return useQuery({ queryKey: CART_KEY, queryFn: fetchCart, enabled: isAuthenticated });
+  return useQuery({ queryKey: CART_KEY, queryFn: fetchCart });
 }
 
 export function useCartMutations() {

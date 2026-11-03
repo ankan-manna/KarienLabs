@@ -4,10 +4,13 @@ import type { CookieOptions, Request, Response } from 'express';
 import type { ParamsDictionary } from 'express-serve-static-core';
 
 import { env, isProduction } from '../../config/env';
+import { logger } from '../../config/logger';
+import { GUEST_CART_COOKIE_NAME, GUEST_CART_COOKIE_OPTIONS } from '../../middlewares/guest-cart.middleware';
 import { getEffectivePermissions } from '../../middlewares/rbac.middleware';
 import { sendCreated, sendSuccess } from '../../utils/api-response';
 import { NotFoundError, UnauthenticatedError } from '../../utils/app-error';
 import { asyncHandler } from '../../utils/async-handler';
+import { mergeGuestCartIntoUserCart } from '../customers/cart.service';
 
 import { getPublicAuthConfig } from './auth-config.service';
 import * as authService from './auth.service';
@@ -43,6 +46,26 @@ const OAUTH_STATE_COOKIE_OPTIONS: CookieOptions = {
   path: '/api/v1/auth/google',
   maxAge: 10 * 60 * 1000,
 };
+
+/**
+ * Runs on every customer-facing login/register success path. Reads the
+ * anonymous guest-cart cookie (if any), folds its items into the
+ * newly-authenticated user's own cart, and clears the guest cookie either
+ * way. A merge failure is logged and swallowed — it must never turn a
+ * successful login/register into a failed one.
+ */
+async function mergeGuestCartIfPresent(req: Request, res: Response, userId: string) {
+  const guestCartId = req.cookies?.[GUEST_CART_COOKIE_NAME];
+  if (!guestCartId) return;
+
+  try {
+    await mergeGuestCartIntoUserCart(guestCartId, userId);
+  } catch (err) {
+    logger.error({ err, userId }, 'Guest cart merge failed on login/register — continuing without it');
+  } finally {
+    res.clearCookie(GUEST_CART_COOKIE_NAME, { path: GUEST_CART_COOKIE_OPTIONS.path });
+  }
+}
 
 function sessionMeta(req: Request) {
   return {
@@ -119,6 +142,7 @@ export const registerHandler = asyncHandler(
 
     setRefreshCookie(res, result.tokens.refreshToken, result.tokens.refreshTokenExpiresAt, true);
     await authService.requestEmailVerification(String(result.user._id));
+    await mergeGuestCartIfPresent(req, res, String(result.user._id));
     return sendCreated(res, {
       otpRequired: false,
       user: toPublicUser(result.user),
@@ -136,6 +160,7 @@ export const registerVerifyOtpHandler = asyncHandler(
       sessionMeta(req),
     );
     setRefreshCookie(res, tokens.refreshToken, tokens.refreshTokenExpiresAt, true);
+    await mergeGuestCartIfPresent(req, res, String(user._id));
     return sendSuccess(res, {
       user: toPublicUser(user),
       accessToken: tokens.accessToken,
@@ -178,6 +203,7 @@ export const loginHandler = asyncHandler(
       result.tokens.refreshTokenExpiresAt,
       req.body.rememberMe ?? true,
     );
+    await mergeGuestCartIfPresent(req, res, String(result.user._id));
     return sendSuccess(res, {
       otpRequired: false,
       user: toPublicUser(result.user),
@@ -195,6 +221,7 @@ export const loginVerifyOtpHandler = asyncHandler(
       sessionMeta(req),
     );
     setRefreshCookie(res, tokens.refreshToken, tokens.refreshTokenExpiresAt, true);
+    await mergeGuestCartIfPresent(req, res, String(user._id));
     return sendSuccess(res, {
       user: toPublicUser(user),
       accessToken: tokens.accessToken,

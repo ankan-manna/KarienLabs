@@ -21,7 +21,7 @@ export const createBannerSchema = z.object({
 
 export const createHomeSectionSchema = z.object({
   title: z.string().min(1),
-  type: z.enum(['product_grid', 'category_grid', 'banner_carousel']),
+  type: z.enum(['product_grid', 'category_grid', 'banner_carousel', 'category_tabs']),
   sourceType: z.enum(['manual', 'category', 'tag', 'query']).optional(),
   productIds: z.array(z.string()).optional(),
   categoryIds: z.array(z.string()).optional(),

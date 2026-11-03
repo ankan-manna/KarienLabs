@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useEffect, useState, type FormEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { autocompleteSuggestions } from '../../api/search.api';
 import { useAuth } from '../../context/AuthContext';
+import { useUnsavedChangesContext } from '../../context/UnsavedChangesContext';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useCart } from '../../modules/storefront/hooks/useCart';
 import { getProfilePath, isStaffRole } from '../../utils/account-path';
@@ -255,6 +256,18 @@ export function Header() {
   const { data: cart } = useCart();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const itemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const homeNavigate = useNavigate();
+  const { guardRef, requestNavigation } = useUnsavedChangesContext();
+
+  // A dirty form elsewhere on the page is the only case this ever does
+  // anything — if nothing is registered as dirty, the click falls through
+  // to the <Link>'s own instant navigation with zero added latency.
+  const handleLogoClick = (e: MouseEvent) => {
+    if (guardRef.current?.isDirty) {
+      e.preventDefault();
+      requestNavigation(() => homeNavigate('/'));
+    }
+  };
 
   return (
     <header className="sticky top-0 z-30 bg-ink">
@@ -279,8 +292,28 @@ export function Header() {
           </svg>
         </button>
 
-        <Link to="/" aria-label="KarienLabs" className="flex flex-shrink-0 items-center">
-          <img src="/logo.jpg" alt="KarienLabs" className="h-9 w-auto rounded" />
+        <Link
+          to="/"
+          onClick={handleLogoClick}
+          aria-label="BRENTIS HEALTHCARE — home"
+          className="flex flex-shrink-0 items-center gap-2"
+        >
+          {/* Text wordmark, not a cropped logo image — newLogo.jpeg is a square,
+              flat-background hero mark (see docs/BRENTIS_DESIGN_SYSTEM.md §11
+              in the analysis doc) that distorts badly at header height; this
+              small heart accent echoes the logo's own heart-on-the-"i" detail
+              without relying on a crop of an asset that isn't header-ready. */}
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true">
+            <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
+          </svg>
+          {/* "BRENTIS HEALTHCARE" set in full doesn't fit next to the hamburger
+              + search/cart/account icon cluster below ~400px (verified via
+              browser QA — it pushed "Sign in" off-screen, causing real
+              horizontal overflow) — "HEALTHCARE" drops below `sm` (640px) so
+              the header never overflows on small phones. */}
+          <span className="font-brentis-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+            BRENTIS<span className="hidden text-primary sm:inline"> HEALTHCARE</span>
+          </span>
         </Link>
 
         {/* Search: immediately after the logo, per the required header order. Inline on desktop; below lg it moves to its own full-width row (see bottom of header). */}

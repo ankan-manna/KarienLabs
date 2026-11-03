@@ -7,7 +7,12 @@ const homeSectionSchema = new Schema({
   title: { type: String, required: true },
   type: {
     type: String,
-    enum: ['product_grid', 'category_grid', 'banner_carousel'],
+    // 'category_tabs' (Prompt 4 — Best Sellers category-wise navigation):
+    // `categoryIds`, in order, define the tab list + default-active (first)
+    // tab; each tab's products are resolved live from the real Product
+    // catalog at read time (see public-cms.routes.ts), never duplicated
+    // onto this record.
+    enum: ['product_grid', 'category_grid', 'banner_carousel', 'category_tabs'],
     required: true,
   },
   sourceType: { type: String, enum: ['manual', 'category', 'tag', 'query'], default: 'manual' },

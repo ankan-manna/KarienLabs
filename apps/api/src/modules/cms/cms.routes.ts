@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { createCrudRouter } from '../../utils/crud-router.factory';
 import { slugify } from '../../utils/slugify';
 
+import { aboutContentRouter } from './about-content.routes';
 import { handleBannerDeleted, handleBannerImageReplaced } from './banner-image.service';
 import { bannerRepository } from './banner.repository';
 import { blogRepository } from './blog.repository';
@@ -24,6 +25,8 @@ import { pageRepository } from './page.repository';
  * only slug generation for pages/blogs needs a custom `transformInput` hook.
  */
 export const cmsRouter = Router();
+
+cmsRouter.use('/about', aboutContentRouter);
 
 cmsRouter.use(
   '/banners',

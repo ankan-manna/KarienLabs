@@ -59,6 +59,30 @@ export default {
         'night-text': 'var(--color-text-main)', // Dark: #F8F5F2
         'night-muted': 'var(--color-text-muted)', // Dark: #A4BCBA
       },
+      // BRENTIS storefront typography (docs/BRENTIS_DESIGN_SYSTEM.md §2).
+      // Deliberately namespaced, NOT merged into Tailwind's default `sans`
+      // key — the Admin Control Panel relies on that default and must keep
+      // its existing font stack untouched. Only storefront components
+      // opt in via `font-brentis-display` / `font-brentis-body`.
+      fontFamily: {
+        'brentis-display': ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'brentis-body': ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      // One additive radius step the default scale doesn't have (between
+      // rounded-2xl/16px and rounded-3xl/24px) for hero/large-media use —
+      // see Design System doc §3. Everything else in this redesign uses
+      // Tailwind's existing default radius/spacing scale as-is.
+      borderRadius: {
+        'storefront-lg': '20px',
+      },
+      // Named, brand-ink-tinted shadows (Design System doc §3) — additive
+      // keys, not overrides of Tailwind's default shadow-sm/md, so nothing
+      // using the default shadow utilities (including Admin) is affected.
+      boxShadow: {
+        'storefront-sm': '0 1px 2px rgba(23,43,47,0.06)',
+        'storefront-md': '0 4px 16px rgba(23,43,47,0.08)',
+        'storefront-hover': '0 8px 24px rgba(255,128,0,0.12)',
+      },
     },
   },
   plugins: [],

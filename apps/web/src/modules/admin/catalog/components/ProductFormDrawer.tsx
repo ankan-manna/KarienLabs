@@ -9,6 +9,7 @@ import { Checkbox } from '../../../../components/common/Checkbox';
 import { Drawer } from '../../../../components/common/Drawer';
 import { Input } from '../../../../components/common/Input';
 import { Select } from '../../../../components/common/Select';
+import { useUnsavedChangesGuard } from '../../../../context/UnsavedChangesContext';
 import { toast } from '../../../../utils/toast';
 import {
   TRI_STATE_OPTIONS,
@@ -81,7 +82,7 @@ export function ProductFormDrawer({ isOpen, onClose, product }: ProductFormDrawe
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: DEFAULT_VALUES,
@@ -191,6 +192,35 @@ export function ProductFormDrawer({ isOpen, onClose, product }: ProductFormDrawe
     }
     onClose();
   }
+
+  // Representative wiring for the logo-click unsaved-changes guard (see
+  // docs/BRENTIS_UNSAVED_NAVIGATION_SPEC.md) — "Save Changes" in that
+  // dialog runs this exact `onSubmit`, including the same validation and
+  // the same create/update mutation, never a parallel save path. Only
+  // registered while the drawer is actually open; closing it (including via
+  // Discard) is itself what clears the guard.
+  useUnsavedChangesGuard(
+    isOpen && isDirty
+      ? {
+          isDirty: true,
+          onSave: () =>
+            new Promise<void>((resolve, reject) => {
+              let valid = true;
+              handleSubmit(
+                async (values) => {
+                  await onSubmit(values);
+                },
+                () => {
+                  valid = false;
+                },
+              )()
+                .then(() => (valid ? resolve() : reject(new Error('Please fix the errors in the form before saving.'))))
+                .catch(reject);
+            }),
+          onDiscard: () => reset(),
+        }
+      : null,
+  );
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title={isEditing ? 'Edit Product' : 'New Product'}>

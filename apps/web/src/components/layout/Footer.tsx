@@ -114,7 +114,7 @@ export function Footer() {
 
   const companyDescription =
     settings?.footer?.companyDescription?.trim() ||
-    'Genuine medicines, delivered fast from verified pharmacies.';
+    'Minds That Care — genuine medicines, delivered fast from verified pharmacies.';
 
   const socialLinks = settings?.footer?.socialLinks;
   const resolvedSocialLinks = SOCIAL_LINKS.map((s) => ({
@@ -127,8 +127,13 @@ export function Footer() {
       <div className="mx-auto max-w-[1920px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
-            <Link to="/" aria-label="KarienLabs" className="inline-flex items-center">
-              <img src="/logo.jpg" alt="KarienLabs" className="h-8 w-auto rounded" />
+            <Link to="/" aria-label="BRENTIS HEALTHCARE — home" className="inline-flex items-center gap-2">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 flex-shrink-0 text-primary" aria-hidden="true">
+                <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
+              </svg>
+              <span className="font-brentis-display text-base font-semibold tracking-tight text-white">
+                BRENTIS <span className="text-primary">HEALTHCARE</span>
+              </span>
             </Link>
             <p className="mt-2 text-xs text-white/60">{companyDescription}</p>
             <div className="mt-3 flex gap-3">
@@ -190,8 +195,32 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-white/10 pt-6 text-center text-xs text-white/50">
-          © {new Date().getFullYear()} KarienLabs. All rights reserved.
+        {/* Truthful payment-methods row — what Razorpay (the project's real,
+            already-integrated payment gateway) actually accepts, restating
+            Checkout's own "card, UPI, netbanking & wallets" line. Text
+            labels rather than card-network logo marks, since reproducing
+            Visa/Mastercard/RuPay's actual trademarked logos isn't something
+            to do without their brand guidelines/permission. */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-6">
+          <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-white/50">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+              <rect x="2.5" y="5.5" width="19" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M2.5 9.5h19" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+            Secure payments via Razorpay
+          </span>
+          {['Visa', 'Mastercard', 'RuPay', 'UPI', 'Netbanking', 'Wallets'].map((method) => (
+            <span
+              key={method}
+              className="rounded-md border border-white/15 px-2 py-1 text-[11px] font-medium text-white/60"
+            >
+              {method}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-6 border-t border-white/10 pt-6 text-center text-xs text-white/50">
+          © {new Date().getFullYear()} BRENTIS HEALTHCARE. All rights reserved.
         </div>
       </div>
     </footer>

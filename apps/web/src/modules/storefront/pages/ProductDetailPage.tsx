@@ -2,12 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { getProduct, listProducts } from '../../../api/products-public.api';
+import { getProduct, listCategoryTree, listProducts } from '../../../api/products-public.api';
 import { Badge } from '../../../components/common/Badge';
 import { Button } from '../../../components/common/Button';
 import { Modal } from '../../../components/common/Modal';
 import { RatingStars } from '../../../components/common/RatingStars';
 import { Skeleton } from '../../../components/common/Skeleton';
+import { Breadcrumb } from '../../../components/layout/Breadcrumb';
 import { useDocumentMeta, useStructuredData } from '../../../hooks/useDocumentMeta';
 import { useRecentlyViewed } from '../../../hooks/useRecentlyViewed';
 import { trackAddToCart, trackViewItem } from '../../../lib/analytics';
@@ -37,6 +38,24 @@ export default function ProductDetailPage() {
     queryFn: () => listProducts({ limit: 4, filter: { categoryId: product!.categoryId } }),
     enabled: !!product?.categoryId,
   });
+
+  // Just for the breadcrumb's category label — the product-detail response
+  // only carries `categoryId`, not the category's name (confirmed in
+  // products-public.api.ts), so this resolves it against the same public
+  // category tree the PLP already fetches/caches.
+  const { data: categoryTree } = useQuery({ queryKey: ['categories', 'tree'], queryFn: listCategoryTree });
+  const categoryName = (() => {
+    if (!product?.categoryId || !categoryTree) return undefined;
+    const find = (nodes: typeof categoryTree): string | undefined => {
+      for (const n of nodes) {
+        if (n._id === product.categoryId) return n.name;
+        const found = find((n.children as typeof categoryTree) ?? []);
+        if (found) return found;
+      }
+      return undefined;
+    };
+    return find(categoryTree);
+  })();
 
   useEffect(() => {
     if (product) recordView(product._id);
@@ -106,7 +125,14 @@ export default function ProductDetailPage() {
   const relatedProducts = (related?.items ?? []).filter((p) => p._id !== product._id).slice(0, 4);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-6 pb-20 md:gap-10 md:pb-0">
+      <Breadcrumb
+        items={[
+          { label: 'Products', to: '/products' },
+          ...(categoryName ? [{ label: categoryName, to: `/products?categoryId=${product.categoryId}` }] : []),
+          { label: product.name },
+        ]}
+      />
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/*  (Product Image Management) Part 10/15/16 — Amazon-style
             layout as a UX reference only (own KarienLabs styling, not their
@@ -163,12 +189,24 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="flex flex-col gap-3">
+          {product.brand && (
+            <Link
+              to={`/products?brandId=${product.brand._id}`}
+              className="text-xs font-semibold uppercase tracking-wide text-gray-400 hover:text-accent dark:text-night-muted"
+            >
+              {product.brand.name}
+            </Link>
+          )}
           {product.medicine?.prescriptionRequired && (
             <Badge tone="yellow">Prescription Required</Badge>
           )}
-          <h1 className="text-2xl font-semibold text-ink dark:text-night-text">{product.name}</h1>
+          <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text sm:text-3xl">
+            {product.name}
+          </h1>
           {product.medicine?.genericName && (
-            <p className="text-sm text-gray-500">Generic: {product.medicine.genericName}</p>
+            <p className="text-sm text-gray-500 dark:text-night-muted">
+              Generic: {product.medicine.genericName}
+            </p>
           )}
           {!!product.ratingCount && (
             <RatingStars value={product.ratingAvg ?? 0} count={product.ratingCount} />
@@ -178,58 +216,92 @@ export default function ProductDetailPage() {
             {product.inStock ? 'In Stock' : 'Out of Stock'}
           </Badge>
 
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-ink dark:text-night-text">
+          <div className="flex flex-wrap items-baseline gap-2 border-t border-pale-sage pt-3 dark:border-night-border">
+            <span className="font-brentis-body text-3xl font-bold text-ink dark:text-night-text">
               {formatCurrency(product.basePrice)}
             </span>
             {discountPct > 0 && (
               <>
-                <span className="text-sm text-gray-400 line-through">
+                <span className="text-base text-gray-400 line-through">
                   {formatCurrency(product.mrp)}
                 </span>
-                <span className="text-sm font-medium text-green-600">{discountPct}% off</span>
+                <span className="rounded-full bg-secondary/10 px-2 py-0.5 text-sm font-semibold text-secondary">
+                  {discountPct}% OFF
+                </span>
               </>
             )}
-            <span className="text-xs text-gray-400">incl. {product.gstRate}% GST</span>
           </div>
+          <span className="-mt-2 text-xs text-gray-400 dark:text-night-muted">
+            Inclusive of {product.gstRate}% GST
+          </span>
 
-          <p className="text-sm text-gray-600 dark:text-night-muted">
+          <p className="text-sm leading-relaxed text-gray-600 dark:text-night-muted">
             {product.shortDescription || product.description}
           </p>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center rounded-md border border-gray-300 dark:border-night-border">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex items-center rounded-full border border-pale-sage dark:border-night-border">
               <button
-                className="px-3 py-1.5 text-gray-500"
+                type="button"
+                aria-label="Decrease quantity"
+                className="px-3.5 py-2 text-gray-500 hover:text-ink dark:text-night-muted dark:hover:text-night-text"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               >
                 −
               </button>
-              <span className="w-8 text-center text-sm">{quantity}</span>
-              <button className="px-3 py-1.5 text-gray-500" onClick={() => setQuantity((q) => q + 1)}>
+              <span className="w-8 text-center text-sm font-medium text-ink dark:text-night-text">{quantity}</span>
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                className="px-3.5 py-2 text-gray-500 hover:text-ink dark:text-night-muted dark:hover:text-night-text"
+                onClick={() => setQuantity((q) => q + 1)}
+              >
                 +
               </button>
             </div>
-            <Button
-              variant="coral"
-              isLoading={add.isPending}
-              disabled={!product.inStock}
-              onClick={() => {
-                add.mutate({ productId: product._id, quantity });
-                trackAddToCart({
-                  item_id: product._id,
-                  item_name: product.name,
-                  item_category: product.categoryId,
-                  price: product.basePrice,
-                  quantity,
-                });
-              }}
-            >
-              {product.inStock ? 'Add to cart' : 'Out of stock'}
-            </Button>
+            <div className="flex flex-1 gap-2">
+              <Button
+                variant="teal"
+                className="flex-1"
+                isLoading={add.isPending}
+                disabled={!product.inStock}
+                onClick={() => {
+                  add.mutate({ productId: product._id, quantity });
+                  trackAddToCart({
+                    item_id: product._id,
+                    item_name: product.name,
+                    item_category: product.categoryId,
+                    price: product.basePrice,
+                    quantity,
+                  });
+                }}
+              >
+                {product.inStock ? 'Add to cart' : 'Out of stock'}
+              </Button>
+              {product.inStock && (
+                <Link to="/checkout" className="flex-1">
+                  <Button
+                    variant="coral"
+                    className="w-full"
+                    onClick={() => {
+                      add.mutate({ productId: product._id, quantity });
+                      trackAddToCart({
+                        item_id: product._id,
+                        item_name: product.name,
+                        item_category: product.categoryId,
+                        price: product.basePrice,
+                        quantity,
+                      });
+                    }}
+                  >
+                    Buy now
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
 
-          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm dark:border-night-border">
+          <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-pale-sage bg-white p-4 text-sm dark:border-night-border dark:bg-night-surface">
             {product.brand && (
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Brand</dt>
@@ -281,12 +353,38 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
+      {/* Sticky mobile purchase bar — desktop already has the Add to
+          Cart/Buy Now pair inline above and doesn't need this duplicated. */}
+      <div className="fixed inset-x-0 bottom-0 z-20 flex items-center gap-3 border-t border-pale-sage bg-white px-4 py-3 shadow-[0_-4px_16px_rgba(23,43,47,0.08)] dark:border-night-border dark:bg-night-surface md:hidden">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs text-gray-500 dark:text-night-muted">{product.name}</p>
+          <p className="text-base font-bold text-ink dark:text-night-text">{formatCurrency(product.basePrice)}</p>
+        </div>
+        <Button
+          variant="coral"
+          disabled={!product.inStock}
+          isLoading={add.isPending}
+          onClick={() => {
+            add.mutate({ productId: product._id, quantity });
+            trackAddToCart({
+              item_id: product._id,
+              item_name: product.name,
+              item_category: product.categoryId,
+              price: product.basePrice,
+              quantity,
+            });
+          }}
+        >
+          {product.inStock ? 'Add to cart' : 'Out of stock'}
+        </Button>
+      </div>
+
       <ProductReviews productId={product._id} />
 
       {/* Part 28/29 — visible FAQ content, admin-authored only (never generated); the same entries also back the FAQPage JSON-LD above. */}
       {!!product.faq?.length && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
+          <h2 className="mb-3 font-brentis-display text-lg font-semibold text-ink dark:text-night-text">
             Frequently Asked Questions
           </h2>
           <dl className="flex flex-col gap-4">
@@ -302,7 +400,7 @@ export default function ProductDetailPage() {
 
       {relatedProducts.length > 0 && (
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
+          <h2 className="mb-3 font-brentis-display text-lg font-semibold text-ink dark:text-night-text">
             Related Products
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

@@ -10,6 +10,9 @@ export interface Category {
   slug: string;
   parentId: string | null;
   isActive: boolean;
+  imageUrl?: string;
+  imagePublicId?: string | null;
+  imageAlt?: string;
   // (CAT-06) — see product-defaults resolution on Product below.
   isExpirableDefault?: boolean;
   requiresPrescriptionDefault?: boolean;

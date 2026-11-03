@@ -108,6 +108,7 @@ const AdminGstSettingsPage = lazy(() => import('../modules/admin/tax/pages/GstSe
 const AdminProductTaxMappingsPage = lazy(
   () => import('../modules/admin/tax/pages/ProductTaxMappingsPage'),
 );
+const AdminAboutContentPage = lazy(() => import('../modules/admin/cms/pages/AboutContentPage'));
 const AdminBannersPage = lazy(() => import('../modules/admin/cms/pages/BannersPage'));
 const AdminHomeSectionsPage = lazy(() => import('../modules/admin/cms/pages/HomeSectionsPage'));
 const AdminBlogsPage = lazy(() => import('../modules/admin/cms/pages/BlogsPage'));
@@ -287,6 +288,7 @@ export function AppRouter() {
               <Route path="/admin/delivery/shipments" element={<AdminShipmentsPage />} />
               <Route path="/admin/tax/gst-settings" element={<AdminGstSettingsPage />} />
               <Route path="/admin/tax/product-mappings" element={<AdminProductTaxMappingsPage />} />
+              <Route path="/admin/cms/about" element={<AdminAboutContentPage />} />
               <Route path="/admin/cms/banners" element={<AdminBannersPage />} />
               <Route path="/admin/cms/home-sections" element={<AdminHomeSectionsPage />} />
               <Route path="/admin/cms/blogs" element={<AdminBlogsPage />} />

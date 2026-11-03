@@ -10,6 +10,8 @@ import { Button } from '../../../components/common/Button';
 import { Card } from '../../../components/common/Card';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { Skeleton } from '../../../components/common/Skeleton';
+import { Breadcrumb } from '../../../components/layout/Breadcrumb';
+import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
 import {
   trackAddPaymentInfo,
   trackAddShippingInfo,
@@ -57,6 +59,8 @@ export default function CheckoutPage() {
   });
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [processingState, setProcessingState] = useState(false);
+
+  useDocumentMeta({ title: 'Checkout', description: 'Complete your order securely.' });
 
   const subtotal = cart?.items.reduce((sum, item) => sum + item.priceAtAdd * item.quantity, 0) ?? 0;
 
@@ -132,7 +136,7 @@ export default function CheckoutPage() {
           orderId: intent.razorpayOrder.id,
           amount: intent.razorpayOrder.amount,
           currency: intent.razorpayOrder.currency,
-          name: 'KarienLabs',
+          name: 'BRENTIS HEALTHCARE',
           onSuccess: async (response) => {
             // Backend is authoritative from here — the widget firing
             // `onSuccess` is NEVER itself treated as "order placed" (Part
@@ -203,15 +207,15 @@ export default function CheckoutPage() {
     return (
       <Card className="mx-auto max-w-lg p-6 text-center">
         <Badge tone="yellow">Processing</Badge>
-        <h1 className="mt-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h1 className="mt-3 font-brentis-display text-lg font-semibold text-ink dark:text-night-text">
           Payment received — finalizing your order
         </h1>
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-sm text-gray-500 dark:text-night-muted">
           Your payment was successful. We&apos;re just finishing setting up your order — this
           usually takes a few seconds. You&apos;ll receive a confirmation email, and the order will
           appear in your order history shortly.
         </p>
-        <Button className="mt-4" onClick={() => navigate('/account/orders')}>
+        <Button variant="coral" className="mt-4" onClick={() => navigate('/account/orders')}>
           View my orders
         </Button>
       </Card>
@@ -228,11 +232,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
-      <Card className="p-4">
-        <h1 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col gap-4">
+      <Breadcrumb items={[{ label: 'Cart', to: '/cart' }, { label: 'Checkout' }]} />
+      <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text">Checkout</h1>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px]">
+      <Card className="p-4 sm:p-6">
+        <h2 className="mb-3 font-brentis-display text-base font-semibold text-ink dark:text-night-text">
           Delivery Address
-        </h1>
+        </h2>
         {isLoadingAddresses ? (
           <Skeleton className="h-24 w-full" />
         ) : !addresses || addresses.length === 0 ? (
@@ -253,16 +260,16 @@ export default function CheckoutPage() {
             {addresses.map((address) => (
               <label
                 key={address._id}
-                className={`flex cursor-pointer items-start gap-3 rounded-md border p-3 text-sm ${
+                className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 text-sm transition-colors ${
                   selectedAddressId === address._id
-                    ? 'border-brand-500 bg-brand-50 dark:bg-brand-500/10'
-                    : 'border-gray-200 dark:border-gray-800'
+                    ? 'border-primary bg-deep-teal dark:bg-night-elevated'
+                    : 'border-pale-sage hover:border-accent dark:border-night-border'
                 }`}
               >
                 <input
                   type="radio"
                   name="address"
-                  className="mt-1"
+                  className="mt-1 accent-[var(--color-primary)]"
                   checked={selectedAddressId === address._id}
                   onChange={() => {
                     setSelectedAddressId(address._id);
@@ -270,13 +277,15 @@ export default function CheckoutPage() {
                   }}
                 />
                 <span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <span className="font-medium text-ink dark:text-night-text">
                     {address.label}
                   </span>
                   <br />
-                  {address.line1}, {address.city}, {address.state} {address.pincode}
-                  <br />
-                  {address.phone}
+                  <span className="text-gray-600 dark:text-night-muted">
+                    {address.line1}, {address.city}, {address.state} {address.pincode}
+                    <br />
+                    {address.phone}
+                  </span>
                 </span>
               </label>
             ))}
@@ -315,20 +324,22 @@ export default function CheckoutPage() {
         )}
       </Card>
 
-      <Card className="flex h-fit flex-col gap-4 p-4">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Order Summary</h2>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Subtotal</span>
-          <span className="font-medium text-gray-900 dark:text-gray-100">
+      <Card className="flex h-fit flex-col gap-4 p-4 sm:p-6">
+        <h2 className="font-brentis-display text-base font-semibold text-ink dark:text-night-text">
+          Order Summary
+        </h2>
+        <div className="flex justify-between border-t border-pale-sage pt-3 text-sm dark:border-night-border">
+          <span className="text-gray-500 dark:text-night-muted">Subtotal</span>
+          <span className="font-medium text-ink dark:text-night-text">
             {formatCurrency(subtotal)}
           </span>
         </div>
-        <p className="text-xs text-gray-400">
+        <p className="-mt-2 text-xs text-gray-400 dark:text-night-muted">
           Final total (with GST) is calculated before payment. You will only be charged once, and
           your order is only created after payment succeeds.
         </p>
         <Button
-          variant="gradient"
+          variant="coral"
           className="w-full"
           disabled={!selectedAddressId}
           isLoading={payMutation.isPending}
@@ -336,7 +347,11 @@ export default function CheckoutPage() {
         >
           Pay now
         </Button>
+        <p className="text-center text-xs text-gray-400 dark:text-night-muted">
+          Secured by Razorpay — card, UPI, netbanking &amp; wallets accepted.
+        </p>
       </Card>
+      </div>
     </div>
   );
 }

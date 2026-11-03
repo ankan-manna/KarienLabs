@@ -295,7 +295,7 @@ export default function BulkPurchasePage() {
         </Button>
 
         <div className="flex items-center justify-between text-sm">
-          <button type="button" className="font-medium text-brand-600 hover:underline" onClick={onResendOtp}>
+          <button type="button" className="font-medium text-accent hover:underline" onClick={onResendOtp}>
             Resend code
           </button>
           <button
@@ -324,7 +324,7 @@ export default function BulkPurchasePage() {
           distribution business? Tell us what you need below and our business team will reach out
           with availability, pricing, and next steps. This form is for wholesale/business enquiries
           only — for general questions, please use our{' '}
-          <a href="/contact" className="text-brand-600 hover:underline">
+          <a href="/contact" className="text-accent hover:underline">
             Contact Us
           </a>{' '}
           page instead.

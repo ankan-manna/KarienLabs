@@ -1,0 +1,98 @@
+# Local development compose for the BRENTIS HEALTHCARE redesign work.
+#
+# This is intentionally separate from infra/docker/docker-compose.yml (the
+# production base) and infra/docker/docker-compose.dev.yml (the existing
+# full-local-infra dev setup with its own Mongo/Redis/MinIO containers) —
+# neither of those is modified by this file.
+#
+# This compose only runs what Prompt 3 asked for: `web` + `api`, with an
+# optional `worker`. It deliberately runs NO local MongoDB and NO local
+# Redis container — `api`/`worker` connect out to the real external
+# MongoDB Atlas cluster (MONGO_URI) and the EC2-hosted Redis instance
+# (REDIS_URL) via the root .env file (git-ignored; copy from .env.example
+# and fill in real values — never commit it, never put real values here).
+#
+# Usage:
+#   docker compose up            -> starts web + api only
+#   docker compose --profile worker up   -> also starts the worker
+#   docker compose down          -> stops everything
+
+name: medcommerce-local
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      # The Dockerfile's final "runtime" stage expects a compiled dist/ and
+      # has no bind-mounted source; its "build" stage still has the full
+      # toolchain (tsx, ts-node deps) needed to run `tsx watch` directly
+      # against bind-mounted source for hot reload — same approach already
+      # used by infra/docker/docker-compose.dev.yml.
+      target: build
+    working_dir: /app/apps/api
+    command: ["npx", "tsx", "watch", "src/server.ts"]
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./apps/api:/app/apps/api
+      - ./packages/shared:/app/packages/shared
+      - /app/apps/api/node_modules
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks: [medcommerce-local]
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
+    command: ["npm", "run", "dev", "--", "--host"]
+    environment:
+      # Docker-DNS name of the `api` service on the shared network — same
+      # mechanism vite.config.ts already supports for the existing dev
+      # compose (see its inline comment).
+      VITE_API_PROXY_TARGET: http://api:5000
+    volumes:
+      - ./apps/web:/app/apps/web
+      - ./packages/shared:/app/packages/shared
+      - /app/apps/web/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [medcommerce-local]
+
+  # Optional — only starts with `docker compose --profile worker up`.
+  # Requires REDIS_URL to actually be reachable (the EC2 instance); if it
+  # isn't, this container will fail/crash-loop on its BullMQ connection
+  # while `api`/`web` remain unaffected, since nothing here depends on it.
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: build
+    working_dir: /app/apps/api
+    command: ["npx", "tsx", "watch", "src/worker.ts"]
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./apps/api:/app/apps/api
+      - ./packages/shared:/app/packages/shared
+      - /app/apps/api/node_modules
+    profiles: ["worker"]
+    networks: [medcommerce-local]
+
+networks:
+  medcommerce-local:
+    driver: bridge

@@ -1,4 +1,8 @@
+import type { ApiResponse } from '@medcommerce/shared';
+
 import { createCrudApi } from './createCrudApi';
+import { httpClient } from './http-client';
+import type { AboutContent } from './public-cms.api';
 
 export interface Banner {
   _id: string;
@@ -25,8 +29,10 @@ export const bannerApi = createCrudApi<Banner>('/cms/banners');
 export interface HomeSection {
   _id: string;
   title: string;
-  type: 'product_grid' | 'category_grid' | 'banner_carousel';
+  type: 'product_grid' | 'category_grid' | 'banner_carousel' | 'category_tabs';
   sourceType: 'manual' | 'category' | 'tag' | 'query';
+  categoryIds?: string[];
+  productIds?: string[];
   order: number;
   isActive: boolean;
 }
@@ -67,3 +73,19 @@ export interface Blog {
 }
 
 export const blogApi = createCrudApi<Blog>('/cms/blogs');
+
+function unwrap<T>(response: ApiResponse<T>): T {
+  if (!response.success) throw new Error(response.error.message);
+  return response.data;
+}
+
+/** Singleton GET/PUT (not a list) — the homepage "About Us" teaser content. See about-content.routes.ts. */
+export async function getAboutContent(): Promise<AboutContent> {
+  const { data } = await httpClient.get<ApiResponse<AboutContent>>('/cms/about');
+  return unwrap(data);
+}
+
+export async function setAboutContent(value: AboutContent): Promise<AboutContent> {
+  const { data } = await httpClient.put<ApiResponse<AboutContent>>('/cms/about', value);
+  return unwrap(data);
+}

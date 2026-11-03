@@ -1,5 +1,6 @@
 import { homeSectionApi, type HomeSection } from '../../../../api/cms.api';
 import { ConfigEntityPage, type ConfigField } from '../../../../components/table/ConfigEntityPage';
+import { HomeSectionCategoryFields } from '../components/HomeSectionCategoryFields';
 import { homeSectionHooks } from '../hooks/useCms';
 
 const fields: ConfigField[] = [
@@ -11,6 +12,7 @@ const fields: ConfigField[] = [
     options: [
       { label: 'Product Grid', value: 'product_grid' },
       { label: 'Category Grid', value: 'category_grid' },
+      { label: 'Category Tabs (Best Sellers)', value: 'category_tabs' },
       { label: 'Banner Carousel', value: 'banner_carousel' },
     ],
     defaultValue: 'product_grid',
@@ -39,6 +41,12 @@ export default function HomeSectionsPage() {
       hooks={homeSectionHooks}
       fields={fields}
       api={homeSectionApi}
+      renderExtraFields={() => <HomeSectionCategoryFields />}
+      extraDefaultValues={(section) => ({
+        categoryIds: ((section as unknown as { categoryIds?: { _id: string }[] | string[] })?.categoryIds ?? []).map(
+          (c) => (typeof c === 'string' ? c : c._id),
+        ),
+      })}
     />
   );
 }

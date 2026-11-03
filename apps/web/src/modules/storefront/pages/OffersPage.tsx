@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { getPublicBanners } from '../../../api/public-cms.api';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { SkeletonRows } from '../../../components/common/Skeleton';
+import { Breadcrumb } from '../../../components/layout/Breadcrumb';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
 
 export default function OffersPage() {
@@ -18,8 +19,9 @@ export default function OffersPage() {
   });
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
+    <div className="flex flex-col gap-6">
+      <Breadcrumb items={[{ label: 'Offers' }]} />
+      <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text sm:text-3xl">
         Offers & Deals
       </h1>
       {isLoading ? (
@@ -35,9 +37,13 @@ export default function OffersPage() {
             <Link
               key={banner._id}
               to={banner.linkUrl || '/products'}
-              className="block overflow-hidden rounded-lg border border-gray-100 dark:border-night-border"
+              className="group block overflow-hidden rounded-xl border border-pale-sage shadow-storefront-sm transition-shadow hover:shadow-storefront-hover dark:border-night-border"
             >
-              <img src={banner.imageUrl} alt={banner.title} className="w-full object-cover" />
+              <img
+                src={banner.imageUrl}
+                alt={banner.title}
+                className="w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+              />
             </Link>
           ))}
         </div>

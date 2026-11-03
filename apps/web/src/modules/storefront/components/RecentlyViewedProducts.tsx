@@ -23,7 +23,7 @@ export function RecentlyViewedProducts({ excludeId }: { excludeId?: string }) {
 
   return (
     <section>
-      <h2 className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <h2 className="mb-3 text-lg font-semibold text-ink dark:text-night-text">
         Recently Viewed
       </h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

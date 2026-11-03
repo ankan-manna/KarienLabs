@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import type { PublicProduct } from '../../../api/products-public.api';
 import { Badge } from '../../../components/common/Badge';
@@ -11,9 +11,25 @@ import { CLOUDINARY_PRESETS, cloudinaryUrl } from '../../../utils/cloudinary';
 import { formatCurrency } from '../../../utils/format';
 import { useCartMutations } from '../hooks/useCart';
 
-export function ProductCard({ product }: { product: PublicProduct }) {
+interface ProductCardProps {
+  product: PublicProduct;
+  /**
+   * 'cover' (default, unchanged everywhere this card was already used —
+   * PLP/PDP related-products/etc.) fills the image box edge-to-edge.
+   * 'contain' is used by the homepage's single Selected Products row (see
+   * docs/BRENTIS_HOMEPAGE_IMPLEMENTATION_REPORT.md) — padded, on a neutral
+   * light background, so a seeded demo image whose own background happens
+   * to be a solid color doesn't read as "the whole card is a flat color
+   * block." This does not touch or fix the underlying seed images
+   * themselves (that's a content problem, documented separately) — it
+   * just keeps the card chrome itself light/contained regardless of what
+   * the current placeholder image looks like.
+   */
+  imageFit?: 'cover' | 'contain';
+}
+
+export function ProductCard({ product, imageFit = 'cover' }: ProductCardProps) {
   const { add } = useCartMutations();
-  const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
   // (Product Image Management) Part 7/8/29 — the card ALWAYS shows
   // the product's configured main image, never a random sub-image, and only
@@ -27,8 +43,8 @@ export function ProductCard({ product }: { product: PublicProduct }) {
   const discountPct =
     product.mrp > product.basePrice ? Math.round((1 - product.basePrice / product.mrp) * 100) : 0;
 
-  const addItem = (onAdded?: () => void) => {
-    add.mutate({ productId: product._id, quantity: 1 }, { onSuccess: onAdded });
+  const addItem = () => {
+    add.mutate({ productId: product._id, quantity: 1 });
     trackAddToCart({
       item_id: product._id,
       item_name: product.name,
@@ -48,13 +64,19 @@ export function ProductCard({ product }: { product: PublicProduct }) {
     >
       <Card className="group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-md">
         <Link to={`/products/${product.slug}`} className="relative block">
-          <div className="flex aspect-square items-center justify-center bg-gray-50 dark:bg-night-elevated">
+          <div
+            className={`flex aspect-square items-center justify-center bg-gray-50 dark:bg-night-elevated ${
+              imageFit === 'contain' ? 'p-6' : ''
+            }`}
+          >
             {mainImageUrl ? (
               <img
                 src={cloudinaryUrl(mainImageUrl, CLOUDINARY_PRESETS.cardThumbnail)}
                 alt={product.name}
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                className={`h-full w-full transition-transform duration-200 group-hover:scale-[1.03] ${
+                  imageFit === 'contain' ? 'object-contain' : 'object-cover'
+                }`}
               />
             ) : (
               <span className="text-xs text-gray-400">No image</span>
@@ -95,27 +117,25 @@ export function ProductCard({ product }: { product: PublicProduct }) {
               </span>
             )}
           </div>
-          <div className="mt-auto flex gap-2 pt-2">
+          {/* Prompt-2 refinement: a single, full-width primary CTA — the
+              measured reference card uses exactly one 44px button ("View
+              Options"), and the prior two-button row (Add to cart + Buy now,
+              each ~50% width) was the actual measured cause of this card
+              reading busier than the reference at a comparable footprint
+              (see docs/BRENTIS_VISUAL_AUDIT.md §G). "Buy now" is not
+              removed from the app — it remains on the PDP's own purchase
+              actions — only the card-level duplicate affordance is gone. */}
+          <div className="mt-auto pt-2">
             <Button
               size="sm"
               variant="coral"
-              className="flex-1"
+              className="w-full"
               disabled={!product.inStock}
               onClick={() => addItem()}
               isLoading={add.isPending}
             >
               {product.inStock ? 'Add to cart' : 'Out of stock'}
             </Button>
-            {product.inStock && (
-              <Button
-                size="sm"
-                variant="teal"
-                className="flex-1"
-                onClick={() => addItem(() => navigate('/checkout'))}
-              >
-                Buy now
-              </Button>
-            )}
           </div>
         </div>
       </Card>

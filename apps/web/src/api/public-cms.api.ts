@@ -19,13 +19,34 @@ export interface PublicBanner {
   slideDurationMs: number | null;
 }
 
+export interface PublicHomeSectionProduct {
+  _id: string;
+  name: string;
+  slug: string;
+  basePrice: number;
+  mrp: number;
+  images: { url: string; isPrimary: boolean }[];
+  ratingAvg?: number;
+  ratingCount?: number;
+  inStock: boolean;
+}
+
+export interface PublicCategoryTab {
+  categoryId: string;
+  name: string;
+  slug: string;
+  products: PublicHomeSectionProduct[];
+}
+
 export interface PublicHomeSection {
   _id: string;
   title: string;
-  type: 'product_grid' | 'category_grid' | 'banner_carousel';
+  type: 'product_grid' | 'category_grid' | 'banner_carousel' | 'category_tabs';
   sourceType: 'manual' | 'category' | 'tag' | 'query';
-  productIds: { _id: string; name: string; slug: string; basePrice: number; mrp: number; images: { url: string; isPrimary: boolean }[]; ratingAvg?: number; ratingCount?: number; inStock: boolean }[];
+  productIds: PublicHomeSectionProduct[];
   categoryIds: { _id: string; name: string; slug: string }[];
+  /** Present only when `type === 'category_tabs'` — see public-cms.routes.ts. */
+  categoryTabs?: PublicCategoryTab[];
   order: number;
 }
 
@@ -133,5 +154,49 @@ export interface SiteSettings {
  */
 export async function getPublicSiteSettings(): Promise<SiteSettings> {
   const { data } = await httpClient.get<ApiResponse<SiteSettings>>('/public/cms/site-settings');
+  return unwrap(data);
+}
+
+export type AboutContentIconKey =
+  | 'values'
+  | 'compass'
+  | 'rx'
+  | 'lock'
+  | 'verified'
+  | 'truck'
+  | 'heart'
+  | 'shield';
+
+export interface AboutContentBlock {
+  iconKey: AboutContentIconKey;
+  title: string;
+  description: string;
+}
+
+export interface AboutContent {
+  tagline?: string;
+  heading?: string;
+  description?: string;
+  mainImageUrl?: string;
+  mainImagePublicId?: string | null;
+  mainImageAlt?: string;
+  blocks?: AboutContentBlock[];
+  highlightsTagline?: string;
+  highlightsHeading?: string;
+  highlightsDescription?: string;
+  highlightsImageUrl?: string;
+  highlightsImagePublicId?: string | null;
+  highlightsImageAlt?: string;
+  highlights?: AboutContentBlock[];
+}
+
+/**
+ * Admin-managed homepage "About Us" teaser content (heading/description/
+ * main image/value blocks + the "Why BRENTIS" highlights block) — stored in
+ * the Configuration Engine under the 'about' namespace. Anonymous-readable,
+ * same convention as getPublicSiteSettings above.
+ */
+export async function getPublicAboutContent(): Promise<AboutContent> {
+  const { data } = await httpClient.get<ApiResponse<AboutContent>>('/public/cms/about');
   return unwrap(data);
 }
