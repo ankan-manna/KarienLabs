@@ -217,6 +217,67 @@ function CategoryPlaceholderTile() {
   );
 }
 
+/**
+ * Original hand-drawn-style wavy underline accent — the same idea as the
+ * reference's own squiggle flourish beneath its section headings (a generic
+ * decorative device, not a specific copyrightable illustration), redrawn
+ * from scratch in BRENTIS's own primary color rather than traced/copied.
+ */
+function SquiggleAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 14" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M2 10c10-7 20-7 30 0s20 7 30 0 20-7 30 0 20 7 26 2"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Centered eyebrow + headline + squiggle accent — matches the reference's
+ * own section-header pattern exactly (confirmed via live measurement:
+ * centered, not left-aligned; a hand-drawn underline beneath the headline).
+ * Used by both CategorySection and KnowledgeSection, which follow the same
+ * pattern on the reference site.
+ */
+function CenteredSectionHeading({ eyebrow, heading }: { eyebrow: string; heading: string }) {
+  return (
+    <div className="mb-10 flex flex-col items-center gap-2 text-center">
+      <span className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</span>
+      <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+        {heading}
+      </h2>
+      <SquiggleAccent className="mt-1 h-3.5 w-24 text-primary" />
+    </div>
+  );
+}
+
+/**
+ * Edge-overlay prev/next controls positioned at the carousel's own left/
+ * right edges (not inline with the section heading) — matches the
+ * reference's own carousel-arrow placement, confirmed via live screenshot
+ * (its arrows sit at the far left/right of the content area, never next to
+ * a heading). Hidden on mobile, where the horizontal-scroll/2-col-grid
+ * behavior is swipe-driven instead.
+ */
+function EdgeArrowButton({ direction, onClick }: { direction: 'left' | 'right'; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label={direction === 'left' ? 'Scroll left' : 'Scroll right'}
+      onClick={onClick}
+      className={`absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-pale-sage bg-white text-ink shadow-sm transition-colors hover:bg-deep-teal dark:border-night-border dark:bg-night-surface dark:text-night-text dark:hover:bg-night-elevated sm:flex ${
+        direction === 'left' ? 'left-0 -translate-x-1/2' : 'right-0 translate-x-1/2'
+      }`}
+    >
+      {direction === 'left' ? '‹' : '›'}
+    </button>
+  );
+}
+
 function CategorySection() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const { data: categories } = useQuery({ queryKey: ['categories', 'tree', 'home'], queryFn: listCategoryTree });
@@ -229,33 +290,13 @@ function CategorySection() {
   }
 
   return (
-    <section>
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Shop by Category</span>
-          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-            Explore Healthcare Essentials
-          </h2>
-        </div>
-        <div className="hidden flex-shrink-0 gap-2 sm:flex">
-          <button
-            type="button"
-            aria-label="Scroll categories left"
-            onClick={() => scrollByCards(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label="Scroll categories right"
-            onClick={() => scrollByCards(1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ›
-          </button>
-        </div>
-      </div>
+    // Pale sage-tinted band (measured from the reference: rgb(248,248,242))
+    // — the reference renders this full-bleed; here it's a contained,
+    // rounded band matching the rest of the page's container model (the
+    // homepage has no full-bleed-breakout mechanism elsewhere), which is
+    // the one structural difference from the reference that remains.
+    <section className="rounded-[28px] bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14">
+      <CenteredSectionHeading eyebrow="Shop by Category" heading="Explore Healthcare Essentials" />
       {/*
         Mobile (<640px): compact 2-column grid — matches Brintoncare's own
         measured mobile behavior exactly (174×242px cards, 2 per row, not a
@@ -266,40 +307,44 @@ function CategorySection() {
         sm+ (≥640px): the existing single-row horizontal scroll/carousel,
         matching the reference's own desktop/tablet single-row behavior.
       */}
-      <div
-        ref={scrollerRef}
-        className="grid grid-cols-2 gap-3.5 sm:themed-scrollbar sm:-mx-4 sm:flex sm:snap-x sm:snap-mandatory sm:gap-3.5 sm:overflow-x-auto sm:px-4 sm:pb-2"
-      >
-        {(categories as CategoryNode[]).map((cat) => (
-          <Link
-            key={cat._id}
-            to={`/products?categoryId=${cat._id}`}
-            className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
-          >
-            {cat.imageUrl ? (
-              <img
-                src={cat.imageUrl}
-                alt={cat.imageAlt || cat.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
-                <CategoryPlaceholderTile />
-              </div>
-            )}
-            {/*
-              Generous, content-width white pill (not a percentage-stretched
-              bar) — matches the reference's measured treatment exactly:
-              border-radius 33px, 12px/30px padding, 16px/500 label,
-              bottom:20px, horizontally centered via left-50%/translateX.
-              docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories.
-            */}
-            <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
-              {cat.name}
-            </span>
-          </Link>
-        ))}
+      <div className="relative">
+        <EdgeArrowButton direction="left" onClick={() => scrollByCards(-1)} />
+        <EdgeArrowButton direction="right" onClick={() => scrollByCards(1)} />
+        <div
+          ref={scrollerRef}
+          className="grid grid-cols-2 gap-3.5 sm:themed-scrollbar sm:flex sm:snap-x sm:snap-mandatory sm:gap-3.5 sm:overflow-x-auto sm:pb-2"
+        >
+          {(categories as CategoryNode[]).map((cat) => (
+            <Link
+              key={cat._id}
+              to={`/products?categoryId=${cat._id}`}
+              className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
+            >
+              {cat.imageUrl ? (
+                <img
+                  src={cat.imageUrl}
+                  alt={cat.imageAlt || cat.name}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
+                  <CategoryPlaceholderTile />
+                </div>
+              )}
+              {/*
+                Generous, content-width white pill (not a percentage-stretched
+                bar) — matches the reference's measured treatment exactly:
+                border-radius 33px, 12px/30px padding, 16px/500 label,
+                bottom:20px, horizontally centered via left-50%/translateX.
+                docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories.
+              */}
+              <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
+                {cat.name}
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -484,65 +529,44 @@ function KnowledgeSection() {
 
   return (
     <section>
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Healthcare Knowledge</span>
-          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-            Knowledge Is Part of Good Care.
-          </h2>
-        </div>
-        <div className="hidden flex-shrink-0 gap-2 sm:flex">
-          <button
-            type="button"
-            aria-label="Scroll articles left"
-            onClick={() => scrollByCards(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label="Scroll articles right"
-            onClick={() => scrollByCards(1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ›
-          </button>
-        </div>
-      </div>
-      <div
-        ref={scrollerRef}
-        className="themed-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2"
-      >
-        {data.items.map((blog) => (
-          <Link
-            key={blog._id}
-            to={`/blog/${blog.slug}`}
-            className="group flex w-[82%] flex-shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]"
-          >
-            <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
-              {blog.coverImageUrl && (
-                <img
-                  src={blog.coverImageUrl}
-                  alt={blog.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+      <CenteredSectionHeading eyebrow="Healthcare Knowledge" heading="Knowledge Is Part of Good Care." />
+      <div className="relative">
+        <EdgeArrowButton direction="left" onClick={() => scrollByCards(-1)} />
+        <EdgeArrowButton direction="right" onClick={() => scrollByCards(1)} />
+        <div
+          ref={scrollerRef}
+          className="themed-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2"
+        >
+          {data.items.map((blog) => (
+            <Link
+              key={blog._id}
+              to={`/blog/${blog.slug}`}
+              className="group flex w-[82%] flex-shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]"
+            >
+              <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
+                {blog.coverImageUrl && (
+                  <img
+                    src={blog.coverImageUrl}
+                    alt={blog.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
+              </div>
+              {blog.tags[0] && (
+                <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
+                  {blog.tags[0]}
+                </span>
               )}
-            </div>
-            {blog.tags[0] && (
-              <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
-                {blog.tags[0]}
-              </span>
-            )}
-            <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
-              {blog.title}
-            </h3>
-            <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
-            <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
-            <span className="text-sm font-medium text-accent">Read article →</span>
-          </Link>
-        ))}
+              <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
+                {blog.title}
+              </h3>
+              <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
+              <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
+              <span className="text-sm font-medium text-accent">Read article →</span>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );
