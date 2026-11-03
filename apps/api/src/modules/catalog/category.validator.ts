@@ -7,7 +7,9 @@ export const createCategorySchema = z.object({
   slug: z.string().trim().toLowerCase().optional(),
   parentId: optionalObjectIdSchema,
   description: z.string().max(2000).optional(),
-  imageUrl: z.string().url().optional(),
+  imageUrl: z.string().url().or(z.literal('')).optional(),
+  imagePublicId: z.string().nullable().optional(),
+  imageAlt: z.string().max(200).optional(),
   order: z.number().int().optional(),
   // (CAT-06) — see product-defaults.util.ts for how products inherit these.
   isExpirableDefault: z.boolean().optional(),

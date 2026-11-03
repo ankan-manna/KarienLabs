@@ -37,7 +37,7 @@ export default function BrandsPage() {
               {brand.logoUrl ? (
                 <img src={brand.logoUrl} alt={brand.name} className="h-12 w-12 object-contain" />
               ) : (
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-lg dark:bg-brand-500/10">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-deep-teal text-lg dark:bg-night-elevated">
                   🏷️
                 </div>
               )}

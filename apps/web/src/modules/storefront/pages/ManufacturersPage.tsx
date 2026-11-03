@@ -34,7 +34,7 @@ export default function ManufacturersPage() {
               to={`/products?manufacturerId=${manufacturer._id}`}
               className="flex flex-col items-center gap-2 rounded-lg border border-gray-100 bg-white p-4 text-center hover:border-brand-300 dark:border-night-border dark:bg-night-surface"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-lg dark:bg-brand-500/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-deep-teal text-lg dark:bg-night-elevated">
                 🏭
               </div>
               <span className="text-sm font-medium text-gray-700 dark:text-night-text">

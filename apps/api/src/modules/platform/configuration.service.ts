@@ -5,6 +5,7 @@ import { invalidateRateLimitConfigCache } from '../../middlewares/rate-limit-con
 import { ValidationError } from '../../utils/app-error';
 import { decryptSensitiveConfigFields, encryptSensitiveConfigFields } from '../../utils/field-encryption.util';
 import { recordAudit } from '../audit/audit.service';
+import { aboutContentSchema } from '../cms/about-content.validator';
 
 import { ConfigurationModel } from './models/configuration.model';
 
@@ -18,6 +19,7 @@ import { ConfigurationModel } from './models/configuration.model';
  */
 const NAMESPACE_SCHEMAS: Partial<Record<string, { safeParse: (v: unknown) => { success: boolean; error?: unknown } }>> = {
   s3: s3ConfigSchema,
+  about: aboutContentSchema,
 };
 
 /**

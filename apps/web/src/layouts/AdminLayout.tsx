@@ -42,6 +42,7 @@ export function AdminLayout() {
         title="KarienLabs Admin"
         mobileOpen={mobileNavOpen}
         onCloseMobile={() => setMobileNavOpen(false)}
+        logoHref="/admin"
         sections={[
           { items: DASHBOARD_MENU },
           { label: 'Catalog', items: PRODUCT_MENU },

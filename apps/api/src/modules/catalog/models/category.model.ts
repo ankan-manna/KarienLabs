@@ -9,6 +9,13 @@ const categorySchema = new Schema({
   parentId: { type: Schema.Types.ObjectId, ref: 'Category', default: null, index: true },
   description: { type: String, default: '' },
   imageUrl: { type: String, default: '' },
+  // The Cloudinary public_id for `imageUrl`, when it was uploaded through the
+  // admin's Cloudinary upload widget (vs. a hand-pasted/seeded external URL,
+  // which has no Cloudinary asset to manage). `null`, never empty string, so
+  // "no known Cloudinary asset" is unambiguous — same convention as
+  // Banner.imagePublicId (see cms/models/banner.model.ts).
+  imagePublicId: { type: String, default: null },
+  imageAlt: { type: String, default: '' },
   order: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   // (CAT-06) — category-level defaults a product inherits when its

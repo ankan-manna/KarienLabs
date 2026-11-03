@@ -209,6 +209,12 @@ export const TAX_MENU: MenuItem[] = [
 
 export const CMS_MENU: MenuItem[] = [
   {
+    key: 'cms-about',
+    label: 'About Us',
+    path: '/admin/cms/about',
+    requiredPermission: { resource: 'cms', action: 'read' },
+  },
+  {
     key: 'cms-banners',
     label: 'Banners',
     path: '/admin/cms/banners',

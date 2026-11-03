@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { listPublicBlogs } from '../../../api/public-cms.api';
 import { Card } from '../../../components/common/Card';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { Pagination } from '../../../components/common/Pagination';
 import { SkeletonRows } from '../../../components/common/Skeleton';
+import { Breadcrumb } from '../../../components/layout/Breadcrumb';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
 import { formatDate } from '../../../utils/format';
 
 export default function BlogListPage() {
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(() => Number(searchParams.get('page')) || 1);
   const limit = 9;
 
   const { data, isLoading } = useQuery({
@@ -21,12 +23,22 @@ export default function BlogListPage() {
 
   useDocumentMeta({
     title: 'Health & Wellness Blog',
-    description: 'Tips, guides, and news from the KarienLabs pharmacist team.',
+    description: 'Tips, guides, and news from the BRENTIS HEALTHCARE pharmacist team.',
   });
 
+  function goToPage(next: number) {
+    setPage(next);
+    const params = new URLSearchParams(searchParams);
+    if (next > 1) params.set('page', String(next));
+    else params.delete('page');
+    setSearchParams(params, { replace: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900 dark:text-night-text">
+    <div className="flex flex-col gap-6">
+      <Breadcrumb items={[{ label: 'Blog' }]} />
+      <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text sm:text-3xl">
         Health & Wellness Blog
       </h1>
       {isLoading ? (
@@ -38,21 +50,24 @@ export default function BlogListPage() {
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {data.items.map((blog) => (
               <Link key={blog._id} to={`/blog/${blog.slug}`}>
-                <Card className="flex h-full flex-col overflow-hidden">
-                  <div className="flex h-40 items-center justify-center bg-gray-50 dark:bg-night-elevated">
+                <Card className="group flex h-full flex-col overflow-hidden transition-shadow hover:shadow-storefront-hover">
+                  <div className="flex h-40 items-center justify-center overflow-hidden bg-gray-50 dark:bg-night-elevated">
                     {blog.coverImageUrl ? (
                       <img
                         src={blog.coverImageUrl}
                         alt={blog.title}
-                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
                       />
                     ) : (
                       <span className="text-xs text-gray-400">No image</span>
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1.5 p-4">
-                    <span className="text-xs text-gray-400">{formatDate(blog.publishedAt)}</span>
-                    <h2 className="line-clamp-2 text-sm font-semibold text-gray-900 dark:text-night-text">
+                    <span className="text-xs text-gray-400 dark:text-night-muted">
+                      {formatDate(blog.publishedAt)}
+                    </span>
+                    <h2 className="line-clamp-2 font-brentis-display text-sm font-semibold text-ink dark:text-night-text">
                       {blog.title}
                     </h2>
                     <p className="line-clamp-3 text-xs text-gray-500 dark:text-night-muted">
@@ -68,7 +83,7 @@ export default function BlogListPage() {
               page={page}
               limit={limit}
               total={data.meta.total}
-              onPageChange={setPage}
+              onPageChange={goToPage}
             />
           </div>
         </>

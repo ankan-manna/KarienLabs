@@ -8,6 +8,7 @@ import App from './App';
 import { queryClient } from './config/query-client';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { UnsavedChangesProvider } from './context/UnsavedChangesContext';
 
 import './styles/index.css';
 
@@ -43,8 +44,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ThemeProvider>
         <BrowserRouter>
           <AuthProvider>
-            <App />
-            <ThemedToaster />
+            <UnsavedChangesProvider>
+              <App />
+              <ThemedToaster />
+            </UnsavedChangesProvider>
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>

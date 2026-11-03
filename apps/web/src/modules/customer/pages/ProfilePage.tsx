@@ -21,6 +21,7 @@ import { Input } from '../../../components/common/Input';
 import { Switch } from '../../../components/common/Switch';
 import { Textarea } from '../../../components/common/Textarea';
 import { useAuth } from '../../../context/AuthContext';
+import { useUnsavedChangesGuard } from '../../../context/UnsavedChangesContext';
 import { toast } from '../../../utils/toast';
 
 const PREFERENCE_LABELS: { key: keyof NotificationPreferences; label: string }[] = [
@@ -48,6 +49,40 @@ function ChangePasswordCard() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  // The ONE real submit path — both the form's own submit button and the
+  // logo-click "Save Changes" dialog (see
+  // docs/BRENTIS_UNSAVED_NAVIGATION_SPEC.md) call this, never two separate
+  // save implementations. Throws on validation failure so the guard keeps
+  // the user on the form with every field intact, exactly like a normal
+  // failed submit already does.
+  async function submitPasswordChange() {
+    if (newPassword.length < 8) throw new Error('New password must be at least 8 characters');
+    if (newPassword !== confirmPassword) throw new Error('Passwords do not match');
+    await mutation.mutateAsync();
+  }
+
+  const isDirty = !!(currentPassword || newPassword || confirmPassword);
+  useUnsavedChangesGuard(
+    isDirty
+      ? {
+          isDirty: true,
+          onSave: async () => {
+            try {
+              await submitPasswordChange();
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : 'Could not change password');
+              throw err;
+            }
+          },
+          onDiscard: () => {
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+          },
+        }
+      : null,
+  );
+
   return (
     <Card className="max-w-lg p-5">
       <h2 className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -56,9 +91,7 @@ function ChangePasswordCard() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (newPassword.length < 8) return toast.error('New password must be at least 8 characters');
-          if (newPassword !== confirmPassword) return toast.error('Passwords do not match');
-          mutation.mutate();
+          submitPasswordChange().catch((err) => toast.error(err instanceof Error ? err.message : 'Could not change password'));
         }}
         className="flex flex-col gap-3"
       >

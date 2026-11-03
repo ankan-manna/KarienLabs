@@ -5,6 +5,7 @@ import { getPublicBlog } from '../../../api/public-cms.api';
 import { Badge } from '../../../components/common/Badge';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { Skeleton } from '../../../components/common/Skeleton';
+import { Breadcrumb } from '../../../components/layout/Breadcrumb';
 import { useDocumentMeta, useStructuredData } from '../../../hooks/useDocumentMeta';
 import { formatDate } from '../../../utils/format';
 import { sanitizeHtml } from '../../../utils/sanitizeHtml';
@@ -28,12 +29,12 @@ export default function BlogDetailPage() {
   useStructuredData(
     blog
       ? {
-          '@type': 'Article',
+          '@type': 'BlogPosting',
           headline: blog.title,
           description: blog.excerpt,
           image: blog.coverImageUrl ? [blog.coverImageUrl] : undefined,
           datePublished: blog.publishedAt,
-          author: { '@type': 'Person', name: typeof blog.authorId === 'object' ? blog.authorId.name : 'KarienLabs' },
+          author: { '@type': 'Person', name: typeof blog.authorId === 'object' ? blog.authorId.name : 'BRENTIS HEALTHCARE' },
         }
       : null,
   );
@@ -53,28 +54,37 @@ export default function BlogDetailPage() {
   }
 
   return (
-    <article className="mx-auto max-w-3xl">
-      {blog.coverImageUrl && (
-        <img src={blog.coverImageUrl} alt={blog.title} className="mb-6 w-full rounded-lg object-cover" />
-      )}
-      <h1 className="text-2xl font-semibold text-gray-900 dark:text-night-text">{blog.title}</h1>
-      <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
-        <span>{formatDate(blog.publishedAt)}</span>
-        {typeof blog.authorId === 'object' && <span>· {blog.authorId.name}</span>}
-      </div>
-      {blog.tags.length > 0 && (
-        <div className="mt-2 flex gap-2">
-          {blog.tags.map((tag) => (
-            <Badge key={tag} tone="gray">
-              {tag}
-            </Badge>
-          ))}
+    <div className="flex flex-col gap-6">
+      <Breadcrumb items={[{ label: 'Blog', to: '/blog' }, { label: blog.title }]} />
+      <article className="mx-auto w-full max-w-3xl">
+        {blog.coverImageUrl && (
+          <img
+            src={blog.coverImageUrl}
+            alt={blog.title}
+            className="mb-6 w-full rounded-xl object-cover shadow-storefront-md"
+          />
+        )}
+        <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text sm:text-3xl">
+          {blog.title}
+        </h1>
+        <div className="mt-2 flex items-center gap-2 text-xs text-gray-400 dark:text-night-muted">
+          <span>{formatDate(blog.publishedAt)}</span>
+          {typeof blog.authorId === 'object' && <span>· {blog.authorId.name}</span>}
         </div>
-      )}
-      <div
-        className="mt-6 text-sm leading-relaxed text-gray-700 [&_a]:text-brand-600 [&_a]:underline [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:text-lg [&_h2]:font-semibold [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3 dark:text-gray-300"
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content) }}
-      />
-    </article>
+        {blog.tags.length > 0 && (
+          <div className="mt-2 flex gap-2">
+            {blog.tags.map((tag) => (
+              <Badge key={tag} tone="gray">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
+        <div
+          className="mt-6 text-sm leading-relaxed text-gray-700 [&_a]:text-accent [&_a]:underline [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-brentis-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_h2]:dark:text-night-text [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3 dark:text-gray-300"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content) }}
+        />
+      </article>
+    </div>
   );
 }

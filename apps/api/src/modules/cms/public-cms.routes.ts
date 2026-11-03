@@ -7,6 +7,7 @@ import type { ListQuery } from '../../utils/pagination';
 import { listQuerySchema } from '../../utils/pagination';
 import { validate } from '../../utils/validate';
 import { resolveProductAvailability } from '../catalog/bundle.service';
+import { ProductModel } from '../catalog/models/product.model';
 import { getConfiguration } from '../platform/configuration.service';
 
 import { BannerModel } from './models/banner.model';
@@ -44,6 +45,8 @@ publicCmsRouter.get(
   }),
 );
 
+const CATEGORY_TAB_PRODUCT_LIMIT = 8;
+
 publicCmsRouter.get(
   '/home-sections',
   asyncHandler(async (_req, res) => {
@@ -53,21 +56,59 @@ publicCmsRouter.get(
       .populate('categoryIds', 'name slug')
       .lean();
 
+    // Best Sellers category tabs (Prompt 4 §7) — each tab's products are
+    // resolved live from the real catalog here, never stored on the
+    // HomeSection record itself (the record only holds the ordered
+    // categoryIds that define the tab list — see home-section.model.ts).
+    const categoryTabSections = sections.filter((s) => s.type === 'category_tabs');
+    const categoryTabProductsByCategory = new Map<string, unknown[]>();
+    for (const section of categoryTabSections) {
+      const catIds = (section.categoryIds as unknown as { _id: unknown }[]).map((c) => c._id);
+      for (const catId of catIds) {
+        const key = String(catId);
+        if (categoryTabProductsByCategory.has(key)) continue;
+        const products = await ProductModel.find({ categoryId: catId, isActive: true })
+          .select('name slug basePrice mrp images ratingAvg ratingCount')
+          .sort({ createdAt: -1 })
+          .limit(CATEGORY_TAB_PRODUCT_LIMIT)
+          .lean();
+        categoryTabProductsByCategory.set(key, products);
+      }
+    }
+
     // Combo-catalog fix (Part 11) — CMS-curated "featured products" must
     // report the SAME authoritative, bundle-aware `inStock` flag every other
     // storefront surface does (never fabricated as always-true here; an
-    // admin-featured product/combo genuinely can sell out).
+    // admin-featured product/combo genuinely can sell out). Extended here to
+    // also cover every category-tab product, resolved in the same batch.
     const productIds = sections.flatMap((s) =>
       (s.productIds as unknown as { _id: unknown }[]).map((p) => String(p._id)),
     );
-    const availabilityMap = await resolveProductAvailability(productIds);
-    const sectionsWithStock = sections.map((section) => ({
-      ...section,
-      productIds: (section.productIds as unknown as { _id: unknown }[]).map((p) => ({
-        ...p,
-        inStock: (availabilityMap.get(String(p._id)) ?? 0) > 0,
-      })),
-    }));
+    const categoryTabProductIds = Array.from(categoryTabProductsByCategory.values()).flatMap((list) =>
+      (list as { _id: unknown }[]).map((p) => String(p._id)),
+    );
+    const availabilityMap = await resolveProductAvailability([...productIds, ...categoryTabProductIds]);
+
+    const withStock = <T extends { _id: unknown }>(items: T[]) =>
+      items.map((p) => ({ ...p, inStock: (availabilityMap.get(String(p._id)) ?? 0) > 0 }));
+
+    const sectionsWithStock = sections.map((section) => {
+      const base = {
+        ...section,
+        productIds: withStock(section.productIds as unknown as { _id: unknown }[]),
+      };
+      if (section.type !== 'category_tabs') return base;
+
+      const categoryTabs = (section.categoryIds as unknown as { _id: unknown; name: string; slug: string }[]).map(
+        (cat) => ({
+          categoryId: String(cat._id),
+          name: cat.name,
+          slug: cat.slug,
+          products: withStock((categoryTabProductsByCategory.get(String(cat._id)) ?? []) as { _id: unknown }[]),
+        }),
+      );
+      return { ...base, categoryTabs };
+    });
 
     return sendSuccess(res, sectionsWithStock);
   }),
@@ -149,6 +190,21 @@ publicCmsRouter.get(
   '/site-settings',
   asyncHandler(async (_req, res) => {
     const value = await getConfiguration('cms');
+    return sendSuccess(res, value);
+  }),
+);
+
+/**
+ * Homepage "About Us" teaser content (heading/description/main image/value
+ * blocks + the "Why BRENTIS" highlights block) — stored in the Configuration
+ * Engine under the 'about' namespace (see about-content.service.ts).
+ * Anonymous-readable so the storefront homepage can render it without a
+ * session, same convention as /site-settings above.
+ */
+publicCmsRouter.get(
+  '/about',
+  asyncHandler(async (_req, res) => {
+    const value = await getConfiguration('about');
     return sendSuccess(res, value);
   }),
 );

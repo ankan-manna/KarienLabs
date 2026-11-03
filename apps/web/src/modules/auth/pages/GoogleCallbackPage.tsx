@@ -18,7 +18,7 @@ export default function GoogleCallbackPage() {
   const { isAuthenticated, isLoading, user } = useAuth();
 
   useEffect(() => {
-    document.title = 'Signing in… — KarienLabs';
+    document.title = 'Signing in… — BRENTIS HEALTHCARE';
   }, []);
 
   if (isLoading) {

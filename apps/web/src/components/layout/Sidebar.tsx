@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import type { MenuItem } from '../../constants/menu';
+import { useUnsavedChangesContext } from '../../context/UnsavedChangesContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { useVisibleMenu } from '../../hooks/useVisibleMenu';
 import { cn } from '../../utils/cn';
@@ -42,6 +43,8 @@ interface SidebarProps {
  */
 export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, logoHref }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const sidebarNavigate = useNavigate();
+  const { guardRef, requestNavigation } = useUnsavedChangesContext();
   // Clicking a category while the sidebar is in icon-only collapsed mode
   // expands the whole sidebar first — there's no room to render a readable
   // inline accordion inside a 4rem-wide rail, and the old fix for that was
@@ -104,7 +107,18 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
                 </span>
               );
             return logoHref ? (
-              <Link to={logoHref} aria-label="KarienLabs Home" onClick={onCloseMobile}>
+              <Link
+                to={logoHref}
+                aria-label="KarienLabs Home"
+                onClick={(e) => {
+                  if (guardRef.current?.isDirty) {
+                    e.preventDefault();
+                    requestNavigation(() => sidebarNavigate(logoHref));
+                    return;
+                  }
+                  onCloseMobile?.();
+                }}
+              >
                 {logo}
               </Link>
             ) : (

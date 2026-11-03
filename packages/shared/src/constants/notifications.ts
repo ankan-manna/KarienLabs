@@ -81,6 +81,10 @@ export const CONFIGURATION_NAMESPACES = {
   // Product Image Management — Super-Admin-configurable max sub/additional
   // images per product (Part 4). See modules/catalog/catalog-config.service.ts.
   CATALOG: 'catalog',
+  // Homepage/storefront "About Us" teaser content (heading, description,
+  // main image, value/highlight blocks) — admin-editable via the CMS
+  // Website Design menu. See modules/cms/about-content.service.ts.
+  ABOUT: 'about',
 } as const;
 
 export type ConfigurationNamespace =

@@ -8,7 +8,7 @@ interface DocumentMetaOptions {
   type?: 'website' | 'article' | 'product';
 }
 
-const SITE_NAME = 'KarienLabs';
+const SITE_NAME = 'BRENTIS HEALTHCARE';
 
 function setMetaTag(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);

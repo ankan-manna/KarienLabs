@@ -1,5 +1,6 @@
 import { categoryApi, type Category } from '../../../../api/catalog.api';
 import { ConfigEntityPage, type ConfigField } from '../../../../components/table/ConfigEntityPage';
+import { CategoryImageFields } from '../components/CategoryImageFields';
 import { CategorySeoFaqFields } from '../components/CategorySeoFaqFields';
 import { categoryHooks } from '../hooks/useCategories';
 
@@ -40,8 +41,16 @@ export default function CategoriesPage() {
       hooks={categoryHooks}
       fields={fields}
       api={categoryApi}
-      renderExtraFields={() => <CategorySeoFaqFields />}
+      renderExtraFields={() => (
+        <>
+          <CategoryImageFields />
+          <CategorySeoFaqFields />
+        </>
+      )}
       extraDefaultValues={(category) => ({
+        imageUrl: category?.imageUrl ?? '',
+        imagePublicId: category?.imagePublicId ?? null,
+        imageAlt: category?.imageAlt ?? '',
         seo: {
           metaTitle: category?.seo?.metaTitle ?? '',
           metaDescription: category?.seo?.metaDescription ?? '',

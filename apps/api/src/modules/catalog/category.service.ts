@@ -6,6 +6,7 @@ import { slugify } from '../../utils/slugify';
 import { recordAudit } from '../audit/audit.service';
 import { actorTypeForRole } from '../auth/actor-context.util';
 
+import { handleCategoryImageDeleted, handleCategoryImageReplaced } from './category-image.service';
 import { categoryRepository } from './category.repository';
 
 interface CreateCategoryInput {
@@ -14,6 +15,8 @@ interface CreateCategoryInput {
   parentId?: string | null;
   description?: string;
   imageUrl?: string;
+  imagePublicId?: string | null;
+  imageAlt?: string;
   order?: number;
   isExpirableDefault?: boolean;
   requiresPrescriptionDefault?: boolean;
@@ -43,6 +46,16 @@ export async function updateCategory(
   const updated = await categoryRepository.updateById(id, patch);
   if (!updated) throw new NotFoundError('Category');
 
+  // Safe Cloudinary lifecycle (Prompt 3 §4.C) — destroy the old image only
+  // after the DB write that stopped referencing it has committed, and only
+  // if no other live category still points at it (see category-image.service.ts).
+  if (before && 'imagePublicId' in input) {
+    await handleCategoryImageReplaced(
+      before as { imagePublicId?: string | null },
+      updated as { imagePublicId?: string | null },
+    );
+  }
+
   // Part 18/40/41 — same distinct SEO-change audit signal as
   // product.service.ts::updateProduct; categories previously had NO audit
   // trail at all on update, so this is the first one, scoped to just the
@@ -67,8 +80,12 @@ export async function deleteCategory(id: string, actorId: string) {
   if (children.length > 0) {
     throw new ConflictError('Cannot delete a category that still has subcategories');
   }
+  const before = await categoryRepository.findById(id);
   const deleted = await categoryRepository.softDeleteById(id, actorId);
   if (!deleted) throw new NotFoundError('Category');
+  if (before) {
+    await handleCategoryImageDeleted(before as { imagePublicId?: string | null; _id: unknown });
+  }
 }
 
 /** Part 15/21 — public detail lookup, resolves by `_id` (existing links) or `slug` (SEO-friendly links) via `findByIdOrSlug`. This is only used by the public `GET /:id` route (confirmed: no admin code path calls it). */

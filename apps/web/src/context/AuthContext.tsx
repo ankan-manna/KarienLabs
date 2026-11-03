@@ -1,4 +1,5 @@
 import type { AuthUser } from '@medcommerce/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   createContext,
   useCallback,
@@ -46,6 +47,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [permissions, setPermissions] = useState<Set<string>>(new Set());
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
+
+  /** The backend merges a guest cart into the account's cart on successful
+   * login/register (see `apps/api/src/modules/auth/auth.controller.ts`).
+   * The `['cart']` query key (matches `useCart.ts`'s `CART_KEY`) is cached
+   * from the pre-login guest fetch, so it must be invalidated here or the
+   * UI would keep showing the stale guest-cart snapshot after the merge. */
+  const invalidateCart = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['cart'] });
+  }, [queryClient]);
 
   const loadMe = useCallback(async () => {
     const me = await meRequest();
@@ -83,10 +94,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!payload.otpRequired) {
         setAccessToken(payload.accessToken);
         await loadMe();
+        invalidateCart();
       }
       return payload;
     },
-    [loadMe],
+    [loadMe, invalidateCart],
   );
 
   const completeOtpLogin = useCallback(
@@ -94,8 +106,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const payload = await verifyLoginOtpRequest(challengeToken, code);
       setAccessToken(payload.accessToken);
       await loadMe();
+      invalidateCart();
     },
-    [loadMe],
+    [loadMe, invalidateCart],
   );
 
   const register = useCallback(
@@ -107,10 +120,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!payload.otpRequired) {
         setAccessToken(payload.accessToken);
         await loadMe();
+        invalidateCart();
       }
       return payload;
     },
-    [loadMe],
+    [loadMe, invalidateCart],
   );
 
   const completeOtpRegistration = useCallback(
@@ -118,15 +132,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const payload = await verifyRegisterOtpRequest(challengeToken, code);
       setAccessToken(payload.accessToken);
       await loadMe();
+      invalidateCart();
     },
-    [loadMe],
+    [loadMe, invalidateCart],
   );
 
   const logout = useCallback(async () => {
     await logoutRequest();
     setAccessToken(null);
     clearSession();
-  }, [clearSession]);
+    invalidateCart();
+  }, [clearSession, invalidateCart]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
