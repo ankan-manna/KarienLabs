@@ -268,13 +268,13 @@ function CategorySection() {
       */}
       <div
         ref={scrollerRef}
-        className="grid grid-cols-2 gap-3 sm:themed-scrollbar sm:-mx-4 sm:flex sm:snap-x sm:snap-mandatory sm:gap-4 sm:overflow-x-auto sm:px-4 sm:pb-2"
+        className="grid grid-cols-2 gap-3.5 sm:themed-scrollbar sm:-mx-4 sm:flex sm:snap-x sm:snap-mandatory sm:gap-3.5 sm:overflow-x-auto sm:px-4 sm:pb-2"
       >
         {(categories as CategoryNode[]).map((cat) => (
           <Link
             key={cat._id}
             to={`/products?categoryId=${cat._id}`}
-            className="group relative aspect-[283/395] overflow-hidden rounded-2xl shadow-storefront-sm transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
+            className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
           >
             {cat.imageUrl ? (
               <img
@@ -288,8 +288,14 @@ function CategorySection() {
                 <CategoryPlaceholderTile />
               </div>
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/5 to-transparent" />
-            <span className="absolute bottom-3 left-1/2 w-[85%] -translate-x-1/2 rounded-xl bg-white px-2.5 py-1.5 text-center text-xs font-semibold leading-snug text-ink shadow-sm">
+            {/*
+              Generous, content-width white pill (not a percentage-stretched
+              bar) — matches the reference's measured treatment exactly:
+              border-radius 33px, 12px/30px padding, 16px/500 label,
+              bottom:20px, horizontally centered via left-50%/translateX.
+              docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories.
+            */}
+            <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
               {cat.name}
             </span>
           </Link>
@@ -458,31 +464,69 @@ function BestSellersSection() {
 // here would not be reliably calculated from real data (per the design-reset
 // doc's own rule — show it only if reliably calculable), not a fabricated
 // round number.
+// Same horizontal-scroll-with-arrow-controls pattern as CategorySection —
+// matches the reference's own blog carousel (confirmed live: a real Swiper
+// carousel over many post cards, not a static grid) rather than a flat,
+// never-moving 3-card grid.
 function KnowledgeSection() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const { data } = useQuery({
     queryKey: ['public-blogs', 'home', 'knowledge'],
-    queryFn: () => listPublicBlogs({ limit: 3 }),
+    queryFn: () => listPublicBlogs({ limit: 6 }),
   });
   if (!data || data.items.length === 0) return null;
 
+  function scrollByCards(direction: 1 | -1) {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: 'smooth' });
+  }
+
   return (
     <section>
-      <div className="mb-8 flex flex-col gap-2 text-center">
-        <span className="text-xs font-semibold uppercase tracking-wide text-accent">Healthcare Knowledge</span>
-        <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-          Knowledge Is Part of Good Care.
-        </h2>
+      <div className="mb-6 flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Healthcare Knowledge</span>
+          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+            Knowledge Is Part of Good Care.
+          </h2>
+        </div>
+        <div className="hidden flex-shrink-0 gap-2 sm:flex">
+          <button
+            type="button"
+            aria-label="Scroll articles left"
+            onClick={() => scrollByCards(-1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll articles right"
+            onClick={() => scrollByCards(1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
+          >
+            ›
+          </button>
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <div
+        ref={scrollerRef}
+        className="themed-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2"
+      >
         {data.items.map((blog) => (
-          <Link key={blog._id} to={`/blog/${blog.slug}`} className="group flex flex-col gap-3">
-            <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-gray-50 dark:bg-night-elevated">
+          <Link
+            key={blog._id}
+            to={`/blog/${blog.slug}`}
+            className="group flex w-[82%] flex-shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]"
+          >
+            <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
               {blog.coverImageUrl && (
                 <img
                   src={blog.coverImageUrl}
                   alt={blog.title}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               )}
             </div>
