@@ -52,7 +52,7 @@ See analysis doc §5 for the full list and reasoning. Summary:
 - `apps/web/tailwind.config.js` / `index.css` — the `brand-*` (admin) token namespace specifically; the KARIEN storefront namespace may be extended additively
 
 ### Pending tasks (for Prompt 2+)
-- [ ] Resolve logo tagline discrepancy with user: "Minds That Care" (logo) vs. "Mind That Cares" (brief) — see analysis doc §11.
+- [ ] Resolve logo tagline discrepancy with user: "Minds That Care" (logo) vs. "Minds That Care" (brief) — see analysis doc §11.
 - [ ] Produce/request a transparent, header-ready BRENTIS logo lockup (current `newLogo.jpeg` is a square hero-style mark, not header-sized).
 - [ ] Add typography + spacing/radius design tokens (currently only `colors` is extended in `tailwind.config.js`).
 - [ ] Decide approach for shared-primitive theme leakage (`Card.tsx`, `Badge.tsx`): new storefront variants vs. new storefront-scoped wrapper components.
@@ -93,7 +93,7 @@ The backend SEO-audit background agent had not yet returned when the user sent P
 Category pages: either (a) build a new `/categories/:slug` route to make the existing sitemap entries/schema real, or (b) stop emitting them in the sitemap and keep category browsing as `/products?categoryId=`. See SEO/GEO/AEO doc §3 and Roadmap item 3.5.
 
 ### Pending tasks carried into Prompt 3
-- [ ] Logo tagline discrepancy still unresolved by the user ("Minds That Care" vs "Mind That Cares") — carried forward from Prompt 1.
+- [ ] Logo tagline discrepancy still unresolved by the user ("Minds That Care" vs "Minds That Care") — carried forward from Prompt 1.
 - [ ] Category-page routing decision (above) — carried into Prompt 3 implementation as an open item.
 - [ ] All Prompt 1 pending items not yet superseded by Prompt 2's design system (shared-primitive strategy, ThemeToggle fix approach) — now specified in the Design System doc and Roadmap, ready for implementation.
 

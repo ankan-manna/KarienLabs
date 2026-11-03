@@ -191,7 +191,7 @@ All layouts/pages draw from:
 
 ## 10. Brand and Color System
 
-**Brand:** BRENTIS HEALTHCARE — "Mind That Cares" (see §11 for a logo-text discrepancy to flag).
+**Brand:** BRENTIS HEALTHCARE — "Minds That Care" (see §11 for a logo-text discrepancy to flag).
 
 Confirmed already implemented in `apps/web/src/styles/index.css`, matching the user's spec exactly:
 
@@ -214,7 +214,7 @@ These are implemented as CSS custom properties (`--color-primary`, `--color-seco
 File: `/Users/ankan/Desktop/medweb/newLogo.jpeg` (95KB JPEG).
 
 - **Visual:** an organic "squircle"/blob shape in an orange gradient (reading close to the brand's `#FF8000`→`#FF4B33` primary/secondary pair) on a light warm-gray background, with white wordmark "BRENTIS HEALTHCARE" (a small heart glyph dots the "i" in "BRENTIS") and a subcopy line "MINDS THAT CARE" beneath a thin divider rule, plus a small white sparkle/star accent in the lower right.
-- **Discrepancy to flag:** the logo reads **"MINDS THAT CARE"** (plural) while the brief's stated tagline is **"Mind That Cares"** (singular, possessive). This should be confirmed with the user before the tagline is used anywhere in UI copy — they may want the logo corrected, the tagline copy corrected, or they may intentionally differ (logo mark vs. marketing tagline).
+- **Discrepancy to flag:** the logo reads **"MINDS THAT CARE"** (plural) while the brief's stated tagline is **"Minds That Care"** (singular, possessive). This should be confirmed with the user before the tagline is used anywhere in UI copy — they may want the logo corrected, the tagline copy corrected, or they may intentionally differ (logo mark vs. marketing tagline).
 - **Background:** the logo file itself has a flat light-gray background, not a true transparent PNG — it is **not head-ready for arbitrary surfaces** (e.g. a dark-mode header bar, or a colored CTA band) as-is.
 - **Aspect ratio:** roughly square/landscape-leaning (approx. 1080×975 based on visual proportions), which suits a hero/about-page brand mark but is not ideal for a header-height lockup.
 - **Suitability assessment:**
@@ -283,7 +283,7 @@ This direction should be validated visually with the user (e.g. via a mockup or 
 
 1. **Shared-codebase risk (highest priority):** because admin and storefront share one SPA, one router, one theme file, and one component library, any edit to a file in the "protected" list (§5) risks an unintended admin-visual regression. Every Prompt 2+ change should be diffed against that list before being applied.
 2. **`modules/auth/**` dual-use:** the login/OAuth flow serves both customer and admin sign-in. A storefront visual redesign of the login page needs explicit verification that it doesn't break or confusingly re-brand the admin login experience.
-3. **Logo tagline discrepancy** (§11): "Minds That Care" (logo) vs. "Mind That Cares" (brief) needs a decision before the tagline is used in page copy, meta tags, or the footer.
+3. **Logo tagline discrepancy** (§11): "Minds That Care" (logo) vs. "Minds That Care" (brief) needs a decision before the tagline is used in page copy, meta tags, or the footer.
 4. **Logo file not production-ready:** the provided `newLogo.jpeg` is a square, flat-background hero mark, not a header-ready lockup — a derived asset is needed before implementation.
 5. **REA tool not installed (see below)** — if repository/website reverse-engineering beyond what Explore/Browser/WebFetch already provided turns out to be necessary in a later prompt, this will need to be revisited explicitly with the user.
 6. **No SEO-friendly category routing** — out of scope for a pure UI redesign, but worth a one-line flag to the user in case they want it bundled in.

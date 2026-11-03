@@ -132,7 +132,7 @@ function AboutSection() {
   const blocks: AboutContentBlock[] = about.blocks ?? [];
 
   return (
-    <section className="rounded-3xl bg-deep-teal px-5 py-10 dark:bg-night-elevated sm:px-8 sm:py-12 lg:px-12">
+    <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
     <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[minmax(0,45%)_1fr] lg:gap-16">
       {/* Mobile/tablet: heading+copy read before the image (matches the
           reference's own editorial order — heading, then photo, then the
@@ -314,10 +314,20 @@ function CategorySection() {
 function ProductGridRow({ items }: { items: PublicProduct[] }) {
   return (
     <>
-      {/* Desktop/tablet: one fixed row, never wraps into a second row. Mobile: horizontal scroll-snap carousel — matches the reference's mobile category-driven carousel, not a vertical stack of every category. */}
-      <div className="hidden gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+      {/*
+        Desktop/tablet: a flex row sized to the actual item count — NOT a
+        4-column grid. A fixed `grid-cols-4` reserves 4 equal-width tracks
+        regardless of how many products exist, so a sparsely-stocked
+        category (this catalog currently has as few as 1-2 products in some
+        categories) rendered 2 cards on the left and a large dead white gap
+        on the right. Each card now has a fixed basis width and the row
+        simply stops where the real data stops — never a phantom gap.
+      */}
+      <div className="hidden gap-5 sm:flex sm:flex-wrap">
         {items.map((product) => (
-          <ProductCard key={product._id} product={product} imageFit="contain" />
+          <div key={product._id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
+            <ProductCard product={product} imageFit="contain" />
+          </div>
         ))}
       </div>
       <div className="themed-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:hidden">
@@ -358,7 +368,7 @@ function BestSellersSection() {
     if (!current || current.products.length === 0) return null;
 
     return (
-      <section className="rounded-3xl bg-deep-teal px-5 py-10 dark:bg-night-elevated sm:px-8 sm:py-12">
+      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
         <div className="mb-5 flex flex-col gap-2">
           <span className="text-xs font-semibold uppercase tracking-wide text-accent">Best Sellers</span>
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -403,7 +413,7 @@ function BestSellersSection() {
     const items = gridSection.productIds as unknown as PublicProduct[];
     if (items.length === 0) return null;
     return (
-      <section className="rounded-3xl bg-deep-teal px-5 py-10 dark:bg-night-elevated sm:px-8 sm:py-12">
+      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div className="flex flex-col gap-2">
             <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
@@ -424,7 +434,7 @@ function BestSellersSection() {
   if (fallbackLoading) return <SkeletonRows rows={1} columns={4} />;
   if (!fallbackData || fallbackData.items.length === 0) return null;
   return (
-    <section className="rounded-3xl bg-deep-teal px-5 py-10 dark:bg-night-elevated sm:px-8 sm:py-12">
+    <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
@@ -507,7 +517,7 @@ function WhyBrentisSection() {
   if (!about.highlightsHeading && highlights.length === 0) return null;
 
   return (
-    <section className="rounded-3xl bg-deep-teal px-5 py-10 dark:bg-night-elevated sm:px-8 sm:py-12 lg:px-12">
+    <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
     <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">

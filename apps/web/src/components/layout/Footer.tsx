@@ -114,7 +114,7 @@ export function Footer() {
 
   const companyDescription =
     settings?.footer?.companyDescription?.trim() ||
-    'Mind That Cares — genuine medicines, delivered fast from verified pharmacies.';
+    'Minds That Care — genuine medicines, delivered fast from verified pharmacies.';
 
   const socialLinks = settings?.footer?.socialLinks;
   const resolvedSocialLinks = SOCIAL_LINKS.map((s) => ({

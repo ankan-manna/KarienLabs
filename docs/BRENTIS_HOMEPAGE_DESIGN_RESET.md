@@ -53,7 +53,7 @@ Re-confirmed live (homepage, full scroll). Brintoncare's homepage section order:
 
 Based on what's actually true about this business (confirmed catalog/content, nothing invented):
 - **Category:** India OTC + prescription pharmacy — Pain Relief & Fever, Vitamins & Supplements, Diabetes Care, Digestive Health, Allergy & Cold, Personal Care, Wellness & Heart Health, Baby & Mother Care (real seeded categories, confirmed in Prompt 2's catalog audit).
-- **Tagline:** "Mind That Cares" — positions the brand around attentiveness/care, not just transaction speed.
+- **Tagline:** "Minds That Care" — positions the brand around attentiveness/care, not just transaction speed.
 - **What can be truthfully said today:** genuine medicines, verified-pharmacy sourcing, secure Razorpay checkout, GST-compliant invoicing, prescription-aware product handling (Rx badges, prescription-required filtering already exist in the product data model).
 - **What cannot be claimed** (no supporting data exists): dermatologist/doctor endorsements, clinical studies, awards, certifications, "trusted by thousands" as a literal headline claim (that exact phrase is itself baked into the problematic seed banner — it should not be reused as real marketing copy since it was never verified as a true figure), international presence, years in business.
 - **Positioning statement for the new hero/about copy (to draft real content against in Prompt 6):** *a healthcare brand built around careful, attentive service — genuine products, straightforward information, and a buying experience that treats a health purchase with the seriousness it deserves* — phrased without any unverifiable superlative.

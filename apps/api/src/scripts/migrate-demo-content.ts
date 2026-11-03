@@ -121,7 +121,7 @@ const ABOUT_CONTENT_SEED: AboutContentInput = {
   tagline: 'About BRENTIS HEALTHCARE',
   heading: 'Care Beyond Products.',
   description:
-    'BRENTIS HEALTHCARE exists to make everyday healthcare simpler and more dependable — that’s what “Mind That Cares” means to us.',
+    'BRENTIS HEALTHCARE exists to make everyday healthcare simpler and more dependable — that’s what “Minds That Care” means to us.',
   mainImageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=1400&q=80',
   mainImagePublicId: null,
   mainImageAlt: 'Vitamins and everyday wellness essentials arranged together',
@@ -452,6 +452,150 @@ const PRODUCTS: ProductSeed[] = [
     imagePublicId: 'external/unsplash-capsules-orange',
     batch: { quantity: 150, unitCost: 287, expiryDate: '2028-01-01' },
   },
+  {
+    name: 'Coenzyme Q10 60mg Capsules',
+    slug: 'coenzyme-q10-60mg-capsules',
+    sku: 'COQ10-60-CAP',
+    description:
+      'Coenzyme Q10 60mg Capsules (Ubiquinone) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Coenzyme Q10 60mg Capsules for trusted, everyday wellness & heart health.',
+    categorySlug: 'wellness-heart-health',
+    brandSlug: 'vitawell',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Ubiquinone', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 450,
+    mrp: 550,
+    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=800&q=80',
+    imagePublicId: 'external/unsplash-vitamins-arranged',
+    batch: { quantity: 150, unitCost: 315, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Daily Fiber Heart Health Powder',
+    slug: 'daily-fiber-heart-health-powder',
+    sku: 'FIBR-HRT-200',
+    description:
+      'Daily Fiber Heart Health Powder (Psyllium Husk) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Daily Fiber Heart Health Powder for trusted, everyday wellness & heart health.',
+    categorySlug: 'wellness-heart-health',
+    brandSlug: 'vitawell',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Psyllium Husk', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 265,
+    mrp: 320,
+    imageUrl: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80',
+    imagePublicId: 'external/unsplash-fitness-class',
+    batch: { quantity: 150, unitCost: 185.5, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Daily Moisturizing Body Lotion 300ml',
+    slug: 'daily-moisturizing-body-lotion-300ml',
+    sku: 'BLTN-MST-300',
+    description:
+      'Daily Moisturizing Body Lotion 300ml (Body Lotion) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Daily Moisturizing Body Lotion 300ml for trusted, everyday personal care.',
+    categorySlug: 'personal-care',
+    brandSlug: 'vitawell',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Body Lotion', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 175,
+    mrp: 215,
+    imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=80',
+    imagePublicId: 'external/unsplash-personal-care',
+    batch: { quantity: 150, unitCost: 122.5, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Antiseptic Liquid 500ml',
+    slug: 'antiseptic-liquid-500ml',
+    sku: 'ANTS-LIQ-500',
+    description:
+      'Antiseptic Liquid 500ml (Chloroxylenol) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Antiseptic Liquid 500ml for trusted, everyday personal care.',
+    categorySlug: 'personal-care',
+    brandSlug: 'medcare-pharma',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Chloroxylenol', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 95,
+    mrp: 120,
+    imageUrl: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80',
+    imagePublicId: 'external/unsplash-capsules-orange',
+    batch: { quantity: 150, unitCost: 66.5, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Aspirin 75mg Tablets',
+    slug: 'aspirin-75mg-tablets',
+    sku: 'ASPR-75-TAB',
+    description:
+      'Aspirin 75mg Tablets (Acetylsalicylic Acid) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Aspirin 75mg Tablets for trusted, everyday pain relief & fever.',
+    categorySlug: 'pain-relief-fever',
+    brandSlug: 'medcare-pharma',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Acetylsalicylic Acid', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 32,
+    mrp: 40,
+    imageUrl: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=800&q=80',
+    imagePublicId: 'external/unsplash-blister-pack',
+    batch: { quantity: 150, unitCost: 22.4, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Diclofenac Gel 30g',
+    slug: 'diclofenac-gel-30g',
+    sku: 'DICL-GEL-30',
+    description:
+      'Diclofenac Gel 30g (Diclofenac Diethylamine) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Diclofenac Gel 30g for trusted, everyday pain relief & fever.',
+    categorySlug: 'pain-relief-fever',
+    brandSlug: 'medcare-pharma',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Diclofenac Diethylamine', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 115,
+    mrp: 140,
+    imageUrl: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=80',
+    imagePublicId: 'external/unsplash-capsules-orange',
+    batch: { quantity: 150, unitCost: 80.5, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Zinc 50mg Tablets',
+    slug: 'zinc-50mg-tablets',
+    sku: 'ZINC-50-TAB',
+    description:
+      'Zinc 50mg Tablets (Zinc Sulphate) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Zinc 50mg Tablets for trusted, everyday vitamins & supplements.',
+    categorySlug: 'vitamins-supplements',
+    brandSlug: 'vitawell',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Zinc Sulphate', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 165,
+    mrp: 199,
+    imageUrl: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=800&q=80',
+    imagePublicId: 'external/unsplash-blister-pack',
+    batch: { quantity: 150, unitCost: 115.5, expiryDate: '2028-01-01' },
+  },
+  {
+    name: 'Vitamin D3 2000IU Capsules',
+    slug: 'vitamin-d3-2000iu-capsules',
+    sku: 'VITD3-2K-CAP',
+    description:
+      'Vitamin D3 2000IU Capsules (Cholecalciferol) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+    shortDescription: 'Vitamin D3 2000IU Capsules for trusted, everyday vitamins & supplements.',
+    categorySlug: 'vitamins-supplements',
+    brandSlug: 'vitawell',
+    manufacturerSlug: 'karienlabs-formulations-pvt-ltd',
+    medicine: { genericName: 'Cholecalciferol', schedule: 'none' },
+    gstRate: 12,
+    basePrice: 310,
+    mrp: 375,
+    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=800&q=80',
+    imagePublicId: 'external/unsplash-vitamins-arranged',
+    batch: { quantity: 150, unitCost: 217, expiryDate: '2028-01-01' },
+  },
 ];
 
 const BLOGS = [
@@ -521,76 +665,76 @@ const BANNERS: Array<{
   placement: 'hero' | 'category' | 'checkout';
   order: number;
 }> = [
-  {
-    title: 'Your Health, Delivered with Care',
-    subtitle: 'Order from verified pharmacies with fast, reliable delivery and secure payments.',
-    badge: 'Trusted by thousands',
-    // Dynamic CMS (Prompt 3) — the original Cloudinary asset here was the
-    // same class of generated-placeholder graphic (headline/CTA baked into
-    // the image pixels) previously root-caused and fixed for product/blog
-    // cover images; once the homepage started reading REAL seeded Banner
-    // documents (instead of the 3 hand-picked clean HERO_SLIDES this
-    // replaces), the baked-in text collided with HeroCarousel's own live
-    // text overlay — the exact bug class described in this file's own
-    // BLOGS comment. Swapped for real, individually verified, text-free
-    // stock photography, same standard used everywhere else in this file.
-    imageUrl: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1600&q=80',
-    imagePublicId: null,
-    linkPath: '/products',
-    linkCategorySlug: null,
-    ctaText: 'Shop Now',
-    placement: 'hero',
-    order: 1,
-  },
-  {
-    title: 'Vitamins & Supplements for Every Day',
-    subtitle: 'Curated wellness essentials to support your daily routine.',
-    badge: 'Wellness made simple',
-    imageUrl: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80',
-    imagePublicId: null,
-    linkPath: '/products',
-    linkCategorySlug: 'vitamins-supplements',
-    ctaText: 'Explore Wellness',
-    placement: 'hero',
-    order: 1,
-  },
-  {
-    title: 'Flat 20% Off Diabetes Care Essentials',
-    subtitle: 'Save on trusted diabetes management products.',
-    badge: 'Limited Time',
-    imageUrl: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=900&q=80',
-    imagePublicId: null,
-    linkPath: '/products',
-    linkCategorySlug: 'diabetes-care',
-    ctaText: 'Shop Diabetes Care',
-    placement: 'category',
-    order: 1,
-  },
-  {
-    title: '15% Off Your First Order',
-    subtitle: 'New to BRENTIS HEALTHCARE? Start with savings on your first purchase.',
-    badge: 'New Customer Offer',
-    imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=900&q=80',
-    imagePublicId: null,
-    linkPath: '/products',
-    linkCategorySlug: null,
-    ctaText: 'Get Started',
-    placement: 'category',
-    order: 1,
-  },
-  {
-    title: 'Allergy & Cold Relief Bundle Deals',
-    subtitle: 'Stay ready for the season with allergy and cold essentials.',
-    badge: 'Seasonal Care',
-    imageUrl: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=900&q=80',
-    imagePublicId: null,
-    linkPath: '/products',
-    linkCategorySlug: 'allergy-cold',
-    ctaText: 'View Offers',
-    placement: 'category',
-    order: 1,
-  },
-];
+    {
+      title: 'Your Health, Delivered with Care',
+      subtitle: 'Order from verified pharmacies with fast, reliable delivery and secure payments.',
+      badge: 'Trusted by thousands',
+      // Dynamic CMS (Prompt 3) — the original Cloudinary asset here was the
+      // same class of generated-placeholder graphic (headline/CTA baked into
+      // the image pixels) previously root-caused and fixed for product/blog
+      // cover images; once the homepage started reading REAL seeded Banner
+      // documents (instead of the 3 hand-picked clean HERO_SLIDES this
+      // replaces), the baked-in text collided with HeroCarousel's own live
+      // text overlay — the exact bug class described in this file's own
+      // BLOGS comment. Swapped for real, individually verified, text-free
+      // stock photography, same standard used everywhere else in this file.
+      imageUrl: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1600&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: null,
+      ctaText: 'Shop Now',
+      placement: 'hero',
+      order: 1,
+    },
+    {
+      title: 'Vitamins & Supplements for Every Day',
+      subtitle: 'Curated wellness essentials to support your daily routine.',
+      badge: 'Wellness made simple',
+      imageUrl: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: 'vitamins-supplements',
+      ctaText: 'Explore Wellness',
+      placement: 'hero',
+      order: 1,
+    },
+    {
+      title: 'Flat 20% Off Diabetes Care Essentials',
+      subtitle: 'Save on trusted diabetes management products.',
+      badge: 'Limited Time',
+      imageUrl: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=900&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: 'diabetes-care',
+      ctaText: 'Shop Diabetes Care',
+      placement: 'category',
+      order: 1,
+    },
+    {
+      title: '15% Off Your First Order',
+      subtitle: 'New to BRENTIS HEALTHCARE? Start with savings on your first purchase.',
+      badge: 'New Customer Offer',
+      imageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=900&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: null,
+      ctaText: 'Get Started',
+      placement: 'category',
+      order: 1,
+    },
+    {
+      title: 'Allergy & Cold Relief Bundle Deals',
+      subtitle: 'Stay ready for the season with allergy and cold essentials.',
+      badge: 'Seasonal Care',
+      imageUrl: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=900&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: 'allergy-cold',
+      ctaText: 'View Offers',
+      placement: 'category',
+      order: 1,
+    },
+  ];
 
 interface Counts {
   created: number;
@@ -616,7 +760,7 @@ async function migrate(): Promise<void> {
   if (!admin) {
     throw new Error(
       'No super_admin/admin user found in the target database — refusing to guess an author/creator. ' +
-        'Run seed:super-admin first, or create an admin account, then re-run this script.',
+      'Run seed:super-admin first, or create an admin account, then re-run this script.',
     );
   }
   const adminId = admin._id;

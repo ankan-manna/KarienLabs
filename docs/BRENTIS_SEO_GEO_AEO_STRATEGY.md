@@ -191,7 +191,7 @@ Pain Relief & Fever · Vitamins & Supplements · Diabetes Care · Digestive Heal
 
 | Type | Examples (derived from real taxonomy, India market) |
 |---|---|
-| Brand keywords | "BRENTIS HEALTHCARE", "BRENTIS pharmacy online", "BRENTIS Mind That Cares" |
+| Brand keywords | "BRENTIS HEALTHCARE", "BRENTIS pharmacy online", "BRENTIS Minds That Care" |
 | Category keywords | "buy vitamins online India", "diabetes care products online", "digestive health supplements India", "allergy medicine online India" |
 | Product keywords | Exact product names once real catalog is confirmed (e.g. demo-shape examples: "paracetamol 500mg online", "daily multivitamin capsules") — **must be replaced with real SKUs before use, never shipped as literal demo names** |
 | Informational / question-based | "what is the difference between paracetamol and ibuprofen", "how to choose a multivitamin", "is [category] safe for daily use", "schedule H medicine meaning India" |

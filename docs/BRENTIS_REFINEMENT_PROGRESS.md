@@ -30,7 +30,7 @@
 - No catalog/blog-content decision made.
 
 ### Open questions for the business owner, carried into Prompt 2
-1. Tagline: "Mind That Cares" (singular, used throughout the existing site) vs. "MINDS THAT CARE" (plural, used 3× in `aboutus.txt`) — which is correct?
+1. Tagline: "Minds That Care" (singular, used throughout the existing site) vs. "MINDS THAT CARE" (plural, used 3× in `aboutus.txt`) — which is correct?
 2. Support email domain: `brentishealthcare.com` (`aboutus.txt`) vs. `Brentislabs.com` (`WEBSITE DOCUMENTATION.docx`, used throughout all 6 policy documents) — which is live?
 3. Catalog direction: is the real BRENTIS launch line the 5 wellness-supplement products described in `BLOGS.docx` (ACV/Vitamin C+Zinc/Glutathione effervescent tablets, Sea Buckthorn Juice, Shilajit Resin), replacing the current demo pharmacy catalog — or are these two separate, both-real product lines?
 4. Should the Admin/Super Admin logo become clickable at all (it isn't today)?
@@ -60,7 +60,7 @@
 Investigated the "avoid a large dark panel with four oversized text columns" instruction directly in code (not from memory): found two separate, redundant sections — `ValuesSection` ("Our Philosophy", 4 numbered tiles) and `WhyBrentisSection` ("Why BRENTIS", already an editorial image+list layout built in the prior workflow). Their content overlapped almost entirely (Quality & Trust / Customer-First / Responsible Healthcare / Transparency vs. Verified Sourcing / Secure Checkout / Tracked Delivery / Prescription-Aware — both are "why trust us" lists). **Removed the redundant `ValuesSection` entirely** rather than just recoloring it — this both eliminates the generic-card-grid redundancy (section 4's "Avoid: Too many boxed sections") and shortens the page (5,609px vs. ~6,850px total scroll height measured before). `WhyBrentisSection` (the one true editorial Values/Differentiation section, already matching the reference's text+list+photo composition) was kept and given the same section-bg tint treatment as #1 above.
 
 ### 3. Vision & Mission — real content gap closed
-`AboutSection`'s "Our Vision & Mission" block now carries the actual sentence from `aboutus.txt`: *"To build a trusted and progressive healthcare and wellness company that improves everyday lives through quality, innovation, and responsible care."* — closing a gap flagged in two prior prompts. Did **not** touch the disputed tagline ("Mind That Cares" vs. "MINDS THAT CARE") or support-email domain anywhere — both remain open questions for the business owner, per `BRENTIS_IMAGE_DIRECTION.md` §1.
+`AboutSection`'s "Our Vision & Mission" block now carries the actual sentence from `aboutus.txt`: *"To build a trusted and progressive healthcare and wellness company that improves everyday lives through quality, innovation, and responsible care."* — closing a gap flagged in two prior prompts. Did **not** touch the disputed tagline ("Minds That Care" vs. "MINDS THAT CARE") or support-email domain anywhere — both remain open questions for the business owner, per `BRENTIS_IMAGE_DIRECTION.md` §1.
 
 ### 4. Product card — measured, verified improvement
 | | Before (measured, Prompt 1) | After (measured, Prompt 2) | Reference (Brintoncare) |

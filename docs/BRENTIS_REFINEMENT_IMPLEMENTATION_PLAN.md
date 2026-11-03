@@ -23,7 +23,7 @@
 ## C. Vision & Mission real copy
 
 - Replace the current honest "coming soon" placeholder in `AboutSection`'s "Our Vision & Mission" block with the real sentence from `aboutus.txt`: *"To build a trusted and progressive healthcare and wellness company that improves everyday lives through quality, innovation, and responsible care."*
-- **Before implementing, resolve the tagline discrepancy flagged in `BRENTIS_IMAGE_DIRECTION.md` §1** ("MINDS THAT CARE" vs. "Mind That Cares") and the contact-email-domain discrepancy (`brentishealthcare.com` vs. `Brentislabs.com`) with the business owner — do not let either slip into live copy via this change without a definitive answer, since the Vision sentence itself doesn't use either disputed string and can ship independently, but adjacent About-page copy elsewhere in the app does use the tagline and shouldn't be touched piecemeal.
+- **Before implementing, resolve the tagline discrepancy flagged in `BRENTIS_IMAGE_DIRECTION.md` §1** ("MINDS THAT CARE" vs. "Minds That Care") and the contact-email-domain discrepancy (`brentishealthcare.com` vs. `Brentislabs.com`) with the business owner — do not let either slip into live copy via this change without a definitive answer, since the Vision sentence itself doesn't use either disputed string and can ship independently, but adjacent About-page copy elsewhere in the app does use the tagline and shouldn't be touched piecemeal.
 - **Risk: low.** Pure copy change, source text already verified real and business-authored.
 
 ## D. Product card button treatment
