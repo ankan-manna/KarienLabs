@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, type FormEvent, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { autocompleteSuggestions } from '../../api/search.api';
@@ -14,6 +14,17 @@ import { ThemeToggle } from './ThemeToggle';
 
 const AUTOCOMPLETE_MIN_LENGTH = 2;
 const AUTOCOMPLETE_DEBOUNCE_MS = 400;
+
+// Cycling search placeholder — matches Brintoncare's rotating search hints.
+// Module-level (not recreated per render) so the cycling effect's
+// dependency array stays stable.
+const SEARCH_PLACEHOLDERS = [
+  'Search medicines, health products & more',
+  'Search for Pain Relief',
+  'Search for Vitamins & Supplements',
+  'Search for Skin Care',
+  'Search for Wellness Essentials',
+];
 
 const NAV_LINKS = [
   { to: '/products', label: 'Products' },
@@ -55,6 +66,20 @@ function SearchInput({ compact = false }: { compact?: boolean }) {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const debounced = useDebounce(searchValue.trim(), AUTOCOMPLETE_DEBOUNCE_MS);
   const shouldSuggest = isOpen && debounced.length >= AUTOCOMPLETE_MIN_LENGTH;
+
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const placeholderTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    // Only cycle when the input is empty (no user text)
+    if (searchValue) return;
+    placeholderTimerRef.current = setInterval(() => {
+      setPlaceholderIdx((i) => (i + 1) % SEARCH_PLACEHOLDERS.length);
+    }, 3000);
+    return () => {
+      if (placeholderTimerRef.current) clearInterval(placeholderTimerRef.current);
+    };
+  }, [searchValue]);
 
   const {
     data: suggestions,
@@ -143,7 +168,7 @@ function SearchInput({ compact = false }: { compact?: boolean }) {
           onChange={(e) => setSearchValue(e.target.value)}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search medicines, health products & more"
+          placeholder={SEARCH_PLACEHOLDERS[placeholderIdx]}
           aria-label="Search medicines, health products & more"
           aria-autocomplete="list"
           aria-activedescendant={highlightedIndex >= 0 ? `search-suggestion-${highlightedIndex}` : undefined}

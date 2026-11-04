@@ -14,21 +14,15 @@ import { useCartMutations } from '../hooks/useCart';
 interface ProductCardProps {
   product: PublicProduct;
   /**
-   * 'cover' (default, unchanged everywhere this card was already used —
-   * PLP/PDP related-products/etc.) fills the image box edge-to-edge.
-   * 'contain' is used by the homepage's single Selected Products row (see
-   * docs/BRENTIS_HOMEPAGE_IMPLEMENTATION_REPORT.md) — padded, on a neutral
-   * light background, so a seeded demo image whose own background happens
-   * to be a solid color doesn't read as "the whole card is a flat color
-   * block." This does not touch or fix the underlying seed images
-   * themselves (that's a content problem, documented separately) — it
-   * just keeps the card chrome itself light/contained regardless of what
-   * the current placeholder image looks like.
+   * 'cover' (default) fills the image box edge-to-edge.
+   * 'contain' pads the image on a neutral light background.
    */
   imageFit?: 'cover' | 'contain';
+  /** When true, renders an orange "Best Seller" badge below the image area. */
+  bestSellerBadge?: boolean;
 }
 
-export function ProductCard({ product, imageFit = 'cover' }: ProductCardProps) {
+export function ProductCard({ product, imageFit = 'cover', bestSellerBadge = false }: ProductCardProps) {
   const { add } = useCartMutations();
   const prefersReducedMotion = useReducedMotion();
   // (Product Image Management) Part 7/8/29 — the card ALWAYS shows
@@ -106,6 +100,11 @@ export function ProductCard({ product, imageFit = 'cover' }: ProductCardProps) {
             {!product.inStock && <Badge tone="red">Out of Stock</Badge>}
           </div>
         </Link>
+        {bestSellerBadge && (
+          <span className="mx-3 mt-2 inline-block rounded bg-primary px-2.5 py-1 text-[11px] font-semibold text-white">
+            Best Seller
+          </span>
+        )}
         <div className="flex flex-1 flex-col gap-1 p-3">
           {product.brandName && (
             <span className="text-[11px] font-medium uppercase tracking-wide text-gray-400 dark:text-gray-500">

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRef, useState, type ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { PublicProduct } from '../../../api/products-public.api';
@@ -13,7 +13,6 @@ import { NewsletterForm } from '../../../components/common/NewsletterForm';
 import { RatingStars } from '../../../components/common/RatingStars';
 import { SkeletonRows } from '../../../components/common/Skeleton';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
-import { formatDate } from '../../../utils/format';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { ProductCard } from '../components/ProductCard';
 
@@ -316,96 +315,39 @@ function CenteredSectionHeading({ eyebrow, heading }: { eyebrow: string; heading
   );
 }
 
-/**
- * Edge-overlay prev/next controls positioned at the carousel's own left/
- * right edges (not inline with the section heading) — matches the
- * reference's own carousel-arrow placement, confirmed via live screenshot
- * (its arrows sit at the far left/right of the content area, never next to
- * a heading). Hidden on mobile, where the horizontal-scroll/2-col-grid
- * behavior is swipe-driven instead.
- */
-function EdgeArrowButton({ direction, onClick }: { direction: 'left' | 'right'; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      aria-label={direction === 'left' ? 'Scroll left' : 'Scroll right'}
-      onClick={onClick}
-      className={`absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-pale-sage bg-white text-ink shadow-sm transition-colors hover:bg-deep-teal dark:border-night-border dark:bg-night-surface dark:text-night-text dark:hover:bg-night-elevated sm:flex ${
-        direction === 'left' ? 'left-0 -translate-x-1/2' : 'right-0 translate-x-1/2'
-      }`}
-    >
-      {direction === 'left' ? '‹' : '›'}
-    </button>
-  );
-}
+
 
 function CategorySection() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const { data: categories } = useQuery({ queryKey: ['categories', 'tree', 'home'], queryFn: listCategoryTree });
   if (!categories || categories.length === 0) return null;
 
-  function scrollByCards(direction: 1 | -1) {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: 'smooth' });
-  }
-
   return (
-    // Pale sage-tinted band (measured from the reference: rgb(248,248,242))
-    // — the reference renders this full-bleed; here it's a contained,
-    // rounded band matching the rest of the page's container model (the
-    // homepage has no full-bleed-breakout mechanism elsewhere), which is
-    // the one structural difference from the reference that remains.
-    <section className="rounded-[28px] bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14">
+    <section className="bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14">
       <CenteredSectionHeading eyebrow="Shop by Category" heading="Explore Healthcare Essentials" />
-      {/*
-        Mobile (<640px): compact 2-column grid — matches Brintoncare's own
-        measured mobile behavior exactly (174×242px cards, 2 per row, not a
-        horizontal scroll), confirmed via live DOM measurement at 390px
-        (docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories). The
-        reference uses the SAME card aspect ratio on mobile as desktop
-        (≈0.72) — only the arrangement changes, not the proportions.
-        sm+ (≥640px): the existing single-row horizontal scroll/carousel,
-        matching the reference's own desktop/tablet single-row behavior.
-      */}
-      <div className="relative">
-        <EdgeArrowButton direction="left" onClick={() => scrollByCards(-1)} />
-        <EdgeArrowButton direction="right" onClick={() => scrollByCards(1)} />
-        <div
-          ref={scrollerRef}
-          className="grid grid-cols-2 gap-3.5 sm:themed-scrollbar sm:flex sm:snap-x sm:snap-mandatory sm:gap-3.5 sm:overflow-x-auto sm:pb-2"
-        >
-          {(categories as CategoryNode[]).map((cat) => (
-            <Link
-              key={cat._id}
-              to={`/products?categoryId=${cat._id}`}
-              className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
-            >
-              {cat.imageUrl ? (
-                <img
-                  src={cat.imageUrl}
-                  alt={cat.imageAlt || cat.name}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
-                  <CategoryPlaceholderTile />
-                </div>
-              )}
-              {/*
-                Generous, content-width white pill (not a percentage-stretched
-                bar) — matches the reference's measured treatment exactly:
-                border-radius 33px, 12px/30px padding, 16px/500 label,
-                bottom:20px, horizontally centered via left-50%/translateX.
-                docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories.
-              */}
-              <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
-                {cat.name}
-              </span>
-            </Link>
-          ))}
-        </div>
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
+        {(categories as CategoryNode[]).map((cat) => (
+          <Link
+            key={cat._id}
+            to={`/products?categoryId=${cat._id}`}
+            className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover"
+          >
+            {cat.imageUrl ? (
+              <img
+                src={cat.imageUrl}
+                alt={cat.imageAlt || cat.name}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
+                <CategoryPlaceholderTile />
+              </div>
+            )}
+            <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
+              {cat.name}
+            </span>
+          </Link>
+        ))}
       </div>
     </section>
   );
@@ -425,31 +367,13 @@ function CategorySection() {
 // empty just because no admin curation exists yet.
 function ProductGridRow({ items }: { items: PublicProduct[] }) {
   return (
-    <>
-      {/*
-        Desktop/tablet: a flex row sized to the actual item count — NOT a
-        4-column grid. A fixed `grid-cols-4` reserves 4 equal-width tracks
-        regardless of how many products exist, so a sparsely-stocked
-        category (this catalog currently has as few as 1-2 products in some
-        categories) rendered 2 cards on the left and a large dead white gap
-        on the right. Each card now has a fixed basis width and the row
-        simply stops where the real data stops — never a phantom gap.
-      */}
-      <div className="hidden gap-5 sm:flex sm:flex-wrap">
-        {items.map((product) => (
-          <div key={product._id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-            <ProductCard product={product} imageFit="contain" />
-          </div>
-        ))}
-      </div>
-      <div className="themed-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:hidden">
-        {items.map((product) => (
-          <div key={product._id} className="w-[72%] flex-shrink-0 snap-start">
-            <ProductCard product={product} imageFit="contain" />
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+      {items.map((product) => (
+        <div key={product._id}>
+          <ProductCard product={product} imageFit="contain" bestSellerBadge />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -480,7 +404,7 @@ function BestSellersSection() {
     if (!current || current.products.length === 0) return null;
 
     return (
-      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
+      <section className="px-4 py-8 sm:px-6 sm:py-10">
         <CenteredSectionHeading eyebrow="Best Sellers" heading={tabsSection.title} />
         {/*
           Underlined-text tabs, centered — matches the reference's own
@@ -526,7 +450,7 @@ function BestSellersSection() {
     const items = gridSection.productIds as unknown as PublicProduct[];
     if (items.length === 0) return null;
     return (
-      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
+      <section className="px-4 py-8 sm:px-6 sm:py-10">
         <CenteredSectionHeading eyebrow="Selected Products" heading={gridSection.title} />
         <ProductGridRow items={items} />
         <div className="mt-6 text-center">
@@ -542,7 +466,7 @@ function BestSellersSection() {
   if (fallbackLoading) return <SkeletonRows rows={1} columns={4} />;
   if (!fallbackData || fallbackData.items.length === 0) return null;
   return (
-    <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
+    <section className="px-4 py-8 sm:px-6 sm:py-10">
       <CenteredSectionHeading eyebrow="Selected Products" heading="A Few Essentials Worth Exploring." />
       <ProductGridRow items={fallbackData.items} />
       <div className="mt-6 text-center">
@@ -593,22 +517,19 @@ function KnowledgeSection() {
               )}
             </div>
             {blog.tags[0] && (
-              <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
+              <span className="text-sm text-gray-500 dark:text-night-muted">
                 {blog.tags[0]}
               </span>
             )}
-            <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
+            <h3 className="font-brentis-display text-lg font-semibold leading-snug text-ink group-hover:text-accent dark:text-night-text">
               {blog.title}
             </h3>
-            <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
-            <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
-            <span className="text-sm font-medium text-accent">Read article →</span>
           </Link>
         ))}
       </div>
       <div className="mt-8 text-center">
-        <Link to="/blog" className="text-sm font-medium text-accent hover:underline">
-          View all articles →
+        <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-semibold text-ink hover:text-primary dark:text-night-text">
+          View All Blogs <span aria-hidden="true">›</span>
         </Link>
       </div>
     </section>
