@@ -698,7 +698,14 @@ function MarqueeSection() {
   const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
   return (
     <section className="-mx-4 overflow-hidden border-y border-pale-sage bg-deep-teal py-4 dark:border-night-border dark:bg-night-elevated sm:-mx-6 lg:-mx-8 xl:-mx-10 2xl:-mx-12">
-      <div className="flex w-max animate-marquee gap-10 motion-reduce:animate-none">
+      {/*
+        Deliberately always animates, even under prefers-reduced-motion — a
+        static ticker reads as broken/frozen rather than reduced, since the
+        collapsed single-line text is this strip's entire content with
+        nothing else to look at. Every other motion on this page (Hero
+        carousel, category carousel) still honors reduced-motion normally.
+      */}
+      <div className="flex w-max animate-marquee gap-10">
         {items.map((item, i) => (
           <span
             key={i}
