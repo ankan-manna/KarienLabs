@@ -83,6 +83,18 @@ export default {
         'storefront-md': '0 4px 16px rgba(23,43,47,0.08)',
         'storefront-hover': '0 8px 24px rgba(255,128,0,0.12)',
       },
+      // Continuous horizontal scroll for the homepage trust-strip marquee —
+      // the track renders its content twice back-to-back and scrolls
+      // exactly 50% so the loop is seamless.
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 24s linear infinite',
+      },
     },
   },
   plugins: [],

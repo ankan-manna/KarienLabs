@@ -123,7 +123,13 @@ export function Footer() {
   }));
 
   return (
-    <footer className="bg-ink">
+    // Teal/green-leaning gradient (per redesign_plan.md) — built entirely
+    // from colors already established in this codebase's own dark theme
+    // (`ink` #172B2F → the dark `deep-teal`/`night-elevated` token's own
+    // value #0D282D), never Brintoncare's specific measured brand hex. Fixed
+    // regardless of the site's light/dark theme, same as before — this is
+    // chrome, not a themed content surface.
+    <footer className="bg-gradient-to-b from-ink to-[#0D282D]">
       <div className="mx-auto max-w-[1920px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">

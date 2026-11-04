@@ -270,14 +270,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-ink">
+    <header className="sticky top-0 z-30 border-b border-pale-sage bg-white dark:border-night-border dark:bg-night-surface">
       <div className="mx-auto flex max-w-[1920px] items-center gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <button
           type="button"
           onClick={() => setMobileNavOpen((o) => !o)}
           aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileNavOpen}
-          className="rounded-md p-1.5 text-white/90 hover:bg-white/10 lg:hidden"
+          className="rounded-md p-1.5 text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated lg:hidden"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
             {mobileNavOpen ? (
@@ -311,7 +311,7 @@ export function Header() {
               browser QA — it pushed "Sign in" off-screen, causing real
               horizontal overflow) — "HEALTHCARE" drops below `sm` (640px) so
               the header never overflows on small phones. */}
-          <span className="font-brentis-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+          <span className="font-brentis-display text-lg font-semibold tracking-tight text-ink dark:text-night-text sm:text-xl">
             BRENTIS<span className="hidden text-primary sm:inline"> HEALTHCARE</span>
           </span>
         </Link>
@@ -321,7 +321,7 @@ export function Header() {
           <SearchInput />
         </div>
 
-        <nav className="ml-2 hidden items-center gap-5 text-sm font-medium text-white/85 lg:flex">
+        <nav className="ml-2 hidden items-center gap-5 text-sm font-medium text-ink/80 dark:text-night-muted lg:flex">
           {NAV_LINKS.map((link) => (
             <Link key={link.to} to={link.to} className="whitespace-nowrap transition-colors hover:text-accent">
               {link.label}
@@ -333,16 +333,16 @@ export function Header() {
           {isStaffRole(user?.role) && (
             <Link
               to="/admin/dashboard"
-              className="hidden rounded-md bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-white/20 sm:block sm:px-3 sm:text-sm"
+              className="hidden rounded-md bg-deep-teal px-2.5 py-1.5 text-xs font-medium text-ink hover:bg-pale-sage dark:bg-night-elevated dark:text-night-text dark:hover:bg-night-border sm:block sm:px-3 sm:text-sm"
             >
               Control Panel
             </Link>
           )}
-          <ThemeToggle className="hover:!bg-white/10" />
+          <ThemeToggle />
           <Link
             to="/cart"
             aria-label="Cart"
-            className="relative rounded-md p-2 text-white/90 hover:bg-white/10"
+            className="relative rounded-md p-2 text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
               <path
@@ -360,13 +360,16 @@ export function Header() {
             )}
           </Link>
           {isAuthenticated ? (
-            <Link to={getProfilePath(user?.role)} className="flex items-center gap-2 rounded-md p-1 hover:bg-white/10">
+            <Link
+              to={getProfilePath(user?.role)}
+              className="flex items-center gap-2 rounded-md p-1 hover:bg-deep-teal dark:hover:bg-night-elevated"
+            >
               <Avatar name={user?.name ?? '?'} size="sm" />
             </Link>
           ) : (
             <Link
               to="/login"
-              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-white hover:bg-white/10 sm:px-3"
+              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated sm:px-3"
             >
               Sign in
             </Link>
@@ -383,14 +386,14 @@ export function Header() {
       </div>
 
       {mobileNavOpen && (
-        <nav className="border-t border-white/10 px-4 py-2 lg:hidden">
+        <nav className="border-t border-pale-sage px-4 py-2 dark:border-night-border lg:hidden">
           <ul className="flex flex-col">
             {NAV_LINKS.map((link) => (
               <li key={link.to}>
                 <Link
                   to={link.to}
                   onClick={() => setMobileNavOpen(false)}
-                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
+                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated"
                 >
                   {link.label}
                 </Link>
@@ -401,7 +404,7 @@ export function Header() {
                 <Link
                   to="/admin/dashboard"
                   onClick={() => setMobileNavOpen(false)}
-                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-accent hover:bg-white/10"
+                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-accent hover:bg-deep-teal dark:hover:bg-night-elevated"
                 >
                   Control Panel
                 </Link>

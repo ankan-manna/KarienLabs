@@ -32,6 +32,7 @@ export async function setAboutContent(value: AboutContentInput, actorId: string)
   const saved = (await setConfiguration(NAMESPACE, value, actorId)) as AboutContentInput;
 
   await destroyIfReplaced(before.mainImagePublicId, saved.mainImagePublicId);
+  await destroyIfReplaced(before.secondaryImagePublicId, saved.secondaryImagePublicId);
   await destroyIfReplaced(before.highlightsImagePublicId, saved.highlightsImagePublicId);
 
   return saved;

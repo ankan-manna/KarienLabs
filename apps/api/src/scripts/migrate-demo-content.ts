@@ -125,6 +125,9 @@ const ABOUT_CONTENT_SEED: AboutContentInput = {
   mainImageUrl: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=1400&q=80',
   mainImagePublicId: null,
   mainImageAlt: 'Vitamins and everyday wellness essentials arranged together',
+  secondaryImageUrl: '',
+  secondaryImagePublicId: null,
+  secondaryImageAlt: '',
   blocks: [
     {
       iconKey: 'values',

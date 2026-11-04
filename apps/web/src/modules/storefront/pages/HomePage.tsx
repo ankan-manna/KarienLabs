@@ -136,15 +136,32 @@ function AboutSection() {
     <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[minmax(0,45%)_1fr] lg:gap-16">
       {/* Mobile/tablet: heading+copy read before the image (matches the
           reference's own editorial order — heading, then photo, then the
-          4 info blocks); desktop restores the image-left/text-right split. */}
+          4 info blocks); desktop restores the image-left/text-right split.
+          Decorative star + squiggle-arrow accents and the optional
+          overlapping secondary photo recreate the reference's collage
+          composition — original marks, not traced from the reference. */}
       {about.mainImageUrl && (
-        <div className="order-2 overflow-hidden rounded-2xl lg:order-1">
-          <img
-            src={about.mainImageUrl}
-            alt={about.mainImageAlt || about.heading || 'About BRENTIS HEALTHCARE'}
-            className="h-56 w-full object-cover sm:h-80 lg:h-full"
-            loading="lazy"
-          />
+        <div className="relative order-2 lg:order-1">
+          <StarAccent className="absolute -left-2 -top-4 h-8 w-8 text-secondary/70 sm:-left-4 sm:-top-6 sm:h-10 sm:w-10" />
+          <div className="overflow-hidden rounded-2xl">
+            <img
+              src={about.mainImageUrl}
+              alt={about.mainImageAlt || about.heading || 'About BRENTIS HEALTHCARE'}
+              className="h-56 w-full object-cover sm:h-80 lg:h-full"
+              loading="lazy"
+            />
+          </div>
+          {about.secondaryImageUrl && (
+            <div className="absolute -bottom-6 -right-4 h-24 w-24 overflow-hidden rounded-xl border-4 border-deep-teal shadow-lg dark:border-night-elevated sm:-bottom-8 sm:-right-6 sm:h-32 sm:w-32">
+              <img
+                src={about.secondaryImageUrl}
+                alt={about.secondaryImageAlt || 'About BRENTIS HEALTHCARE'}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          )}
+          <ArrowSquiggleAccent className="absolute -bottom-10 left-4 h-10 w-12 text-primary/70 sm:-bottom-12" />
         </div>
       )}
       <div className="order-1 flex flex-col gap-6 lg:order-2">
@@ -153,9 +170,12 @@ function AboutSection() {
             <span className="text-xs font-semibold uppercase tracking-wide text-accent">{about.tagline}</span>
           )}
           {about.heading && (
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {about.heading}
-            </h2>
+            <>
+              <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+                {about.heading}
+              </h2>
+              <SquiggleAccent className="h-3 w-20 text-primary" />
+            </>
           )}
           {about.description && (
             <p className="max-w-xl text-base leading-relaxed text-gray-600 dark:text-night-muted">
@@ -232,6 +252,47 @@ function SquiggleAccent({ className = '' }: { className?: string }) {
         strokeWidth="3"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+/** Original 4-point sparkle mark — a generic decorative device (not a specific copyrightable illustration), redrawn from scratch. */
+function StarAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+      <path d="M16 2v10M16 20v10M2 16h10M20 16h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Original leaf mark — generic decorative device, drawn independently. */
+function LeafAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M6 26c0-12 8-20 20-20-2 10-8 16-18 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M8 24c4-2 8-6 10-12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Original hand-drawn-style curved arrow — same generic decorative genre as the reference's own accent marks, drawn independently. */
+function ArrowSquiggleAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 40" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M4 36c0-14 10-22 20-22-6 2-10 7-9 12 1 4 6 6 10 3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M19 23l6 6-2-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -420,22 +481,18 @@ function BestSellersSection() {
 
     return (
       <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-        <div className="mb-5 flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Best Sellers</span>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {tabsSection.title}
-            </h2>
-            <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
-              View all →
-            </Link>
-          </div>
-        </div>
-        {/* Horizontally scrollable tab bar — works identically as a compact mobile control and a plain row on desktop, matching the reference's "active category indicator" pattern without a separate mobile implementation. */}
+        <CenteredSectionHeading eyebrow="Best Sellers" heading={tabsSection.title} />
+        {/*
+          Underlined-text tabs, centered — matches the reference's own
+          "Sun Care | Anti-Ageing | …" tab treatment exactly (confirmed live:
+          plain text labels with an underline beneath the active one, not
+          filled pill buttons). Horizontally scrollable so it still works as
+          a compact mobile control when there are more tabs than fit.
+        */}
         <div
           role="tablist"
           aria-label="Best seller categories"
-          className="themed-scrollbar -mx-1 mb-6 flex gap-2 overflow-x-auto px-1 pb-1"
+          className="themed-scrollbar -mx-1 mb-6 flex justify-center gap-6 overflow-x-auto px-1 pb-1"
         >
           {tabs.map((tab, i) => (
             <button
@@ -444,10 +501,10 @@ function BestSellersSection() {
               role="tab"
               aria-selected={i === activeTab}
               onClick={() => setActiveTab(i)}
-              className={`flex-shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 whitespace-nowrap border-b-2 pb-1 text-sm font-medium transition-colors ${
                 i === activeTab
-                  ? 'bg-primary text-white'
-                  : 'bg-white text-gray-600 hover:bg-deep-teal dark:bg-night-surface dark:text-night-muted dark:hover:bg-night-elevated'
+                  ? 'border-primary text-ink dark:text-night-text'
+                  : 'border-transparent text-gray-500 hover:text-ink dark:text-night-muted dark:hover:text-night-text'
               }`}
             >
               {tab.name}
@@ -455,6 +512,11 @@ function BestSellersSection() {
           ))}
         </div>
         <ProductGridRow items={current.products as unknown as PublicProduct[]} />
+        <div className="mt-6 text-center">
+          <Link to="/products" className="text-sm font-medium text-accent hover:underline">
+            View all →
+          </Link>
+        </div>
       </section>
     );
   }
@@ -465,18 +527,13 @@ function BestSellersSection() {
     if (items.length === 0) return null;
     return (
       <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {gridSection.title}
-            </h2>
-          </div>
-          <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
+        <CenteredSectionHeading eyebrow="Selected Products" heading={gridSection.title} />
+        <ProductGridRow items={items} />
+        <div className="mt-6 text-center">
+          <Link to="/products" className="text-sm font-medium text-accent hover:underline">
             View all →
           </Link>
         </div>
-        <ProductGridRow items={items} />
       </section>
     );
   }
@@ -486,18 +543,13 @@ function BestSellersSection() {
   if (!fallbackData || fallbackData.items.length === 0) return null;
   return (
     <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
-          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-            A Few Essentials Worth Exploring.
-          </h2>
-        </div>
-        <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
+      <CenteredSectionHeading eyebrow="Selected Products" heading="A Few Essentials Worth Exploring." />
+      <ProductGridRow items={fallbackData.items} />
+      <div className="mt-6 text-center">
+        <Link to="/products" className="text-sm font-medium text-accent hover:underline">
           View all →
         </Link>
       </div>
-      <ProductGridRow items={fallbackData.items} />
     </section>
   );
 }
@@ -513,60 +565,51 @@ function BestSellersSection() {
 // matches the reference's own blog carousel (confirmed live: a real Swiper
 // carousel over many post cards, not a static grid) rather than a flat,
 // never-moving 3-card grid.
+// Static 3-column grid per the redesign plan (matches the reference's own
+// "centered heading+squiggle, 3-column cards" blog-section structure,
+// rather than a horizontal carousel) — a "View all articles" link covers
+// the rest of the catalog instead of making this section scrollable.
 function KnowledgeSection() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const { data } = useQuery({
     queryKey: ['public-blogs', 'home', 'knowledge'],
-    queryFn: () => listPublicBlogs({ limit: 6 }),
+    queryFn: () => listPublicBlogs({ limit: 3 }),
   });
   if (!data || data.items.length === 0) return null;
-
-  function scrollByCards(direction: 1 | -1) {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: 'smooth' });
-  }
 
   return (
     <section>
       <CenteredSectionHeading eyebrow="Healthcare Knowledge" heading="Knowledge Is Part of Good Care." />
-      <div className="relative">
-        <EdgeArrowButton direction="left" onClick={() => scrollByCards(-1)} />
-        <EdgeArrowButton direction="right" onClick={() => scrollByCards(1)} />
-        <div
-          ref={scrollerRef}
-          className="themed-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2"
-        >
-          {data.items.map((blog) => (
-            <Link
-              key={blog._id}
-              to={`/blog/${blog.slug}`}
-              className="group flex w-[82%] flex-shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]"
-            >
-              <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
-                {blog.coverImageUrl && (
-                  <img
-                    src={blog.coverImageUrl}
-                    alt={blog.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                )}
-              </div>
-              {blog.tags[0] && (
-                <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
-                  {blog.tags[0]}
-                </span>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        {data.items.map((blog) => (
+          <Link key={blog._id} to={`/blog/${blog.slug}`} className="group flex flex-col gap-3">
+            <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
+              {blog.coverImageUrl && (
+                <img
+                  src={blog.coverImageUrl}
+                  alt={blog.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
               )}
-              <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
-                {blog.title}
-              </h3>
-              <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
-              <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
-              <span className="text-sm font-medium text-accent">Read article →</span>
-            </Link>
-          ))}
-        </div>
+            </div>
+            {blog.tags[0] && (
+              <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
+                {blog.tags[0]}
+              </span>
+            )}
+            <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
+              {blog.title}
+            </h3>
+            <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
+            <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
+            <span className="text-sm font-medium text-accent">Read article →</span>
+          </Link>
+        ))}
+      </div>
+      <div className="mt-8 text-center">
+        <Link to="/blog" className="text-sm font-medium text-accent hover:underline">
+          View all articles →
+        </Link>
       </div>
     </section>
   );
@@ -593,9 +636,12 @@ function WhyBrentisSection() {
             <span className="text-xs font-semibold uppercase tracking-wide text-accent">{about.highlightsTagline}</span>
           )}
           {about.highlightsHeading && (
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {about.highlightsHeading}
-            </h2>
+            <>
+              <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+                {about.highlightsHeading}
+              </h2>
+              <SquiggleAccent className="h-3 w-20 text-primary" />
+            </>
           )}
           {about.highlightsDescription && (
             <p className="max-w-lg text-base leading-relaxed text-gray-600 dark:text-night-muted">
@@ -625,16 +671,56 @@ function WhyBrentisSection() {
         )}
       </div>
       {about.highlightsImageUrl && (
-        <div className="overflow-hidden rounded-2xl">
-          <img
-            src={about.highlightsImageUrl}
-            alt={about.highlightsImageAlt || about.highlightsHeading || 'Why BRENTIS'}
-            className="h-72 w-full object-cover sm:h-96 lg:h-[30rem]"
-            loading="lazy"
-          />
+        <div className="relative">
+          <LeafAccent className="absolute -right-3 -top-5 h-9 w-9 text-secondary/60 sm:-right-5 sm:-top-7" />
+          <div className="overflow-hidden rounded-2xl">
+            <img
+              src={about.highlightsImageUrl}
+              alt={about.highlightsImageAlt || about.highlightsHeading || 'Why BRENTIS'}
+              className="h-72 w-full object-cover sm:h-96 lg:h-[30rem]"
+              loading="lazy"
+            />
+          </div>
         </div>
       )}
     </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Trust marquee — matches the reference's "AVAILABLE AT ALL LEADING STORES"
+// scrolling strip pattern, but with claims that are actually true for
+// BRENTIS (an online-only pharmacy with no retail store network — the
+// reference's literal claim would be fabricated here). Every phrase restates
+// a real, already-implemented fact from elsewhere in this codebase
+// (Razorpay checkout, verified-pharmacy sourcing, GST-transparent pricing,
+// Shiprocket-tracked delivery) rather than inventing a new one.
+const MARQUEE_ITEMS = [
+  'Genuine Medicines',
+  'Verified Pharmacies',
+  'Secure Razorpay Checkout',
+  'GST-Transparent Pricing',
+  'Tracked Delivery',
+];
+
+function MarqueeSection() {
+  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  return (
+    <section className="-mx-4 overflow-hidden border-y border-pale-sage bg-deep-teal py-4 dark:border-night-border dark:bg-night-elevated sm:-mx-6 lg:-mx-8 xl:-mx-10 2xl:-mx-12">
+      <div className="flex w-max animate-marquee gap-10 motion-reduce:animate-none">
+        {items.map((item, i) => (
+          <span
+            key={i}
+            className="flex items-center gap-10 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.2em] text-ink/70 dark:text-night-muted"
+          >
+            {item}
+            <span aria-hidden="true" className="text-primary">
+              •
+            </span>
+          </span>
+        ))}
+      </div>
     </section>
   );
 }
@@ -721,9 +807,10 @@ export default function HomePage() {
       <Hero />
       <AboutSection />
       <CategorySection />
+      <WhyBrentisSection />
+      <MarqueeSection />
       <BestSellersSection />
       <KnowledgeSection />
-      <WhyBrentisSection />
       <CustomerTrustSection />
       <NewsletterSection />
     </div>

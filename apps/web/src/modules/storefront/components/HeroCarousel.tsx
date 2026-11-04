@@ -137,7 +137,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden rounded-2xl bg-ink outline-none"
+      className="relative overflow-hidden rounded-2xl bg-deep-teal outline-none dark:bg-night-elevated"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -148,36 +148,23 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
       aria-label="Featured promotions"
     >
       {/*
-       * A definite `h-*` is required here, not `min-h`: the image and its
-       * `flex flex-col` slide wrapper are absolutely positioned, so
-       * `h-full` on them only resolves against a DEFINITE ancestor height —
-       * `min-height` alone leaves this box's height indeterminate, which
-       * silently falls back to the banner image's own intrinsic aspect
-       * ratio (rendering far taller than intended). The mobile height is
-       * sized generously for a 3-line heading; a fixed `max-h` + `overflow-
-       * hidden` on the heading/subtitle below caps growth so admin-entered
-       * copy can never exceed it and reproduce the original overlap bug.
-       * (Not Tailwind's `line-clamp-*` — that sets `-webkit-line-clamp` +
-       * `display: -webkit-box`, which has a real Chromium/WebKit rendering
-       * bug where the clipped overflow text can flash through at an
-       * incorrect, oversized scale when the clamped element's text content
-       * changes dynamically, exactly what happens here on every slide swap.
-       * A plain height cap has no such issue.)
+       * Light split layout (text left, product/lifestyle photo right) per
+       * docs/ redesign_plan.md — matches the reference's own hero
+       * composition instead of a full-bleed photo with white text overlaid
+       * on a dark gradient. A definite `h-*` is still required (not `min-h`)
+       * for the same reason as before: slides are absolutely positioned, so
+       * `h-full` needs a definite ancestor height. The heading/subtitle
+       * still use a plain height cap (not Tailwind's `line-clamp-*`) to
+       * avoid the same WebKit/Chromium line-clamp + dynamic-content
+       * rendering bug documented below.
        */}
-      <div className="relative h-[420px] sm:h-[380px] md:h-[26rem]">
+      <div className="relative h-[560px] sm:h-[420px] md:h-[26rem]">
         {/*
          * `mode="wait"` — the default crossfade runs the outgoing and
          * incoming slide's animations concurrently, so for a stretch of the
-         * transition BOTH are simultaneously at a legible opacity. That's
-         * unnoticeable on a busy photo background, but these banners can use
-         * a solid/gradient background with prominent white text, where a
-         * ~40%-opacity outgoing heading sitting behind an incoming one reads
-         * as visibly doubled text, not a subtle blend. `wait` fully finishes
-         * the exit animation before the enter animation starts, so only one
-         * slide's content is ever on screen — slightly slower overall, but
-         * that's the actual requirement here, not a side effect to work
-         * around. (Not `mode="popLayout"`, which is for reflowing layout
-         * siblings — not applicable since every slide is `absolute inset-0`.)
+         * transition BOTH are simultaneously at a legible opacity. `wait`
+         * fully finishes the exit animation before the enter animation
+         * starts, so only one slide's content is ever on screen.
          */}
         <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
@@ -188,20 +175,10 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             animate={prefersReducedMotion ? { opacity: 1 } : 'center'}
             exit={prefersReducedMotion ? { opacity: 0 } : 'exit'}
             transition={transition}
-            className="absolute inset-0 flex flex-col"
+            className="absolute inset-0 grid grid-cols-1 items-center gap-6 overflow-y-auto px-6 py-8 sm:grid-cols-2 sm:gap-10 sm:overflow-visible sm:px-10 sm:py-10 md:px-16"
           >
-            <motion.img
-              src={active.imageUrl}
-              alt={active.imageAlt || active.title}
-              className="absolute inset-0 h-full w-full object-cover"
-              loading={safeIndex === 0 ? 'eager' : 'lazy'}
-              initial={prefersReducedMotion ? false : { scale: 1.08 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-transparent" />
             <motion.div
-              className="relative z-10 mt-auto p-5 pl-16 pr-16 sm:p-10 sm:pl-24 sm:pr-24"
+              className="relative z-10 order-2 flex flex-col items-start sm:order-1"
               variants={prefersReducedMotion ? undefined : textContainerVariants}
               initial={prefersReducedMotion ? false : 'hidden'}
               animate="visible"
@@ -209,44 +186,50 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
               {active.badge && (
                 <motion.span
                   variants={prefersReducedMotion ? undefined : textItemVariants}
-                  className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm"
+                  className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-medium text-ink dark:bg-night-surface dark:text-night-text"
                 >
                   {active.badge}
                 </motion.span>
               )}
               <motion.h2
                 variants={prefersReducedMotion ? undefined : textItemVariants}
-                className="max-h-[78px] max-w-xl overflow-hidden text-xl font-bold leading-tight text-white sm:max-h-[116px] sm:text-3xl md:max-h-[140px] md:text-4xl"
+                className="font-brentis-display max-h-[96px] max-w-md overflow-hidden text-2xl font-bold leading-tight text-ink dark:text-night-text sm:max-h-[120px] sm:text-3xl md:max-h-[140px] md:text-4xl"
               >
                 {active.title}
               </motion.h2>
               {active.subtitle && (
                 <motion.p
                   variants={prefersReducedMotion ? undefined : textItemVariants}
-                  className="mt-2 max-h-[42px] max-w-md overflow-hidden text-sm text-white/90 sm:max-h-[48px] sm:text-base"
+                  className="mt-3 max-h-[48px] max-w-sm overflow-hidden text-sm text-gray-600 dark:text-night-muted sm:max-h-[54px] sm:text-base"
                 >
                   {active.subtitle}
                 </motion.p>
               )}
               <motion.div
                 variants={prefersReducedMotion ? undefined : textItemVariants}
-                className="mt-4 flex flex-wrap gap-3"
+                className="mt-5 flex flex-wrap gap-3"
               >
                 <Link to={active.linkUrl || '/products'}>
                   <Button variant="coral">{active.ctaText || 'Shop Now'}</Button>
                 </Link>
                 {active.secondaryCtaText && (
                   <Link to={active.secondaryCtaLink || '/products'}>
-                    <Button
-                      variant="ghost"
-                      className="border border-white/40 text-white hover:bg-white/10"
-                    >
-                      {active.secondaryCtaText}
-                    </Button>
+                    <Button variant="outline">{active.secondaryCtaText}</Button>
                   </Link>
                 )}
               </motion.div>
             </motion.div>
+            <div className="relative order-1 h-48 w-full overflow-hidden rounded-2xl sm:order-2 sm:h-full">
+              <motion.img
+                src={active.imageUrl}
+                alt={active.imageAlt || active.title}
+                className="h-full w-full object-cover"
+                loading={safeIndex === 0 ? 'eager' : 'lazy'}
+                initial={prefersReducedMotion ? false : { scale: 1.08 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -257,7 +240,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             type="button"
             onClick={() => goTo(safeIndex - 1)}
             aria-label="Previous slide"
-            className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:left-4"
+            className="absolute left-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-sm transition-colors hover:bg-deep-teal dark:bg-night-surface dark:text-night-text dark:hover:bg-night-elevated sm:flex sm:left-4"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
               <path
@@ -271,7 +254,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
             type="button"
             onClick={() => goTo(safeIndex + 1)}
             aria-label="Next slide"
-            className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-colors hover:bg-white/30 sm:right-4"
+            className="absolute right-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-ink shadow-sm transition-colors hover:bg-deep-teal dark:bg-night-surface dark:text-night-text dark:hover:bg-night-elevated sm:flex sm:right-4"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
               <path
@@ -293,7 +276,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
                 onClick={() => goTo(i)}
                 className={cn(
                   'h-1.5 rounded-full transition-all',
-                  i === safeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/75',
+                  i === safeIndex ? 'w-6 bg-primary' : 'w-1.5 bg-ink/20 hover:bg-ink/40 dark:bg-white/30 dark:hover:bg-white/50',
                 )}
               />
             ))}

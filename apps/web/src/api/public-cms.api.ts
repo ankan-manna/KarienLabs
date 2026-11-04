@@ -180,6 +180,9 @@ export interface AboutContent {
   mainImageUrl?: string;
   mainImagePublicId?: string | null;
   mainImageAlt?: string;
+  secondaryImageUrl?: string;
+  secondaryImagePublicId?: string | null;
+  secondaryImageAlt?: string;
   blocks?: AboutContentBlock[];
   highlightsTagline?: string;
   highlightsHeading?: string;

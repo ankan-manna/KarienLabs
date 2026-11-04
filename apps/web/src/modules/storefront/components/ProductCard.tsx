@@ -82,11 +82,25 @@ export function ProductCard({ product, imageFit = 'cover' }: ProductCardProps) {
               <span className="text-xs text-gray-400">No image</span>
             )}
           </div>
-          {discountPct > 0 && (
-            <span className="absolute left-2 top-2 rounded-full bg-emerald-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">
-              {discountPct}% OFF
-            </span>
-          )}
+          <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
+            {discountPct > 0 && (
+              <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm">
+                {discountPct}% OFF
+              </span>
+            )}
+            {/* Real-rating badge, overlaid on the image corner — matches the
+                reference's own product-card rating badge treatment. Only
+                ever rendered from real `ratingCount`/`ratingAvg` data, never
+                a fabricated default. */}
+            {!!product.ratingCount && (
+              <span className="flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-ink shadow-sm dark:bg-night-surface dark:text-night-text">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-primary" aria-hidden="true">
+                  <path d="M10 1.5l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.77l-4.77 2.44.91-5.32-3.87-3.77 5.34-.78L10 1.5Z" />
+                </svg>
+                {(product.ratingAvg ?? 0).toFixed(1)}
+              </span>
+            )}
+          </div>
           <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
             {product.medicine?.prescriptionRequired && <Badge tone="yellow">Rx</Badge>}
             {!product.inStock && <Badge tone="red">Out of Stock</Badge>}
