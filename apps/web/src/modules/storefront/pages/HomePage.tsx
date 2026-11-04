@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState, type ReactElement } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { PublicProduct } from '../../../api/products-public.api';
@@ -317,38 +318,106 @@ function CenteredSectionHeading({ eyebrow, heading }: { eyebrow: string; heading
 
 
 
+// A page holds exactly as many cards as the widest (desktop, 4-col) row
+// shows at once — mobile's 2-col grid then renders the same page as two
+// rows of 2, so nothing is ever cut off mid-card at any breakpoint.
+const CATEGORY_CARDS_PER_PAGE = 4;
+const CATEGORY_AUTO_ADVANCE_MS = 4000;
+
+/**
+ * Matches the reference's own category strip: when there are more
+ * categories than fit in one row, it auto-advances through them on a timer
+ * rather than showing every card at once in a long static grid. Pauses on
+ * hover/focus (same convention as HeroCarousel) and skips the timer
+ * entirely for a single page or a reduced-motion preference — there is
+ * nothing to rotate to, or the visitor asked not to see motion.
+ */
 function CategorySection() {
   const { data: categories } = useQuery({ queryKey: ['categories', 'tree', 'home'], queryFn: listCategoryTree });
+  const prefersReducedMotion = useReducedMotion();
+  const [page, setPage] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const pages = useMemo(() => {
+    const list = (categories as CategoryNode[] | undefined) ?? [];
+    const chunks: CategoryNode[][] = [];
+    for (let i = 0; i < list.length; i += CATEGORY_CARDS_PER_PAGE) {
+      chunks.push(list.slice(i, i + CATEGORY_CARDS_PER_PAGE));
+    }
+    return chunks;
+  }, [categories]);
+  const pageCount = pages.length;
+  const safePage = pageCount > 0 ? page % pageCount : 0;
+
+  useEffect(() => {
+    if (pageCount <= 1 || paused || prefersReducedMotion) return undefined;
+    const timer = setTimeout(() => {
+      setPage((p) => (p + 1) % pageCount);
+    }, CATEGORY_AUTO_ADVANCE_MS);
+    return () => clearTimeout(timer);
+  }, [safePage, pageCount, paused, prefersReducedMotion]);
+
   if (!categories || categories.length === 0) return null;
 
   return (
-    <section className="bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14">
+    <section
+      className="bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       <CenteredSectionHeading eyebrow="Shop by Category" heading="Explore Healthcare Essentials" />
-      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
-        {(categories as CategoryNode[]).map((cat) => (
-          <Link
-            key={cat._id}
-            to={`/products?categoryId=${cat._id}`}
-            className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover"
-          >
-            {cat.imageUrl ? (
-              <img
-                src={cat.imageUrl}
-                alt={cat.imageAlt || cat.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
-                <CategoryPlaceholderTile />
-              </div>
-            )}
-            <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
-              {cat.name}
-            </span>
-          </Link>
-        ))}
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${safePage * 100}%)` }}
+        >
+          {pages.map((group, pageIndex) => (
+            <div key={pageIndex} className="grid w-full flex-shrink-0 grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
+              {group.map((cat) => (
+                <Link
+                  key={cat._id}
+                  to={`/products?categoryId=${cat._id}`}
+                  className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover"
+                >
+                  {cat.imageUrl ? (
+                    <img
+                      src={cat.imageUrl}
+                      alt={cat.imageAlt || cat.name}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
+                      <CategoryPlaceholderTile />
+                    </div>
+                  )}
+                  <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
+                    {cat.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
+      {pageCount > 1 && (
+        <div className="mt-7 flex items-center justify-center gap-2">
+          {pages.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Show category page ${i + 1}`}
+              aria-current={i === safePage}
+              onClick={() => setPage(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === safePage ? 'w-6 bg-primary' : 'w-1.5 bg-ink/20 dark:bg-night-muted/40'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
