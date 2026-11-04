@@ -13,6 +13,7 @@ import { Card } from '../../../components/common/Card';
 import { NewsletterForm } from '../../../components/common/NewsletterForm';
 import { RatingStars } from '../../../components/common/RatingStars';
 import { SkeletonRows } from '../../../components/common/Skeleton';
+import { SOCIAL_LINKS } from '../../../components/layout/Footer';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { ProductCard } from '../components/ProductCard';
@@ -723,6 +724,36 @@ function MarqueeSection() {
 }
 
 // ---------------------------------------------------------------------------
+// Social strip — same always-moving marquee treatment as the trust strip
+// above, but for BRENTIS's real, already-verified social accounts (reusing
+// `SOCIAL_LINKS`/the icon components from Footer.tsx — the exact same five
+// accounts and logos, not a second, separately-maintained list). Each item
+// links out to the real profile. Reversed scroll direction purely so the
+// two stacked strips read as visually distinct bands, not a continuation of
+// the same motion.
+function SocialMarqueeSection() {
+  const items = [...SOCIAL_LINKS, ...SOCIAL_LINKS];
+  return (
+    <section className="-mx-4 overflow-hidden border-b border-pale-sage bg-white py-4 dark:border-night-border dark:bg-night-surface sm:-mx-6 lg:-mx-8 xl:-mx-10 2xl:-mx-12">
+      <div className="flex w-max animate-marquee-reverse gap-10">
+        {items.map(({ key, label, href, Icon }, i) => (
+          <a
+            key={`${key}-${i}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-shrink-0 items-center gap-2 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.2em] text-ink/70 transition-colors hover:text-primary dark:text-night-muted"
+          >
+            <Icon />
+            {label}
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Customer Trust — real reviews when they exist (same data source/logic as
 // before); when none exist yet (confirmed: no reviews are seeded in this
 // environment), falls back to real, verifiable trust facts distinct from the
@@ -806,6 +837,7 @@ export default function HomePage() {
       <CategorySection />
       <WhyBrentisSection />
       <MarqueeSection />
+      <SocialMarqueeSection />
       <BestSellersSection />
       <KnowledgeSection />
       <CustomerTrustSection />

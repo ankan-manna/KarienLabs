@@ -72,8 +72,10 @@ function FacebookIcon() {
 
 // Exact, real KarienLabs accounts as supplied — no other social accounts are
 // invented. `key` doubles as the `socialLinks` config field admin-configured
-// URLs (if any) are looked up by.
-const SOCIAL_LINKS = [
+// URLs (if any) are looked up by. Exported so other storefront surfaces
+// (the homepage's social-strip marquee) reuse these same verified accounts
+// and icons rather than duplicating or inventing a second list.
+export const SOCIAL_LINKS = [
   { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/karien.labs/', Icon: InstagramIcon },
   { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/@KarienLabs', Icon: YoutubeIcon },
   {

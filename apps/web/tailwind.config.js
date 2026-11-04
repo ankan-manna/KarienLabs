@@ -94,6 +94,10 @@ export default {
       },
       animation: {
         marquee: 'marquee 24s linear infinite',
+        // Same keyframe, opposite direction — used to visually distinguish
+        // a second, stacked marquee strip (homepage social-accounts row)
+        // from the one above it, without a duplicate keyframe definition.
+        'marquee-reverse': 'marquee 24s linear infinite reverse',
       },
     },
   },
