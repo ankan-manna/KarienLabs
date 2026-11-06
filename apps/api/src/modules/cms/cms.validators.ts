@@ -11,7 +11,7 @@ export const createBannerSchema = z.object({
   ctaText: z.string().optional(),
   secondaryCtaText: z.string().optional(),
   secondaryCtaLink: z.string().optional(),
-  placement: z.enum(['hero', 'category', 'checkout']).optional(),
+  placement: z.enum(['hero', 'category', 'checkout', 'offer']).optional(),
   order: z.number().optional(),
   startsAt: z.string().nullable().optional(),
   endsAt: z.string().nullable().optional(),

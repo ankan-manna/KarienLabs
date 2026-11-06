@@ -31,7 +31,7 @@ const bannerSchema = new Schema({
   // so a half-filled pair just renders no secondary button rather than erroring.
   secondaryCtaText: { type: String, default: '' },
   secondaryCtaLink: { type: String, default: '' },
-  placement: { type: String, enum: ['hero', 'category', 'checkout'], default: 'hero' },
+  placement: { type: String, enum: ['hero', 'category', 'checkout', 'offer'], default: 'hero' },
   order: { type: Number, default: 0 },
   startsAt: { type: Date, default: null },
   endsAt: { type: Date, default: null },

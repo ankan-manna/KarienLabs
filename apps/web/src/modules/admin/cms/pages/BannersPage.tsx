@@ -31,6 +31,7 @@ const fields: ConfigField[] = [
       { label: 'Hero', value: 'hero' },
       { label: 'Category', value: 'category' },
       { label: 'Checkout', value: 'checkout' },
+      { label: 'Offer (Offers & Deals page)', value: 'offer' },
     ],
     defaultValue: 'hero',
   },

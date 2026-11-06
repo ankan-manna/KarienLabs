@@ -14,7 +14,7 @@ export interface PublicBanner {
   ctaText: string;
   secondaryCtaText: string;
   secondaryCtaLink: string;
-  placement: 'hero' | 'category' | 'checkout';
+  placement: 'hero' | 'category' | 'checkout' | 'offer';
   order: number;
   slideDurationMs: number | null;
 }

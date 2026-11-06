@@ -1018,7 +1018,7 @@ const BANNERS: Array<{
   linkPath: string;
   linkCategorySlug: string | null;
   ctaText: string;
-  placement: 'hero' | 'category' | 'checkout';
+  placement: 'hero' | 'category' | 'checkout' | 'offer';
   order: number;
 }> = [
     {
@@ -1063,7 +1063,7 @@ const BANNERS: Array<{
       linkPath: '/products',
       linkCategorySlug: 'diabetes-care',
       ctaText: 'Shop Diabetes Care',
-      placement: 'category',
+      placement: 'offer',
       order: 1,
     },
     {
@@ -1075,8 +1075,8 @@ const BANNERS: Array<{
       linkPath: '/products',
       linkCategorySlug: null,
       ctaText: 'Get Started',
-      placement: 'category',
-      order: 1,
+      placement: 'offer',
+      order: 2,
     },
     {
       title: 'Allergy & Cold Relief Bundle Deals',
@@ -1087,8 +1087,8 @@ const BANNERS: Array<{
       linkPath: '/products',
       linkCategorySlug: 'allergy-cold',
       ctaText: 'View Offers',
-      placement: 'category',
-      order: 1,
+      placement: 'offer',
+      order: 3,
     },
   ];
 
@@ -1289,6 +1289,22 @@ async function migrate(): Promise<void> {
   }
 
   // --- Banners ------------------------------------------------------------
+  // These 3 banners were originally seeded under `placement: 'category'`
+  // (OffersPage.tsx used to borrow that placement for lack of a dedicated
+  // one) and are now re-seeded under the real `placement: 'offer'` instead.
+  // Remove the old `category`-placement copies by title so re-running this
+  // migration doesn't leave orphaned duplicates sitting unused in the DB.
+  await BannerModel.deleteMany({
+    placement: 'category',
+    title: {
+      $in: [
+        'Flat 20% Off Diabetes Care Essentials',
+        '15% Off Your First Order',
+        'Allergy & Cold Relief Bundle Deals',
+      ],
+    },
+  });
+
   const bannerCounts = track('banners');
   for (const b of BANNERS) {
     const existing = await BannerModel.findOne({ title: b.title, placement: b.placement });

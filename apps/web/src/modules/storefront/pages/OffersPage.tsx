@@ -7,10 +7,19 @@ import { SkeletonRows } from '../../../components/common/Skeleton';
 import { Breadcrumb } from '../../../components/layout/Breadcrumb';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
 
+/**
+ * Offers are just Banner records with `placement: 'offer'` (see
+ * admin → CMS → Banners, "Offer" placement option) — the same
+ * Cloudinary-backed image upload, title/subtitle/badge/CTA fields, and
+ * optional start/end-date scheduling every other banner placement already
+ * has, rather than a separate Offer model/admin screen. Adding, editing,
+ * scheduling, or removing an offer is entirely admin-panel-controlled; this
+ * page only ever renders what the admin has published.
+ */
 export default function OffersPage() {
-  const { data: banners, isLoading } = useQuery({
-    queryKey: ['public-banners', 'category'],
-    queryFn: () => getPublicBanners('category'),
+  const { data: offers, isLoading } = useQuery({
+    queryKey: ['public-banners', 'offer'],
+    queryFn: () => getPublicBanners('offer'),
   });
 
   useDocumentMeta({
@@ -25,25 +34,49 @@ export default function OffersPage() {
         Offers & Deals
       </h1>
       {isLoading ? (
-        <SkeletonRows rows={2} columns={2} />
-      ) : !banners || banners.length === 0 ? (
+        <SkeletonRows rows={2} columns={3} />
+      ) : !offers || offers.length === 0 ? (
         <EmptyState
           title="No active offers"
           description="Check back soon — new deals are added regularly."
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {banners.map((banner) => (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {offers.map((offer) => (
             <Link
-              key={banner._id}
-              to={banner.linkUrl || '/products'}
-              className="group block overflow-hidden rounded-xl border border-pale-sage shadow-storefront-sm transition-shadow hover:shadow-storefront-hover dark:border-night-border"
+              key={offer._id}
+              to={offer.linkUrl || '/products'}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-pale-sage bg-white shadow-storefront-sm transition-shadow hover:shadow-storefront-hover dark:border-night-border dark:bg-night-surface"
             >
-              <img
-                src={banner.imageUrl}
-                alt={banner.title}
-                className="w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
-              />
+              <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 dark:bg-night-elevated">
+                <img
+                  src={offer.imageUrl}
+                  alt={offer.imageAlt || offer.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {offer.badge && (
+                  <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                    {offer.badge}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col gap-1.5 p-5">
+                <h2 className="font-brentis-display text-lg font-semibold text-ink dark:text-night-text">
+                  {offer.title}
+                </h2>
+                {offer.subtitle && (
+                  <p className="text-sm leading-relaxed text-gray-500 dark:text-night-muted">
+                    {offer.subtitle}
+                  </p>
+                )}
+                <span className="mt-auto inline-flex w-fit items-center gap-1 pt-3 text-sm font-semibold text-primary">
+                  {offer.ctaText || 'Shop Now'}
+                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </span>
+              </div>
             </Link>
           ))}
         </div>
