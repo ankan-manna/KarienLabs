@@ -115,7 +115,11 @@ const TEMPLATE_VARIABLE_WHITELIST: Record<string, string[]> = {
     'productSummary',
   ],
   distributor_enquiry_confirmation: ['companyName', 'enquiryNumber'],
-  password_reset: ['name'],
+  // `resetUrl` is the one safe, server-constructed exception to the
+  // `token`/`jwt`-shaped global blocklist above — see auth.service.ts's
+  // requestPasswordReset(), which builds this full URL itself rather than
+  // ever handing a raw token to the notification layer.
+  password_reset: ['name', 'resetUrl'],
   password_reset_confirmation: ['name'],
   email_verification: ['name'],
   invoice_email: ['invoiceNumber', 'orderNumber', 'pdfUrl'],

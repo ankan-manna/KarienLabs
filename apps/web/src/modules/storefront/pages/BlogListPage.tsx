@@ -60,7 +60,7 @@ export default function BlogListPage() {
                         className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
                       />
                     ) : (
-                      <span className="text-xs text-gray-400">No image</span>
+                      <span className="text-xs text-gray-400 dark:text-night-muted">No image</span>
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1.5 p-4">

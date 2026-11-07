@@ -32,6 +32,28 @@ const userSchema = new Schema(
     // on every successful login, incremented on every failed one.
     failedLoginAttempts: { type: Number, default: 0 },
     lockedUntil: { type: Date, default: null },
+    // Forces a redirect to the account's change-password form on first
+    // authenticated navigation (see ProtectedRoute.tsx) — set true whenever
+    // a password was chosen by someone other than the account holder (an
+    // admin-created staff account's temp password, or a Super Admin
+    // password-recovery script run). Cleared by changePassword() on success.
+    mustChangePassword: { type: Boolean, default: false },
+    // Captured once at registration, never silently backfilled for accounts
+    // that existed before this field did — a pre-existing user genuinely
+    // has not accepted under this flow, and `accepted: false` says so
+    // honestly rather than fabricating consent that was never given.
+    consent: {
+      terms: {
+        accepted: { type: Boolean, default: false },
+        acceptedAt: { type: Date, default: null },
+        version: { type: String, default: null },
+      },
+      privacy: {
+        accepted: { type: Boolean, default: false },
+        acceptedAt: { type: Date, default: null },
+        version: { type: String, default: null },
+      },
+    },
     deletedAt: { type: Date, default: null },
   },
   { timestamps: true },

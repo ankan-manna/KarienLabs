@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
+// Matches the backend's normalization exactly (auth.validator.ts) — email is
+// this app's username, so a login/lookup must never be case-sensitive.
+const emailSchema = z.string().trim().toLowerCase().email('Enter a valid email');
+
 export const loginSchema = z.object({
-  email: z.string().trim().email('Enter a valid email'),
+  email: emailSchema,
   password: z.string().min(1, 'Password is required'),
   rememberMe: z.boolean().optional(),
 });
@@ -21,9 +25,18 @@ const newPasswordSchema = z
 export const registerSchema = z
   .object({
     name: z.string().trim().min(2, 'Name is too short'),
-    email: z.string().trim().email('Enter a valid email'),
+    email: emailSchema,
     password: newPasswordSchema,
     confirmPassword: z.string().min(1, 'Please confirm your password'),
+    // Unchecked by default (react-hook-form has no value until the user
+    // interacts) — `.literal(true)` fails validation with a specific message
+    // for both "left unchecked" (undefined/false) and an explicit false.
+    acceptedTerms: z.literal(true, {
+      errorMap: () => ({ message: 'You must accept the Terms & Conditions' }),
+    }),
+    acceptedPrivacy: z.literal(true, {
+      errorMap: () => ({ message: 'You must confirm you have read the Privacy Policy' }),
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',
@@ -31,7 +44,7 @@ export const registerSchema = z
   });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().trim().email('Enter a valid email'),
+  email: emailSchema,
 });
 
 export const resetPasswordSchema = z

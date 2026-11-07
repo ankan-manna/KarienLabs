@@ -33,7 +33,13 @@ interface AuthContextValue {
   /** Completes the OTP-login flow started by `login()` when it returned `otpRequired: true`. */
   completeOtpLogin: (challengeToken: string, code: string) => Promise<void>;
   /** Returns the raw response so the caller (RegisterPage) can branch into the OTP step when `otpRequired` is true — mirrors `login()`. */
-  register: (name: string, email: string, password: string) => Promise<RegisterResponse>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    acceptedTerms: boolean,
+    acceptedPrivacy: boolean,
+  ) => Promise<RegisterResponse>;
   /** Completes the OTP-registration flow started by `register()` when it returned `otpRequired: true`. */
   completeOtpRegistration: (challengeToken: string, code: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -112,8 +118,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const register = useCallback(
-    async (name: string, email: string, password: string) => {
-      const payload = await registerRequest(name, email, password);
+    async (
+      name: string,
+      email: string,
+      password: string,
+      acceptedTerms: boolean,
+      acceptedPrivacy: boolean,
+    ) => {
+      const payload = await registerRequest(name, email, password, acceptedTerms, acceptedPrivacy);
       // OTP-required responses carry no session yet — the caller must render
       // the OTP step and call `completeOtpRegistration` once the user enters
       // the code (mirrors `login()`'s otpRequired branch above).

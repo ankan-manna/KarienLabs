@@ -94,6 +94,7 @@ function toPublicUser(user: {
   isActive: boolean;
   isSuspended?: boolean;
   emailVerified?: boolean;
+  mustChangePassword?: boolean;
   createdAt?: Date;
 }) {
   return {
@@ -105,6 +106,7 @@ function toPublicUser(user: {
     isActive: user.isActive,
     isSuspended: user.isSuspended ?? false,
     emailVerified: user.emailVerified ?? false,
+    mustChangePassword: user.mustChangePassword ?? false,
     // (Admin Profile) Part 3 — "Created date"; falls back to `now`
     // only for the type system's benefit (every real User document has
     // `createdAt` via the schema's `{ timestamps: true }`, this is never

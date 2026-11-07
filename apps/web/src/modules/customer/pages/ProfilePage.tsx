@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { changePasswordRequest, requestEmailVerificationRequest } from '../../../api/auth.api';
 import {
@@ -34,17 +34,21 @@ const PREFERENCE_LABELS: { key: keyof NotificationPreferences; label: string }[]
 ];
 
 function ChangePasswordCard() {
+  const { refetchMe } = useAuth();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const mutation = useMutation({
     mutationFn: () => changePasswordRequest(currentPassword, newPassword),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Password changed — other sessions signed out');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
+      // Clears mustChangePassword on the cached user immediately, same as
+      // the admin-panel profile page's equivalent flow.
+      await refetchMe();
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -257,6 +261,10 @@ export default function ProfilePage() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const location = useLocation();
+  const forcedPasswordChange = Boolean(
+    (location.state as { forcedPasswordChange?: boolean } | null)?.forcedPasswordChange,
+  );
 
   const { data: profile } = useQuery({
     queryKey: ['profile', 'me'],
@@ -301,6 +309,13 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">My Profile</h1>
+
+      {forcedPasswordChange && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-900/20 dark:text-amber-400">
+          Your account is using a temporary password. Please set a new password below before
+          continuing.
+        </div>
+      )}
 
       <Card className="max-w-lg p-5">
         <div className="mb-4 flex items-center gap-4">

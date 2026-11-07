@@ -9,6 +9,7 @@ export interface AuthUser {
   isActive: boolean;
   isSuspended: boolean;
   emailVerified: boolean;
+  mustChangePassword: boolean;
   createdAt: string;
 }
 

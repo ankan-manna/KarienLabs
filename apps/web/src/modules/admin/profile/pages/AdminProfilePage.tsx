@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
 
 import { changePasswordRequest, listSessionsRequest, revokeSessionRequest } from '../../../../api/auth.api';
@@ -33,8 +34,12 @@ const passwordSchema = z
 type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function AdminProfilePage() {
-  const { user } = useAuth();
+  const { user, refetchMe } = useAuth();
   const queryClient = useQueryClient();
+  const location = useLocation();
+  const forcedPasswordChange = Boolean(
+    (location.state as { forcedPasswordChange?: boolean } | null)?.forcedPasswordChange,
+  );
 
   const { data: sessions, isLoading: sessionsLoading } = useQuery({
     queryKey: ['auth-sessions'],
@@ -53,9 +58,13 @@ export default function AdminProfilePage() {
   const changePasswordMutation = useMutation({
     mutationFn: (values: PasswordFormValues) =>
       changePasswordRequest(values.currentPassword, values.newPassword),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Password changed — other sessions were signed out');
       reset();
+      // Clears mustChangePassword on the cached user object immediately —
+      // without this, ProtectedRoute's forced-redirect would keep firing
+      // until the next full page load/token refresh re-fetched /auth/me.
+      await refetchMe();
     },
     onError: (err: Error) => toast.error(err.message),
   });
@@ -71,30 +80,37 @@ export default function AdminProfilePage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-semibold text-gray-900 dark:text-night-text">My Profile</h1>
 
+      {forcedPasswordChange && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-900/20 dark:text-amber-400">
+          Your account is using a temporary password. Please set a new password below before
+          continuing.
+        </div>
+      )}
+
       <Card className="p-5">
         <h2 className="mb-3 text-base font-semibold text-gray-800 dark:text-night-text">Account</h2>
         <dl className="grid grid-cols-2 gap-3 text-sm">
-          <dt className="text-gray-500">Name</dt>
+          <dt className="text-gray-500 dark:text-night-muted">Name</dt>
           <dd>{user?.name}</dd>
-          <dt className="text-gray-500">Email</dt>
+          <dt className="text-gray-500 dark:text-night-muted">Email</dt>
           <dd>{user?.email}</dd>
           {/* Part 3 — "only display fields that actually exist in the current user
               model"; `phone` is optional on the User schema (no phone-based
               registration flow), so it's only shown when set. */}
           {user?.phone && (
             <>
-              <dt className="text-gray-500">Phone</dt>
+              <dt className="text-gray-500 dark:text-night-muted">Phone</dt>
               <dd>{user.phone}</dd>
             </>
           )}
-          <dt className="text-gray-500">Role</dt>
+          <dt className="text-gray-500 dark:text-night-muted">Role</dt>
           {/* Part 4 — role-aware, but the label is purely cosmetic: the value
               driving it (`user.role`) comes straight from the backend-issued
               /auth/me response, never guessed or derived on the frontend. */}
           <dd>
             <Badge tone={user?.role === 'super_admin' ? 'red' : 'blue'}>{roleLabel(user?.role)}</Badge>
           </dd>
-          <dt className="text-gray-500">Account Status</dt>
+          <dt className="text-gray-500 dark:text-night-muted">Account Status</dt>
           <dd>
             {user?.isSuspended ? (
               <Badge tone="red">Suspended</Badge>
@@ -106,7 +122,7 @@ export default function AdminProfilePage() {
           </dd>
           {user?.createdAt && (
             <>
-              <dt className="text-gray-500">Created</dt>
+              <dt className="text-gray-500 dark:text-night-muted">Created</dt>
               <dd>{formatDate(user.createdAt)}</dd>
             </>
           )}
@@ -149,7 +165,7 @@ export default function AdminProfilePage() {
         <h2 className="mb-1 text-base font-semibold text-gray-800 dark:text-night-text">
           Login History &amp; Devices
         </h2>
-        <p className="mb-3 text-sm text-gray-500">
+        <p className="mb-3 text-sm text-gray-500 dark:text-night-muted">
           Active and recent sessions across your devices. Two-factor authentication is future-ready
           and not yet enabled.
         </p>

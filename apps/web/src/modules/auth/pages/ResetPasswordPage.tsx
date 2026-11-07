@@ -26,7 +26,7 @@ export default function ResetPasswordPage() {
 
   if (!token && !resetSessionToken) {
     return (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-night-muted">
         This reset link is missing its token. Please use the link from your email, or{' '}
         <Link to="/forgot-password" className="font-medium text-brand-600 hover:underline">
           request a new one
@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
     return (
       <div className="flex flex-col gap-3 text-center">
         <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Password updated</h1>
-        <p className="text-sm text-gray-500">You can now sign in with your new password.</p>
+        <p className="text-sm text-gray-500 dark:text-night-muted">You can now sign in with your new password.</p>
         <Link to="/login" className="text-sm font-medium text-brand-600 hover:underline">
           Sign in
         </Link>
@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
       </h1>
 
       {formError && (
-        <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20">
+        <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
           {formError}
         </p>
       )}

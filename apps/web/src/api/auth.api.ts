@@ -103,11 +103,15 @@ export async function registerRequest(
   name: string,
   email: string,
   password: string,
+  acceptedTerms: boolean,
+  acceptedPrivacy: boolean,
 ): Promise<RegisterResponse> {
   const { data } = await httpClient.post<ApiResponse<RegisterResponse>>('/auth/register', {
     name,
     email,
     password,
+    acceptedTerms,
+    acceptedPrivacy,
   });
   return unwrap(data);
 }

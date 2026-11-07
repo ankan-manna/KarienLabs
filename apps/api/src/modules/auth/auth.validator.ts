@@ -2,14 +2,30 @@ import { z } from 'zod';
 
 import { passwordSchema } from '../../utils/common-schemas';
 
+// Email is this app's username — normalized (trim + lowercase) BEFORE the
+// format check and BEFORE it ever reaches a `UserModel.findOne({ email })`
+// lookup. `User.email` is stored lowercase (`lowercase: true` on the
+// schema), so without this, a login/lookup with different casing than how
+// the account was originally created would silently fail to match —
+// confirmed as a real bug, not a hypothetical, while auditing this module.
+const emailSchema = z.string().trim().toLowerCase().email('Enter a valid email address');
+
 export const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  email: z.string().trim().email(),
+  email: emailSchema,
   password: passwordSchema,
+  // Both must be explicitly `true` — an omitted or `false` value fails
+  // validation with a specific message, never silently defaults to accepted.
+  acceptedTerms: z.literal(true, {
+    errorMap: () => ({ message: 'You must accept the Terms & Conditions' }),
+  }),
+  acceptedPrivacy: z.literal(true, {
+    errorMap: () => ({ message: 'You must confirm you have read the Privacy Policy' }),
+  }),
 });
 
 export const loginSchema = z.object({
-  email: z.string().trim().email(),
+  email: emailSchema,
   password: z.string().min(1),
   rememberMe: z.boolean().optional(),
 });
@@ -39,11 +55,11 @@ export const registerResendOtpSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().trim().email(),
+  email: emailSchema,
 });
 
 export const forgotPasswordVerifyOtpSchema = z.object({
-  email: z.string().trim().email(),
+  email: emailSchema,
   code: otpCodeSchema,
 });
 
