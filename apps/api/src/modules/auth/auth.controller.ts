@@ -24,8 +24,10 @@ import type {
 } from './auth.validator';
 import {
   GoogleAdminResolutionError,
+  GoogleCustomerResolutionError,
   buildGoogleConsentUrl,
   resolveGoogleAdminUser,
+  resolveOrCreateGoogleCustomerUser,
   verifyGoogleAuthCode,
 } from './google-auth.service';
 import { UserModel } from './models/user.model';
@@ -331,13 +333,32 @@ export const authConfigHandler = asyncHandler(async (_req: Request, res) => {
   return sendSuccess(res, await getPublicAuthConfig());
 });
 
-/** Redirects the browser to Google's consent screen. 404s (as "not found" rather than "forbidden", to avoid confirming/denying the feature's existence to a prober) if Google admin login isn't enabled/configured. */
-export const googleLoginHandler = asyncHandler(async (_req: Request, res) => {
+/**
+ * Redirects the browser to Google's consent screen. Shared by both the
+ * admin sign-in button AND the customer Login/Register "Continue with
+ * Google" buttons — `?flow=customer` distinguishes the two (defaulting to
+ * `admin` so the existing admin button, which never sends this param,
+ * keeps working unchanged). The flow is carried through Google's
+ * redirect round-trip inside the SAME httpOnly CSRF-state cookie
+ * (`${state}:${flow}`) rather than a second cookie or a client-controlled
+ * query param on the callback — the callback never trusts anything other
+ * than what this server itself wrote into that cookie. 404s (as "not
+ * found" rather than "forbidden", to avoid confirming/denying the
+ * feature's existence to a prober) if the requested flow isn't
+ * enabled/configured.
+ */
+export const googleLoginHandler = asyncHandler(async (req: Request, res) => {
+  const flow = req.query.flow === 'customer' ? 'customer' : 'admin';
+  // Which page to bounce back to on failure — a short fixed enum (never a
+  // raw path straight off the query string) so this can never become an
+  // open-redirect vector.
+  const origin = req.query.origin === 'register' ? 'register' : 'login';
   const cfg = await getPublicAuthConfig();
-  if (!cfg.googleAdminLoginEnabled) throw new NotFoundError('Google sign-in');
+  const enabled = flow === 'customer' ? cfg.googleCustomerLoginEnabled : cfg.googleAdminLoginEnabled;
+  if (!enabled) throw new NotFoundError('Google sign-in');
 
   const state = randomBytes(24).toString('hex');
-  res.cookie(OAUTH_STATE_COOKIE, state, OAUTH_STATE_COOKIE_OPTIONS);
+  res.cookie(OAUTH_STATE_COOKIE, `${state}:${flow}:${origin}`, OAUTH_STATE_COOKIE_OPTIONS);
   return res.redirect(buildGoogleConsentUrl(state));
 });
 
@@ -353,11 +374,18 @@ export const googleLoginHandler = asyncHandler(async (_req: Request, res) => {
 export const googleCallbackHandler = asyncHandler(async (req: Request, res) => {
   const meta = sessionMeta(req);
   const { code, state, error: googleError } = req.query as Record<string, string | undefined>;
-  const cookieState = req.cookies?.[OAUTH_STATE_COOKIE];
+  const rawCookie: string | undefined = req.cookies?.[OAUTH_STATE_COOKIE];
   res.clearCookie(OAUTH_STATE_COOKIE, { path: OAUTH_STATE_COOKIE_OPTIONS.path });
 
+  // The cookie is this server's own `${state}:${flow}:${origin}` value (set
+  // by googleLoginHandler above) — flow/origin are read from HERE, never
+  // from a request query param, so neither can be spoofed by whoever's
+  // driving the redirect back from Google.
+  const [cookieState, cookieFlow, cookieOrigin] = (rawCookie ?? '').split(':');
+  const flow = cookieFlow === 'customer' ? 'customer' : 'admin';
+  const originPath = cookieOrigin === 'register' ? '/register' : '/login';
   const redirectWithError = (reason: string) =>
-    res.redirect(`${env.WEB_BASE_URL}/login?googleError=${encodeURIComponent(reason)}`);
+    res.redirect(`${env.WEB_BASE_URL}${originPath}?googleError=${encodeURIComponent(reason)}`);
 
   if (googleError) {
     await authService.recordGoogleLoginFailure('user_declined_consent', meta);
@@ -370,12 +398,23 @@ export const googleCallbackHandler = asyncHandler(async (req: Request, res) => {
 
   try {
     const identity = await verifyGoogleAuthCode(code);
+
+    if (flow === 'customer') {
+      const { user } = await resolveOrCreateGoogleCustomerUser(identity);
+      const tokens = await authService.completeGoogleAdminLogin(user, meta);
+      setRefreshCookie(res, tokens.refreshToken, tokens.refreshTokenExpiresAt, true);
+      // Same landing page the admin flow uses — it already branches by the
+      // signed-in user's own role (GoogleCallbackPage.tsx), so a customer
+      // correctly ends up on "/" rather than the admin dashboard.
+      return res.redirect(`${env.WEB_BASE_URL}/admin/google-callback`);
+    }
+
     const user = await resolveGoogleAdminUser(identity);
     const tokens = await authService.completeGoogleAdminLogin(user, meta);
     setRefreshCookie(res, tokens.refreshToken, tokens.refreshTokenExpiresAt, true);
     return res.redirect(`${env.WEB_BASE_URL}/admin/google-callback`);
   } catch (err) {
-    if (err instanceof GoogleAdminResolutionError) {
+    if (err instanceof GoogleAdminResolutionError || err instanceof GoogleCustomerResolutionError) {
       await authService.recordGoogleLoginFailure(err.reason, meta);
       return redirectWithError(err.reason);
     }

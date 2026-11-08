@@ -8,6 +8,11 @@ const blogSchema = new Schema({
   excerpt: { type: String, default: '' },
   content: { type: String, required: true },
   coverImageUrl: { type: String, default: '' },
+  // The Cloudinary public_id for `coverImageUrl`, when it was uploaded
+  // through the admin's Cloudinary widget rather than pasted as a raw URL —
+  // required for safe deletion (see blog-image.service.ts), same pattern as
+  // banner.model.ts's `imagePublicId`.
+  coverImagePublicId: { type: String, default: null },
   authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   tags: { type: [String], default: [] },
   isPublished: { type: Boolean, default: false, index: true },

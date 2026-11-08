@@ -18,8 +18,9 @@ const GOOGLE_ERROR_MESSAGES: Record<string, string> = {
   no_matching_admin_account:
     'No authorized admin account exists for this Google identity. Ask a super admin to create one first.',
   not_admin_role: 'This Google account is not authorized for admin access.',
+  staff_account_use_admin_login: 'This email belongs to a staff account. Please use the admin sign-in below.',
   account_inactive: 'This account is disabled.',
-  account_suspended: 'This account has been suspended. Contact a super admin.',
+  account_suspended: 'This account has been suspended. Contact support.',
   google_verification_failed: 'Google sign-in failed. Please try again.',
 };
 
@@ -33,13 +34,20 @@ export default function LoginPage() {
     null,
   );
   const [googleAdminLoginEnabled, setGoogleAdminLoginEnabled] = useState(false);
+  const [googleCustomerLoginEnabled, setGoogleCustomerLoginEnabled] = useState(false);
 
   const googleError = searchParams.get('googleError');
 
   useEffect(() => {
     authConfigRequest()
-      .then((cfg) => setGoogleAdminLoginEnabled(cfg.googleAdminLoginEnabled))
-      .catch(() => setGoogleAdminLoginEnabled(false));
+      .then((cfg) => {
+        setGoogleAdminLoginEnabled(cfg.googleAdminLoginEnabled);
+        setGoogleCustomerLoginEnabled(cfg.googleCustomerLoginEnabled);
+      })
+      .catch(() => {
+        setGoogleAdminLoginEnabled(false);
+        setGoogleCustomerLoginEnabled(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -214,6 +222,33 @@ export default function LoginPage() {
       <Button variant="gradient" type="submit" isLoading={isSubmitting} className="w-full">
         Sign in
       </Button>
+
+      {googleCustomerLoginEnabled && (
+        <>
+          <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-night-muted">
+            <div className="h-px flex-1 bg-gray-200 dark:bg-night-elevated" />
+            <span>or</span>
+            <div className="h-px flex-1 bg-gray-200 dark:bg-night-elevated" />
+          </div>
+          <GoogleSignInButton flow="customer" origin="login" />
+          <p className="text-center text-xs text-gray-400 dark:text-night-muted">
+            By continuing, you agree to our{' '}
+            <Link to="/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-600">
+              Terms &amp; Conditions
+            </Link>{' '}
+            and{' '}
+            <Link
+              to="/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-brand-600"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </>
+      )}
 
       {googleAdminLoginEnabled && (
         <>

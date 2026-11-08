@@ -53,6 +53,7 @@ export const createBlogSchema = z.object({
   excerpt: z.string().optional(),
   content: z.string().min(1),
   coverImageUrl: z.string().optional(),
+  coverImagePublicId: z.string().nullable().optional(),
   tags: z.array(z.string()).optional(),
   isPublished: z.boolean().optional(),
   publishedAt: z.string().optional(),

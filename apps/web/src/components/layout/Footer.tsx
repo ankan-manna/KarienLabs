@@ -219,9 +219,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" aria-label="BRENTIS HEALTHCARE — home" className="inline-flex items-center gap-2">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 flex-shrink-0 text-primary" aria-hidden="true">
-                <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
-              </svg>
+              <img src="/logo-mark.png" alt="" className="h-8 w-8 flex-shrink-0 rounded-lg object-cover" />
               <span className="font-brentis-display text-base font-semibold tracking-tight text-white">
                 BRENTIS <span className="text-primary">HEALTHCARE</span>
               </span>

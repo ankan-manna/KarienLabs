@@ -30,7 +30,7 @@ const VARIANT_CLASSES: Record<Variant, string> = {
   // filled color to preserve visual hierarchy against `primary`/`gradient`.
   outline:
     'border border-brand-500 text-brand-600 hover:bg-brand-50 dark:border-brand-500 dark:text-brand-400 dark:hover:bg-brand-500/10',
-  // KarienLabs storefront design system — `coral` is the single most
+  // Brentis Healthcare storefront design system — `coral` is the single most
   // prominent CTA per surface (Add to Cart, Shop Now); `teal` is the
   // secondary/less-prominent action alongside it (Buy Now, Bulk Purchase).
   // Names kept as-is (not renamed to `primary`/`accent`) so no call site

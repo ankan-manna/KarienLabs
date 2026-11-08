@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import type { PublicBanner } from '../../../api/public-cms.api';
 import { Button } from '../../../components/common/Button';
+import { useHoverCapable } from '../../../hooks/useHoverCapable';
 import { cn } from '../../../utils/cn';
 
 const DEFAULT_SLIDE_DURATION_MS = 6000;
@@ -72,6 +73,7 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
   const [paused, setPaused] = useState(false);
   const count = banners.length;
   const prefersReducedMotion = useReducedMotion();
+  const hoverCapable = useHoverCapable();
   const sectionRef = useRef<HTMLElement>(null);
 
   // Identity of the CURRENT banner set, not just its length — e.g. the
@@ -138,8 +140,12 @@ export function HeroCarousel({ banners }: { banners: PublicBanner[] }) {
     <section
       ref={sectionRef}
       className="relative overflow-hidden rounded-2xl bg-deep-teal outline-none dark:bg-night-elevated"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      // Pause-on-hover gated to real pointer devices — see useHoverCapable.
+      // A touchscreen's synthetic `mouseenter` on tap with no matching
+      // `mouseleave` would otherwise pause the carousel permanently after
+      // the first touch, with no way to resume auto-advance.
+      onMouseEnter={hoverCapable ? () => setPaused(true) : undefined}
+      onMouseLeave={hoverCapable ? () => setPaused(false) : undefined}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
       onKeyDown={handleKeyDown}

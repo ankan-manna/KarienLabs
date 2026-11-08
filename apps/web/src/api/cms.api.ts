@@ -67,6 +67,7 @@ export interface Blog {
   excerpt: string;
   content: string;
   coverImageUrl: string;
+  coverImagePublicId: string | null;
   isPublished: boolean;
   publishedAt: string | null;
   tags: string[];

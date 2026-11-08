@@ -7,6 +7,7 @@ import { slugify } from '../../utils/slugify';
 import { aboutContentRouter } from './about-content.routes';
 import { handleBannerDeleted, handleBannerImageReplaced } from './banner-image.service';
 import { bannerRepository } from './banner.repository';
+import { handleBlogImageDeleted, handleBlogImageReplaced } from './blog-image.service';
 import { blogRepository } from './blog.repository';
 import {
   createBannerSchema,
@@ -122,5 +123,10 @@ cmsRouter.use(
       if (ctx.isCreate) result.authorId = ctx.user!.id;
       return result;
     },
+    // Safe Cloudinary asset lifecycle: destroy the old cover image only
+    // after the DB write that stopped referencing it has committed, and
+    // only if no other live post still points at it (see blog-image.service.ts).
+    afterUpdate: (before, after) => handleBlogImageReplaced(before, after),
+    afterDelete: (before) => handleBlogImageDeleted(before),
   }),
 );

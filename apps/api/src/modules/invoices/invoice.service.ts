@@ -108,7 +108,7 @@ async function renderInvoicePdfBuffer(
 
   return renderPdf('invoice', {
     store: {
-      name: data.sellerNameSnapshot || 'KarienLabs',
+      name: data.sellerNameSnapshot || 'BRENTIS HEALTHCARE',
       address: data.sellerAddressSnapshot,
       gstin: data.sellerGstinSnapshot,
       drugLicense: data.sellerDrugLicenseSnapshot,

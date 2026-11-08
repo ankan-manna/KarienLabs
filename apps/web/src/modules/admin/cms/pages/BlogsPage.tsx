@@ -22,6 +22,7 @@ export default function BlogsPage() {
       renderExtraFields={() => <BlogImageFields />}
       extraDefaultValues={(blog) => ({
         coverImageUrl: blog?.coverImageUrl ?? '',
+        coverImagePublicId: blog?.coverImagePublicId ?? null,
         tags: blog?.tags?.[0] ?? '',
       })}
     />

@@ -1,3 +1,7 @@
+import { randomBytes } from 'crypto';
+
+import { ROLES } from '@medcommerce/shared';
+import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
 
 import { env } from '../../config/env';
@@ -5,7 +9,10 @@ import { UnauthenticatedError } from '../../utils/app-error';
 
 import { ADMIN_ROLES, isAdminRole } from './actor-context.util';
 import { isGoogleOAuthConfigured } from './auth-config.service';
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from './consent-policy.constants';
 import { UserModel } from './models/user.model';
+
+const BCRYPT_COST = 12;
 
 type UserHydratedDocument = InstanceType<typeof UserModel>;
 
@@ -143,4 +150,98 @@ export async function resolveGoogleAdminUser(
   }
 
   return user;
+}
+
+export type GoogleCustomerResolutionFailure =
+  | 'email_not_verified'
+  | 'staff_account_use_admin_login'
+  | 'account_inactive'
+  | 'account_suspended';
+
+export class GoogleCustomerResolutionError extends Error {
+  constructor(public readonly reason: GoogleCustomerResolutionFailure, message: string) {
+    super(message);
+  }
+}
+
+/**
+ * Customer-facing Google sign-in/sign-up — the deliberate opposite policy
+ * from `resolveGoogleAdminUser` above: a first-time Google identity with no
+ * matching account DOES get auto-provisioned as a new `customer`, since
+ * "Continue with Google" on the Sign Up page IS the account-creation
+ * action, not just an alternate login for an account that must already
+ * exist. An existing STAFF account matched by email is deliberately
+ * rejected here rather than silently logged into — that account must come
+ * through the dedicated, stricter admin Google flow (or password), never
+ * this one.
+ *
+ * Password policy for auto-provisioned accounts: a random, never-displayed,
+ * never-emailed bcrypt hash — satisfies the schema's required `passwordHash`
+ * without ever creating a real/guessable password. The account holder can
+ * still set a real password later via the normal "Forgot password" flow if
+ * they ever want password-based login too.
+ *
+ * Consent: Google sign-up has no checkbox step, so acceptance is recorded
+ * from the visible "By continuing, you agree to our Terms & Conditions and
+ * Privacy Policy" disclaimer shown directly beside the button on both the
+ * Login and Register pages (RegisterPage.tsx / LoginPage.tsx) — not silently
+ * assumed with no on-screen notice.
+ */
+export async function resolveOrCreateGoogleCustomerUser(
+  identity: VerifiedGoogleIdentity,
+): Promise<{ user: UserHydratedDocument; isNewAccount: boolean }> {
+  if (!identity.emailVerified) {
+    throw new GoogleCustomerResolutionError(
+      'email_not_verified',
+      'Your Google account email is not verified.',
+    );
+  }
+
+  let user = await UserModel.findOne({ googleId: identity.sub, deletedAt: null });
+  let isNewAccount = false;
+
+  if (!user) {
+    user = await UserModel.findOne({ email: identity.email, deletedAt: null });
+
+    if (user) {
+      if (isAdminRole(user.role as (typeof ADMIN_ROLES)[number])) {
+        throw new GoogleCustomerResolutionError(
+          'staff_account_use_admin_login',
+          'This email belongs to a staff account. Please use the admin sign-in page.',
+        );
+      }
+      user.googleId = identity.sub;
+      user.googleLinkedAt = new Date();
+      await user.save();
+    } else {
+      const unguessablePassword = randomBytes(32).toString('hex');
+      const now = new Date();
+      user = await UserModel.create({
+        name: identity.name,
+        email: identity.email,
+        passwordHash: await bcrypt.hash(unguessablePassword, BCRYPT_COST),
+        role: ROLES.CUSTOMER,
+        googleId: identity.sub,
+        googleLinkedAt: now,
+        emailVerified: true,
+        consent: {
+          terms: { accepted: true, acceptedAt: now, version: CURRENT_TERMS_VERSION },
+          privacy: { accepted: true, acceptedAt: now, version: CURRENT_PRIVACY_VERSION },
+        },
+      });
+      isNewAccount = true;
+    }
+  }
+
+  if (!user.isActive) {
+    throw new GoogleCustomerResolutionError('account_inactive', 'This account is disabled.');
+  }
+  if (user.isSuspended) {
+    throw new GoogleCustomerResolutionError(
+      'account_suspended',
+      'This account has been suspended. Contact support.',
+    );
+  }
+
+  return { user, isNewAccount };
 }

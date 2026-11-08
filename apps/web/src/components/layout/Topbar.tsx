@@ -37,6 +37,22 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav?: () => void }) {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Clearly visible, always-on (not buried in the account dropdown)
+            so an admin can preview a live storefront change without typing
+            the URL by hand. Opens in a new tab — switching away from the
+            admin panel's own in-progress form state (e.g. a half-filled
+            CMS edit) would be a worse outcome than one extra tab. */}
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-night-muted dark:hover:bg-night-elevated sm:flex"
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden="true">
+            <path d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-3H9v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z" />
+          </svg>
+          Back to Home
+        </a>
         <ThemeToggle />
 
         <div className="relative">

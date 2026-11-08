@@ -35,7 +35,7 @@ import { GENERATED_PAGES } from './content/policy-pages.generated';
  */
 
 const SELLER = {
-  legalName: 'KarienLabs Retail Pvt. Ltd.',
+  legalName: 'Brentis Healthcare Retail Pvt. Ltd.',
   gstin: '27AAAAA0000A1Z5',
   drugLicenseNumber: 'MH-PUN-20260001',
   address: 'Plot 14, Industrial Area, Pune, Maharashtra 411019',
@@ -173,7 +173,12 @@ const BRANDS = [
 ];
 
 const MANUFACTURER = {
-  name: 'KarienLabs Formulations Pvt. Ltd.',
+  name: 'Brentis Healthcare Formulations Pvt. Ltd.',
+  // Kept as the original slug (not re-derived from the new name) — this is
+  // the stable lookup key migrate-demo-content.ts matches existing
+  // Manufacturer documents by; changing it would make this script think
+  // it's a brand-new manufacturer instead of updating the existing one's
+  // display name, orphaning every already-seeded product's reference.
   slug: 'karienlabs-formulations-pvt-ltd',
 };
 
@@ -208,7 +213,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'paracetamol-500mg-tablets',
     sku: 'PARA-500-TAB',
     description:
-      'Paracetamol 500mg Tablets (Paracetamol) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Paracetamol 500mg Tablets (Paracetamol) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Paracetamol 500mg Tablets for trusted, everyday pain relief & fever.',
     categorySlug: 'pain-relief-fever',
     brandSlug: 'medcare-pharma',
@@ -226,7 +231,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'ibuprofen-400mg-tablets',
     sku: 'IBU-400-TAB',
     description:
-      'Ibuprofen 400mg Tablets (Ibuprofen) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Ibuprofen 400mg Tablets (Ibuprofen) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Ibuprofen 400mg Tablets for trusted, everyday pain relief & fever.',
     categorySlug: 'pain-relief-fever',
     brandSlug: 'medcare-pharma',
@@ -244,7 +249,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'daily-multivitamin-capsules',
     sku: 'MVIT-DLY-CAP',
     description:
-      'Daily Multivitamin Capsules (Multivitamin) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Daily Multivitamin Capsules (Multivitamin) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Daily Multivitamin Capsules for trusted, everyday vitamins & supplements.',
     categorySlug: 'vitamins-supplements',
     brandSlug: 'vitawell',
@@ -262,7 +267,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'vitamin-c-1000mg-tablets',
     sku: 'VITC-1000-TAB',
     description:
-      'Vitamin C 1000mg Tablets (Ascorbic Acid) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Vitamin C 1000mg Tablets (Ascorbic Acid) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Vitamin C 1000mg Tablets for trusted, everyday vitamins & supplements.',
     categorySlug: 'vitamins-supplements',
     brandSlug: 'vitawell',
@@ -280,7 +285,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'metformin-500mg-tablets',
     sku: 'MET-500D-TAB',
     description:
-      'Metformin 500mg Tablets (Metformin) is a professionally formulated product for diabetes care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Metformin 500mg Tablets (Metformin) is a professionally formulated product for diabetes care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Metformin 500mg Tablets for trusted, everyday diabetes care.',
     categorySlug: 'diabetes-care',
     brandSlug: 'medcare-pharma',
@@ -298,7 +303,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'glimepiride-2mg-tablets',
     sku: 'GLIM-2D-TAB',
     description:
-      'Glimepiride 2mg Tablets (Glimepiride) is a professionally formulated product for diabetes care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Glimepiride 2mg Tablets (Glimepiride) is a professionally formulated product for diabetes care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Glimepiride 2mg Tablets for trusted, everyday diabetes care.',
     categorySlug: 'diabetes-care',
     brandSlug: 'medcare-pharma',
@@ -316,7 +321,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'antacid-suspension-200ml',
     sku: 'ANTA-SUS-200',
     description:
-      'Antacid Suspension 200ml (Aluminium Hydroxide) is a professionally formulated product for digestive health, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Antacid Suspension 200ml (Aluminium Hydroxide) is a professionally formulated product for digestive health, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Antacid Suspension 200ml for trusted, everyday digestive health.',
     categorySlug: 'digestive-health',
     brandSlug: 'medcare-pharma',
@@ -334,7 +339,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'probiotic-gut-health-capsules',
     sku: 'PROB-GUT-CAP',
     description:
-      'Probiotic Gut Health Capsules (Lactobacillus) is a professionally formulated product for digestive health, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Probiotic Gut Health Capsules (Lactobacillus) is a professionally formulated product for digestive health, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Probiotic Gut Health Capsules for trusted, everyday digestive health.',
     categorySlug: 'digestive-health',
     brandSlug: 'vitawell',
@@ -352,7 +357,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'cetirizine-10mg-tablets',
     sku: 'CET-10D-TAB',
     description:
-      'Cetirizine 10mg Tablets (Cetirizine) is a professionally formulated product for allergy & cold, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Cetirizine 10mg Tablets (Cetirizine) is a professionally formulated product for allergy & cold, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Cetirizine 10mg Tablets for trusted, everyday allergy & cold.',
     categorySlug: 'allergy-cold',
     brandSlug: 'medcare-pharma',
@@ -370,7 +375,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'cold-cough-syrup-100ml',
     sku: 'COLD-SYR-100',
     description:
-      'Cold & Cough Syrup 100ml (Dextromethorphan) is a professionally formulated product for allergy & cold, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Cold & Cough Syrup 100ml (Dextromethorphan) is a professionally formulated product for allergy & cold, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Cold & Cough Syrup 100ml for trusted, everyday allergy & cold.',
     categorySlug: 'allergy-cold',
     brandSlug: 'medcare-pharma',
@@ -388,7 +393,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'hand-sanitizer-gel-250ml',
     sku: 'HSAN-GEL-250',
     description:
-      'Hand Sanitizer Gel 250ml (Ethyl Alcohol 70%) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Hand Sanitizer Gel 250ml (Ethyl Alcohol 70%) is a professionally formulated product for personal care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Hand Sanitizer Gel 250ml for trusted, everyday personal care.',
     categorySlug: 'personal-care',
     brandSlug: 'vitawell',
@@ -406,7 +411,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'gentle-face-cleanser-100ml',
     sku: 'FCLN-GTL-100',
     description:
-      'Gentle Face Cleanser 100ml (Cleansing Lotion) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Gentle Face Cleanser 100ml (Cleansing Lotion) is a professionally formulated product for personal care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Gentle Face Cleanser 100ml for trusted, everyday personal care.',
     categorySlug: 'personal-care',
     brandSlug: 'vitawell',
@@ -424,7 +429,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'baby-moisturizing-lotion-200ml',
     sku: 'BABY-LOT-200',
     description:
-      'Baby Moisturizing Lotion 200ml (Baby Lotion) is a professionally formulated product for baby & mother care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Baby Moisturizing Lotion 200ml (Baby Lotion) is a professionally formulated product for baby & mother care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Baby Moisturizing Lotion 200ml for trusted, everyday baby & mother care.',
     categorySlug: 'baby-mother-care',
     brandSlug: 'vitawell',
@@ -442,7 +447,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'omega-3-fish-oil-capsules',
     sku: 'OME3-FSH-CAP',
     description:
-      'Omega-3 Fish Oil Capsules (Omega-3 Fatty Acids) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Omega-3 Fish Oil Capsules (Omega-3 Fatty Acids) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Omega-3 Fish Oil Capsules for trusted, everyday wellness & heart health.',
     categorySlug: 'wellness-heart-health',
     brandSlug: 'vitawell',
@@ -460,7 +465,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'coenzyme-q10-60mg-capsules',
     sku: 'COQ10-60-CAP',
     description:
-      'Coenzyme Q10 60mg Capsules (Ubiquinone) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Coenzyme Q10 60mg Capsules (Ubiquinone) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Coenzyme Q10 60mg Capsules for trusted, everyday wellness & heart health.',
     categorySlug: 'wellness-heart-health',
     brandSlug: 'vitawell',
@@ -478,7 +483,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'daily-fiber-heart-health-powder',
     sku: 'FIBR-HRT-200',
     description:
-      'Daily Fiber Heart Health Powder (Psyllium Husk) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Daily Fiber Heart Health Powder (Psyllium Husk) is a professionally formulated product for wellness & heart health, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Daily Fiber Heart Health Powder for trusted, everyday wellness & heart health.',
     categorySlug: 'wellness-heart-health',
     brandSlug: 'vitawell',
@@ -496,7 +501,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'daily-moisturizing-body-lotion-300ml',
     sku: 'BLTN-MST-300',
     description:
-      'Daily Moisturizing Body Lotion 300ml (Body Lotion) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Daily Moisturizing Body Lotion 300ml (Body Lotion) is a professionally formulated product for personal care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Daily Moisturizing Body Lotion 300ml for trusted, everyday personal care.',
     categorySlug: 'personal-care',
     brandSlug: 'vitawell',
@@ -514,7 +519,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'antiseptic-liquid-500ml',
     sku: 'ANTS-LIQ-500',
     description:
-      'Antiseptic Liquid 500ml (Chloroxylenol) is a professionally formulated product for personal care, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Antiseptic Liquid 500ml (Chloroxylenol) is a professionally formulated product for personal care, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Antiseptic Liquid 500ml for trusted, everyday personal care.',
     categorySlug: 'personal-care',
     brandSlug: 'medcare-pharma',
@@ -532,7 +537,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'aspirin-75mg-tablets',
     sku: 'ASPR-75-TAB',
     description:
-      'Aspirin 75mg Tablets (Acetylsalicylic Acid) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Aspirin 75mg Tablets (Acetylsalicylic Acid) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Aspirin 75mg Tablets for trusted, everyday pain relief & fever.',
     categorySlug: 'pain-relief-fever',
     brandSlug: 'medcare-pharma',
@@ -550,7 +555,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'diclofenac-gel-30g',
     sku: 'DICL-GEL-30',
     description:
-      'Diclofenac Gel 30g (Diclofenac Diethylamine) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Diclofenac Gel 30g (Diclofenac Diethylamine) is a professionally formulated product for pain relief & fever, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Diclofenac Gel 30g for trusted, everyday pain relief & fever.',
     categorySlug: 'pain-relief-fever',
     brandSlug: 'medcare-pharma',
@@ -568,7 +573,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'zinc-50mg-tablets',
     sku: 'ZINC-50-TAB',
     description:
-      'Zinc 50mg Tablets (Zinc Sulphate) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Zinc 50mg Tablets (Zinc Sulphate) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Zinc 50mg Tablets for trusted, everyday vitamins & supplements.',
     categorySlug: 'vitamins-supplements',
     brandSlug: 'vitawell',
@@ -586,7 +591,7 @@ const PRODUCTS: ProductSeed[] = [
     slug: 'vitamin-d3-2000iu-capsules',
     sku: 'VITD3-2K-CAP',
     description:
-      'Vitamin D3 2000IU Capsules (Cholecalciferol) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by KarienLabs Formulations.',
+      'Vitamin D3 2000IU Capsules (Cholecalciferol) is a professionally formulated product for vitamins & supplements, manufactured under strict quality standards by Brentis Healthcare Formulations.',
     shortDescription: 'Vitamin D3 2000IU Capsules for trusted, everyday vitamins & supplements.',
     categorySlug: 'vitamins-supplements',
     brandSlug: 'vitawell',
@@ -1052,7 +1057,27 @@ const BANNERS: Array<{
       linkCategorySlug: 'vitamins-supplements',
       ctaText: 'Explore Wellness',
       placement: 'hero',
-      order: 1,
+      order: 2,
+    },
+    {
+      // Third hero slide — the homepage carousel is built for exactly 3
+      // slides' worth of rotation/indicator UX; only 2 "hero"-placement
+      // Banner documents existed (an earlier, pre-dynamic-CMS version of
+      // this homepage had 3 hand-picked HERO_SLIDES — see the first hero
+      // banner's own comment above — but only 2 survived the migration to
+      // real seeded Banner documents). Pain relief & fever is BRENTIS's
+      // largest, most-stocked real category (confirmed against the PRODUCTS
+      // list above), so "most shopped" is a true claim, not invented.
+      title: 'Pain Relief & Fever Care, Sorted',
+      subtitle: 'Trusted everyday essentials for aches, fever and more — genuine medicines, fast delivery.',
+      badge: 'Most Shopped',
+      imageUrl: 'https://images.unsplash.com/photo-1580281657527-47f249e8f4df?w=1600&q=80',
+      imagePublicId: null,
+      linkPath: '/products',
+      linkCategorySlug: 'pain-relief-fever',
+      ctaText: 'Shop Pain Relief',
+      placement: 'hero',
+      order: 3,
     },
     {
       title: 'Flat 20% Off Diabetes Care Essentials',

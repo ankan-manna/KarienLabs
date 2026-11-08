@@ -323,14 +323,15 @@ export function Header() {
           aria-label="BRENTIS HEALTHCARE — home"
           className="flex flex-shrink-0 items-center gap-2"
         >
-          {/* Text wordmark, not a cropped logo image — newLogo.jpeg is a square,
-              flat-background hero mark (see docs/BRENTIS_DESIGN_SYSTEM.md §11
-              in the analysis doc) that distorts badly at header height; this
-              small heart accent echoes the logo's own heart-on-the-"i" detail
-              without relying on a crop of an asset that isn't header-ready. */}
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true">
-            <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
-          </svg>
+          {/* Real brand mark (newLogo.jpeg) — pre-cropped server-side to a
+              clean square (logo-mark.png) so it sits in the header at icon
+              scale without the source hero graphic's wide aspect ratio
+              distorting. */}
+          <img
+            src="/logo-mark.png"
+            alt=""
+            className="h-9 w-9 flex-shrink-0 rounded-xl object-cover"
+          />
           {/* "BRENTIS HEALTHCARE" set in full doesn't fit next to the hamburger
               + search/cart/account icon cluster below ~400px (verified via
               browser QA — it pushed "Sign in" off-screen, causing real

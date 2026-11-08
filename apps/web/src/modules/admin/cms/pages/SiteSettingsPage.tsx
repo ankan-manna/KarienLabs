@@ -208,7 +208,7 @@ export default function SiteSettingsPage() {
         />
         <Input
           label="Title Suffix"
-          placeholder="e.g. | KarienLabs"
+          placeholder="e.g. | Brentis Healthcare"
           value={form.titleSuffix}
           onChange={(e) => setForm({ ...form, titleSuffix: e.target.value })}
         />

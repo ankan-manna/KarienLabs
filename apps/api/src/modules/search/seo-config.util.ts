@@ -58,7 +58,7 @@ export const DEFAULT_SEO_CONFIG: SeoConfig = {
   aeoEnabled: true,
   geoEnabled: true,
 
-  siteTitle: 'KarienLabs — Online Medical Store',
+  siteTitle: 'BRENTIS HEALTHCARE — Online Medical Store',
   siteDescription: 'Order medicines and healthcare products online with fast, reliable delivery.',
   defaultOgImage: '/logo.jpg',
   canonicalBaseUrl: '',

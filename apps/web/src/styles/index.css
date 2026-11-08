@@ -42,6 +42,24 @@
        .dark below (Header.tsx/Button.tsx/Footer.tsx already treat `ink` as
        a fixed dark navy that reads correctly against either theme). */
     --color-ink: #172b2f;
+
+    /* Space-separated R G B channel triples of the hex values above —
+       required so Tailwind can splice in its `<alpha-value>` for opacity
+       modifiers (`bg-night-surface/95`, `border-pale-sage/50`, ...; see
+       tailwind.config.js). The bare `var(--color-*)` vars above stay as
+       plain hex strings (several call sites — chart `fill`/`stroke` props,
+       `border-[var(--color-border)]` arbitrary values — use them directly
+       as a complete color and would break if these became channel triples
+       instead), so these `-rgb` variables are additive, not a replacement. */
+    --color-primary-rgb: 255 128 0;
+    --color-secondary-rgb: 255 75 51;
+    --color-text-main-rgb: 23 43 47;
+    --color-text-muted-rgb: 91 115 112;
+    --color-bg-main-rgb: 255 247 242;
+    --color-bg-card-rgb: 255 255 255;
+    --color-bg-section-rgb: 255 240 232;
+    --color-border-rgb: 243 216 204;
+    --color-ink-rgb: 23 43 47;
   }
   .dark {
     --color-primary: #ff8a1f;
@@ -52,6 +70,15 @@
     --color-bg-card: #12343a;
     --color-bg-section: #0d282d;
     --color-border: #24464b;
+
+    --color-primary-rgb: 255 138 31;
+    --color-secondary-rgb: 255 90 69;
+    --color-text-main-rgb: 248 245 242;
+    --color-text-muted-rgb: 164 188 186;
+    --color-bg-main-rgb: 8 28 32;
+    --color-bg-card-rgb: 18 52 58;
+    --color-bg-section-rgb: 13 40 45;
+    --color-border-rgb: 36 70 75;
   }
 }
 

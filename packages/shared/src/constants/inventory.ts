@@ -7,7 +7,7 @@ export const STOCK_MOVEMENT_TYPES = {
   TRANSFER_IN: 'transfer_in',
   DAMAGE: 'damage',
   EXPIRY_WRITE_OFF: 'expiry_write_off',
-  // KarienLabs manufactures its own stock — this distinguishes an Admin's
+  // Brentis Healthcare manufactures its own stock — this distinguishes an Admin's
   // direct "Add Inventory" entry (own-manufactured, no supplier/PO involved)
   // from a supplier-sourced GRN receipt (`RECEIPT`) and from the separate
   // request/approve manual-adjustment workflow (`ADJUSTMENT`), so reporting

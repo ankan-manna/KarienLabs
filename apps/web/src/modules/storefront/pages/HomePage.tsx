@@ -15,6 +15,7 @@ import { RatingStars } from '../../../components/common/RatingStars';
 import { SkeletonRows } from '../../../components/common/Skeleton';
 import { SOCIAL_LINKS } from '../../../components/layout/Footer';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
+import { useHoverCapable } from '../../../hooks/useHoverCapable';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { ProductCard } from '../components/ProductCard';
 
@@ -336,6 +337,7 @@ const CATEGORY_AUTO_ADVANCE_MS = 4000;
 function CategorySection() {
   const { data: categories } = useQuery({ queryKey: ['categories', 'tree', 'home'], queryFn: listCategoryTree });
   const prefersReducedMotion = useReducedMotion();
+  const hoverCapable = useHoverCapable();
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -363,8 +365,12 @@ function CategorySection() {
   return (
     <section
       className="bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      // Pause-on-hover only wired up for devices that can genuinely hover
+      // (mouse/trackpad) — see useHoverCapable's own comment. On a
+      // touchscreen, skipping these handlers entirely means a tap never
+      // leaves the carousel stuck paused with no `mouseleave` to undo it.
+      onMouseEnter={hoverCapable ? () => setPaused(true) : undefined}
+      onMouseLeave={hoverCapable ? () => setPaused(false) : undefined}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >

@@ -135,7 +135,7 @@ export default function ProductDetailPage() {
       />
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/*  (Product Image Management) Part 10/15/16 — Amazon-style
-            layout as a UX reference only (own KarienLabs styling, not their
+            layout as a UX reference only (own Brentis Healthcare styling, not their
             branding): a thumbnail rail beside the large image on desktop
             (`md:flex-row`, rail on the left), collapsing to a horizontal,
             swipeable thumbnail strip BELOW the large image on mobile
