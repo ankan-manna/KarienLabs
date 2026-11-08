@@ -129,7 +129,7 @@ type QuickAddStockInput =
  * approved in one step instead of two.
  *
  *  (Manufacturer Inventory Model) — `mode: 'new_batch'` is the
- * PO/GRN-free path for KarienLabs' own manufactured stock: it creates the
+ * PO/GRN-free path for Brentis Healthcare' own manufactured stock: it creates the
  * Batch itself (the exact same atomic upsert `grn.service.ts::createGrn`
  * already uses — `$inc` the quantity fields, `$setOnInsert` the
  * batch-identity fields, so a race against a second call for the SAME

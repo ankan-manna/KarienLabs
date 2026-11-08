@@ -21,6 +21,13 @@ export const aboutContentSchema = z.object({
   mainImageUrl: z.string().trim().url().or(z.literal('')).default(''),
   mainImagePublicId: z.string().nullable().default(null),
   mainImageAlt: z.string().trim().max(200).default(''),
+  // Optional second, smaller photo layered over a corner of the main image
+  // (an editorial collage composition) — admin-optional; the frontend
+  // renders a single-photo layout when this is unset, never a fabricated
+  // placeholder.
+  secondaryImageUrl: z.string().trim().url().or(z.literal('')).default(''),
+  secondaryImagePublicId: z.string().nullable().default(null),
+  secondaryImageAlt: z.string().trim().max(200).default(''),
   blocks: z.array(contentBlockSchema).max(8).default([]),
   highlightsTagline: z.string().trim().max(80).default(''),
   highlightsHeading: z.string().trim().max(160).default(''),

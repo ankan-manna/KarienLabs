@@ -72,7 +72,7 @@ async function dispatch(channel: string, recipient: string, subject: string, bod
     case 'whatsapp':
       return sendWhatsApp({ to: recipient, body });
     case 'push':
-      return sendPush({ to: recipient, title: subject || 'KarienLabs', body });
+      return sendPush({ to: recipient, title: subject || 'BRENTIS HEALTHCARE', body });
     default:
       throw new Error(`Unknown notification channel "${channel}"`);
   }

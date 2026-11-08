@@ -99,17 +99,17 @@ export function Sidebar({ title, sections, mobileOpen = false, onCloseMobile, lo
           {(() => {
             const logo =
               collapsed && treatAsDesktop ? (
-                <img src="/logo.jpg" alt="KarienLabs" className="h-6 w-6 rounded object-cover" />
+                <img src="/logo-mark.png" alt="Brentis HealthCare" className="h-6 w-6 rounded object-cover" />
               ) : (
                 <span className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-night-text">
-                  <img src="/logo.jpg" alt="" className="h-6 w-auto rounded" />
+                  <img src="/logo-mark.png" alt="" className="h-6 w-6 rounded object-cover" />
                   {title}
                 </span>
               );
             return logoHref ? (
               <Link
                 to={logoHref}
-                aria-label="KarienLabs Home"
+                aria-label="Brentis HealthCare — Home"
                 onClick={(e) => {
                   if (guardRef.current?.isDirty) {
                     e.preventDefault();

@@ -120,6 +120,10 @@ export async function createAdminUser(input: CreateAdminUserInput, actorId: stri
     passwordHash,
     role: input.role,
     createdBy: actorId,
+    // The creating admin chose this password, not the new employee — force
+    // it to be rotated on first login (section 9's "require a password
+    // change where appropriate").
+    mustChangePassword: true,
   });
 
   await recordAudit({
@@ -251,6 +255,7 @@ export async function resetUserPassword(id: string, newPassword: string, actorId
   assertCanManageTarget(actorId, actorRole, { _id: user._id, role: user.role });
 
   user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_COST);
+  user.mustChangePassword = true;
   user.set('updatedBy', actorId);
   await user.save();
 

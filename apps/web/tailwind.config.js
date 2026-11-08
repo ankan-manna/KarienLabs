@@ -34,30 +34,40 @@ export default {
         // (not Tailwind's built-in `teal`, which has different hex values)
         // so every usage traces directly back to the design system doc.
         // KarienLabs Storefront design system mapped to CSS variables
-        'deep-teal': 'var(--color-bg-section)', // Light: #FFF0E8, Dark: #0D282D
-        'healthcare-teal': 'var(--color-primary)', // Light: #FF8000, Dark: #FF8A1F
-        'soft-mint': 'var(--color-bg-main)', // Light: #FFF7F2, Dark: #081C20
-        coral: 'var(--color-secondary)', // Light: #FF4B33, Dark: #FF5A45
-        'charcoal-teal': 'var(--color-text-main)', // Light: #172B2F, Dark: #F8F5F2
-        'slate-teal': 'var(--color-text-muted)', // Muted text
-        'pale-sage': 'var(--color-border)', // Light: #F3D8CC, Dark: #24464B
+        // Values use the `rgb(var(--x-rgb) / <alpha-value>)` form (not a
+        // bare `var(--x)` reference) so Tailwind can actually splice in an
+        // opacity modifier — `bg-night-surface/95`, `border-pale-sage/50`,
+        // etc. are used throughout the storefront, but Tailwind silently
+        // drops any utility combining a slash-opacity modifier with a color
+        // that isn't in this alpha-capable form (no build error — the class
+        // just never gets generated, leaving whatever rule happens to win
+        // the cascade instead, e.g. a card staying light-mode white while
+        // its text switched to the dark-mode color). See index.css's
+        // `-rgb` companion variables.
+        'deep-teal': 'rgb(var(--color-bg-section-rgb) / <alpha-value>)', // Light: #FFF0E8, Dark: #0D282D
+        'healthcare-teal': 'rgb(var(--color-primary-rgb) / <alpha-value>)', // Light: #FF8000, Dark: #FF8A1F
+        'soft-mint': 'rgb(var(--color-bg-main-rgb) / <alpha-value>)', // Light: #FFF7F2, Dark: #081C20
+        coral: 'rgb(var(--color-secondary-rgb) / <alpha-value>)', // Light: #FF4B33, Dark: #FF5A45
+        'charcoal-teal': 'rgb(var(--color-text-main-rgb) / <alpha-value>)', // Light: #172B2F, Dark: #F8F5F2
+        'slate-teal': 'rgb(var(--color-text-muted-rgb) / <alpha-value>)', // Muted text
+        'pale-sage': 'rgb(var(--color-border-rgb) / <alpha-value>)', // Light: #F3D8CC, Dark: #24464B
 
         // Short semantic aliases used across Button/Header/Footer/HomePage/
         // ProductCard/ProductDetailPage/SearchResultsPage — same underlying
         // variables as above, just the shorter names those call sites use.
-        primary: 'var(--color-primary)',
-        accent: 'var(--color-secondary)',
+        primary: 'rgb(var(--color-primary-rgb) / <alpha-value>)',
+        accent: 'rgb(var(--color-secondary-rgb) / <alpha-value>)',
         // Static navbar/footer chrome — intentionally does NOT track the
         // light/dark text color (see index.css's --color-ink comment).
-        ink: 'var(--color-ink)',
+        ink: 'rgb(var(--color-ink-rgb) / <alpha-value>)',
 
         // Dark-mode counterparts mapped to same variables for backward compatibility
-        night: 'var(--color-bg-main)', // Dark: #081C20
-        'night-surface': 'var(--color-bg-card)', // Dark: #12343A
-        'night-elevated': 'var(--color-bg-section)', // Dark: #0D282D
-        'night-border': 'var(--color-border)', // Dark: #24464B
-        'night-text': 'var(--color-text-main)', // Dark: #F8F5F2
-        'night-muted': 'var(--color-text-muted)', // Dark: #A4BCBA
+        night: 'rgb(var(--color-bg-main-rgb) / <alpha-value>)', // Dark: #081C20
+        'night-surface': 'rgb(var(--color-bg-card-rgb) / <alpha-value>)', // Dark: #12343A
+        'night-elevated': 'rgb(var(--color-bg-section-rgb) / <alpha-value>)', // Dark: #0D282D
+        'night-border': 'rgb(var(--color-border-rgb) / <alpha-value>)', // Dark: #24464B
+        'night-text': 'rgb(var(--color-text-main-rgb) / <alpha-value>)', // Dark: #F8F5F2
+        'night-muted': 'rgb(var(--color-text-muted-rgb) / <alpha-value>)', // Dark: #A4BCBA
       },
       // BRENTIS storefront typography (docs/BRENTIS_DESIGN_SYSTEM.md §2).
       // Deliberately namespaced, NOT merged into Tailwind's default `sans`
@@ -82,6 +92,18 @@ export default {
         'storefront-sm': '0 1px 2px rgba(23,43,47,0.06)',
         'storefront-md': '0 4px 16px rgba(23,43,47,0.08)',
         'storefront-hover': '0 8px 24px rgba(255,128,0,0.12)',
+      },
+      // Continuous horizontal scroll for the homepage trust-strip marquee —
+      // the track renders its content twice back-to-back and scrolls
+      // exactly 50% so the loop is seamless.
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 24s linear infinite',
       },
     },
   },

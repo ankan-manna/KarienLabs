@@ -39,7 +39,7 @@ export function AdminLayout() {
     // simply never move — a single scroll region, no double scrollbars.
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-night">
       <Sidebar
-        title="KarienLabs Admin"
+        title="Brentis HealthCare Admin"
         mobileOpen={mobileNavOpen}
         onCloseMobile={() => setMobileNavOpen(false)}
         logoHref="/admin"

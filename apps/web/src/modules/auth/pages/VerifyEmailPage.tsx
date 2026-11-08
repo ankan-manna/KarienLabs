@@ -28,7 +28,7 @@ export default function VerifyEmailPage() {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <Spinner size="lg" className="text-brand-500" />
-        <p className="text-sm text-gray-500">Verifying your email…</p>
+        <p className="text-sm text-gray-500 dark:text-night-muted">Verifying your email…</p>
       </div>
     );
   }
@@ -37,7 +37,7 @@ export default function VerifyEmailPage() {
     return (
       <div className="flex flex-col gap-3 text-center">
         <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Email verified</h1>
-        <p className="text-sm text-gray-500">Thanks — your email address is now confirmed.</p>
+        <p className="text-sm text-gray-500 dark:text-night-muted">Thanks — your email address is now confirmed.</p>
         <Link to="/" className="text-sm font-medium text-brand-600 hover:underline">
           Continue
         </Link>
@@ -50,7 +50,7 @@ export default function VerifyEmailPage() {
       <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
         Verification failed
       </h1>
-      <p className="text-sm text-gray-500">This link is invalid or has expired.</p>
+      <p className="text-sm text-gray-500 dark:text-night-muted">This link is invalid or has expired.</p>
       <Link to="/account/profile" className="text-sm font-medium text-brand-600 hover:underline">
         Request a new link from your profile
       </Link>

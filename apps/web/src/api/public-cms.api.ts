@@ -14,7 +14,7 @@ export interface PublicBanner {
   ctaText: string;
   secondaryCtaText: string;
   secondaryCtaLink: string;
-  placement: 'hero' | 'category' | 'checkout';
+  placement: 'hero' | 'category' | 'checkout' | 'offer';
   order: number;
   slideDurationMs: number | null;
 }
@@ -180,6 +180,9 @@ export interface AboutContent {
   mainImageUrl?: string;
   mainImagePublicId?: string | null;
   mainImageAlt?: string;
+  secondaryImageUrl?: string;
+  secondaryImagePublicId?: string | null;
+  secondaryImageAlt?: string;
   blocks?: AboutContentBlock[];
   highlightsTagline?: string;
   highlightsHeading?: string;

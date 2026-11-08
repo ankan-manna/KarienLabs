@@ -70,10 +70,95 @@ function FacebookIcon() {
   );
 }
 
+// Simplified, self-drawn acceptance-mark icons for the payment methods
+// Razorpay (the real, already-integrated gateway) actually supports —
+// recognizable approximations in each network's brand colors (not traced
+// copies of the networks' official vector files, which this environment
+// has no way to fetch). Displaying "we accept Visa/Mastercard/RuPay/UPI" is
+// standard, expected merchant usage for an acceptance mark, unlike
+// reproducing a competitor's editorial photography.
+function VisaMark() {
+  return (
+    <svg viewBox="0 0 48 16" className="h-4 w-10" aria-hidden="true">
+      <text x="0" y="13" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="15" fill="#1A1F71">
+        VISA
+      </text>
+    </svg>
+  );
+}
+
+function MastercardMark() {
+  return (
+    <svg viewBox="0 0 36 22" className="h-5 w-8" aria-hidden="true">
+      <circle cx="14" cy="11" r="9" fill="#EB001B" />
+      <circle cx="22" cy="11" r="9" fill="#F79E1B" fillOpacity="0.9" />
+    </svg>
+  );
+}
+
+function RuPayMark() {
+  return (
+    <svg viewBox="0 0 54 16" className="h-4 w-14" aria-hidden="true">
+      <text x="0" y="13" fontFamily="Arial, sans-serif" fontWeight="800" fontSize="14" fill="#097939">
+        Ru
+      </text>
+      <text x="20" y="13" fontFamily="Arial, sans-serif" fontWeight="800" fontSize="14" fill="#16284F">
+        Pay
+      </text>
+    </svg>
+  );
+}
+
+function UpiMark() {
+  return (
+    <svg viewBox="0 0 44 16" className="h-4 w-11" aria-hidden="true">
+      <path d="M2 11l4-6 4 6" stroke="#097939" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <text x="12" y="13" fontFamily="Arial, sans-serif" fontWeight="800" fontSize="13" fill="#16284F">
+        UPI
+      </text>
+    </svg>
+  );
+}
+
+function NetbankingMark() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-4 w-4 text-ink" fill="none" aria-hidden="true">
+      <path d="M10 2 2 6.5h16L10 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path
+        d="M4 8.5v6.5M8 8.5v6.5M12 8.5v6.5M16 8.5v6.5M2.5 17.5h15"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function WalletMark() {
+  return (
+    <svg viewBox="0 0 20 20" className="h-4 w-4 text-ink" fill="none" aria-hidden="true">
+      <rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M2 8.5h16" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="14.5" cy="11.5" r="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
+const PAYMENT_METHODS = [
+  { key: 'visa', label: 'Visa', Mark: VisaMark },
+  { key: 'mastercard', label: 'Mastercard', Mark: MastercardMark },
+  { key: 'rupay', label: 'RuPay', Mark: RuPayMark },
+  { key: 'upi', label: 'UPI', Mark: UpiMark },
+  { key: 'netbanking', label: 'Netbanking', Mark: NetbankingMark },
+  { key: 'wallets', label: 'Wallets', Mark: WalletMark },
+] as const;
+
 // Exact, real KarienLabs accounts as supplied — no other social accounts are
 // invented. `key` doubles as the `socialLinks` config field admin-configured
-// URLs (if any) are looked up by.
-const SOCIAL_LINKS = [
+// URLs (if any) are looked up by. Exported so other storefront surfaces
+// (the homepage's social-strip marquee) reuse these same verified accounts
+// and icons rather than duplicating or inventing a second list.
+export const SOCIAL_LINKS = [
   { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/karien.labs/', Icon: InstagramIcon },
   { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/@KarienLabs', Icon: YoutubeIcon },
   {
@@ -123,14 +208,18 @@ export function Footer() {
   }));
 
   return (
-    <footer className="bg-ink">
+    // Teal/green-leaning gradient (per redesign_plan.md) — built entirely
+    // from colors already established in this codebase's own dark theme
+    // (`ink` #172B2F → the dark `deep-teal`/`night-elevated` token's own
+    // value #0D282D), never Brintoncare's specific measured brand hex. Fixed
+    // regardless of the site's light/dark theme, same as before — this is
+    // chrome, not a themed content surface.
+    <footer className="bg-gradient-to-b from-ink to-[#0D282D]">
       <div className="mx-auto max-w-[1920px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">
             <Link to="/" aria-label="BRENTIS HEALTHCARE — home" className="inline-flex items-center gap-2">
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 flex-shrink-0 text-primary" aria-hidden="true">
-                <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
-              </svg>
+              <img src="/logo-mark.png" alt="" className="h-8 w-8 flex-shrink-0 rounded-lg object-cover" />
               <span className="font-brentis-display text-base font-semibold tracking-tight text-white">
                 BRENTIS <span className="text-primary">HEALTHCARE</span>
               </span>
@@ -195,13 +284,12 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Truthful payment-methods row — what Razorpay (the project's real,
+        {/* Payment-methods row — what Razorpay (the project's real,
             already-integrated payment gateway) actually accepts, restating
-            Checkout's own "card, UPI, netbanking & wallets" line. Text
-            labels rather than card-network logo marks, since reproducing
-            Visa/Mastercard/RuPay's actual trademarked logos isn't something
-            to do without their brand guidelines/permission. */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-6">
+            Checkout's own "card, UPI, netbanking & wallets" line. Each
+            method gets its own white acceptance-mark chip (see the
+            PAYMENT_METHODS icons above) rather than a plain text label. */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3 border-t border-white/10 pt-6">
           <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-white/50">
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
               <rect x="2.5" y="5.5" width="19" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
@@ -209,12 +297,13 @@ export function Footer() {
             </svg>
             Secure payments via Razorpay
           </span>
-          {['Visa', 'Mastercard', 'RuPay', 'UPI', 'Netbanking', 'Wallets'].map((method) => (
+          {PAYMENT_METHODS.map(({ key, label, Mark }) => (
             <span
-              key={method}
-              className="rounded-md border border-white/15 px-2 py-1 text-[11px] font-medium text-white/60"
+              key={key}
+              title={label}
+              className="flex h-9 min-w-[44px] items-center justify-center rounded-md bg-white px-2.5"
             >
-              {method}
+              <Mark />
             </span>
           ))}
         </div>

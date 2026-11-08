@@ -29,7 +29,7 @@ const quickAddExistingBatchSchema = z.object({
 
 // Manufacturer own-stock (: "Manufacturer Inventory Model") — creates
 // the batch AND adds the quantity in one step, with no Purchase Order/GRN
-// involved (KarienLabs manufactures its own products, so there's no
+// involved (Brentis Healthcare manufactures its own products, so there's no
 // supplier to receive goods from). Reuses the exact same Batch fields GRN
 // already populates (mfgDate/expiryDate/unitCost/mrp) — same schema, same
 // downstream FEFO/expiry logic, just a different, PO-free entry point.

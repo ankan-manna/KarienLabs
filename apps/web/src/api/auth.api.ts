@@ -86,6 +86,7 @@ export interface PublicAuthConfig {
   otpLoginEnabled: boolean;
   otpPasswordResetEnabled: boolean;
   googleAdminLoginEnabled: boolean;
+  googleCustomerLoginEnabled: boolean;
 }
 
 /** Pre-authentication config the login/forgot-password pages need — whether to render the OTP step and the "Continue with Google" button. */
@@ -94,20 +95,36 @@ export async function authConfigRequest(): Promise<PublicAuthConfig> {
   return unwrap(data);
 }
 
-/** Plain browser-navigation URL (not an axios call) — assign to `window.location.href` or an `<a href>`. */
-export function googleLoginUrl(): string {
-  return `${apiBaseUrl()}/auth/google`;
+/**
+ * Plain browser-navigation URL (not an axios call) — assign to
+ * `window.location.href` or an `<a href>`. `flow` picks which resolution
+ * policy the backend applies on callback (`admin` only ever signs into an
+ * already-authorized staff account; `customer` auto-provisions a new
+ * account on first use, i.e. this IS the "Sign Up with Google" action).
+ * `origin` is only used to send the visitor back to the right page
+ * (Login vs Register) if the flow fails.
+ */
+export function googleLoginUrl(
+  flow: 'admin' | 'customer' = 'admin',
+  origin: 'login' | 'register' = 'login',
+): string {
+  const params = new URLSearchParams({ flow, origin });
+  return `${apiBaseUrl()}/auth/google?${params.toString()}`;
 }
 
 export async function registerRequest(
   name: string,
   email: string,
   password: string,
+  acceptedTerms: boolean,
+  acceptedPrivacy: boolean,
 ): Promise<RegisterResponse> {
   const { data } = await httpClient.post<ApiResponse<RegisterResponse>>('/auth/register', {
     name,
     email,
     password,
+    acceptedTerms,
+    acceptedPrivacy,
   });
   return unwrap(data);
 }

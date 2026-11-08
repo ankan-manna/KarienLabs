@@ -1,9 +1,10 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 
 import { cn } from '../../utils/cn';
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  /** Plain text, or a short inline node (e.g. text with an embedded `<Link>`) — kept simple since it renders inside a `<label>`. */
+  label?: ReactNode;
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(

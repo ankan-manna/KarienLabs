@@ -46,12 +46,17 @@ export default function ForgotPasswordPage() {
 
   async function onSubmit(values: ForgotPasswordFormValues) {
     setFormError(null);
-    await forgotPasswordRequest(values.email);
-    setEmail(values.email);
-    // Config-driven: the OTP step only makes sense when the backend actually
-    // sent an OTP rather than an emailed link — decided ahead of time via
-    // `authConfigRequest`, not from this (deliberately generic) response.
-    setStep(otpEnabled ? 'otp' : 'sent');
+    try {
+      await forgotPasswordRequest(values.email);
+      setEmail(values.email);
+      // Config-driven: the OTP step only makes sense when the backend
+      // actually sent an OTP rather than an emailed link — decided ahead of
+      // time via `authConfigRequest`, not from this (deliberately generic)
+      // response.
+      setStep(otpEnabled ? 'otp' : 'sent');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    }
   }
 
   async function onSubmitOtp(values: OtpFormValues) {
@@ -68,7 +73,7 @@ export default function ForgotPasswordPage() {
     return (
       <div className="flex flex-col gap-3 text-center">
         <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Check your email</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-night-muted">
           If an account exists for that email, we&apos;ve sent a link to reset your password.
         </p>
         <Link to="/login" className="text-sm font-medium text-brand-600 hover:underline">
@@ -82,13 +87,13 @@ export default function ForgotPasswordPage() {
     return (
       <form onSubmit={handleOtpSubmit(onSubmitOtp)} className="flex flex-col gap-4">
         <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Enter verification code</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-night-muted">
           If an account exists for <span className="font-medium">{email}</span>, we&apos;ve sent a code
           to it.
         </p>
 
         {formError && (
-          <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20">
+          <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
             {formError}
           </p>
         )}
@@ -105,7 +110,7 @@ export default function ForgotPasswordPage() {
           Verify code
         </Button>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-500 dark:text-night-muted">
           <Link to="/login" className="font-medium text-brand-600 hover:underline">
             Back to sign in
           </Link>
@@ -117,11 +122,17 @@ export default function ForgotPasswordPage() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Forgot password</h1>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-night-muted">
         {otpEnabled
           ? "Enter your email and we'll send you a verification code."
           : "Enter your email and we'll send you a reset link."}
       </p>
+
+      {formError && (
+        <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+          {formError}
+        </p>
+      )}
 
       <Input
         label="Email"

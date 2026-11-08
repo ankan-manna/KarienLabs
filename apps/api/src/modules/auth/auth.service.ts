@@ -17,6 +17,7 @@ import { enqueueNotification } from '../notifications/notification.service';
 import { recordAuthEvent } from './auth-audit.service';
 import { getAuthConfig } from './auth-config.service';
 import type { LoginInput, RegisterInput } from './auth.validator';
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from './consent-policy.constants';
 import { maskContact, resolveOtpContact } from './contact.util';
 import {
   accessTokenExpiresAt,
@@ -173,11 +174,19 @@ export async function register(input: RegisterInput, meta: SessionMeta): Promise
   }
 
   const passwordHash = await bcrypt.hash(input.password, BCRYPT_COST);
+  const now = new Date();
   const user = await UserModel.create({
     name: input.name,
     email: input.email,
     passwordHash,
     role: ROLES.CUSTOMER,
+    // Schema-level validation already guarantees both are literally `true`
+    // by this point — recorded here, not inferred, so the stored timestamp
+    // and policy version reflect what was actually agreed to.
+    consent: {
+      terms: { accepted: true, acceptedAt: now, version: CURRENT_TERMS_VERSION },
+      privacy: { accepted: true, acceptedAt: now, version: CURRENT_PRIVACY_VERSION },
+    },
   });
 
   if (!otpCfg.registrationOtpEnabled) {
@@ -683,12 +692,20 @@ export async function requestPasswordReset(email: string, meta: SessionMeta): Pr
     expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MINUTES * 60 * 1000),
   });
 
+  // The raw token itself is NEVER passed to the notification layer — it's a
+  // bearer secret, and `token` is in notification-template-variables.util.ts's
+  // global forbidden-variable list specifically so no admin-authored
+  // template can ever be made to render a raw token. The server builds the
+  // complete, safe, single-use URL instead; the template only ever sees
+  // `resetUrl`.
+  const resetUrl = `${env.WEB_BASE_URL}/reset-password?token=${token}`;
+
   await enqueueNotification({
     channel: 'email',
     templateKey: 'password_reset',
     recipient: user.email,
     userId: String(user._id),
-    data: { token, name: user.name },
+    data: { resetUrl, name: user.name },
   });
 }
 
@@ -841,6 +858,7 @@ export async function changePassword(
   if (!valid) throw new UnauthenticatedError('Current password is incorrect');
 
   user.passwordHash = await bcrypt.hash(newPassword, BCRYPT_COST);
+  user.mustChangePassword = false;
   await user.save();
 
   const currentHash = currentRawRefreshToken ? hashToken(currentRawRefreshToken) : null;

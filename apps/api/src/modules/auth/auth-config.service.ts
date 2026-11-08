@@ -109,13 +109,19 @@ export function isGoogleOAuthConfigured(): boolean {
   return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_CALLBACK_URL);
 }
 
-/** Public, unauthenticated-safe subset the frontend needs before/without a session — whether to show the OTP step and the Google button. No limits/thresholds leaked (those aren't secret either, but the client has no use for them until an OTP is actually issued). */
+/** Public, unauthenticated-safe subset the frontend needs before/without a session — whether to show the OTP step and the Google button(s). No limits/thresholds leaked (those aren't secret either, but the client has no use for them until an OTP is actually issued). */
 export async function getPublicAuthConfig() {
   const cfg = await getAuthConfig();
   return {
     otpLoginEnabled: cfg.otpEnabled && cfg.otpLoginEnabled,
     otpPasswordResetEnabled: cfg.otpEnabled && cfg.otpPasswordResetEnabled,
     googleAdminLoginEnabled: cfg.googleAdminLoginEnabled,
+    // Unlike the admin flag, customer Google sign-in/sign-up has no separate
+    // DB toggle to flip — it's shown whenever the server actually has real
+    // OAuth credentials configured, same as any other always-on auth method
+    // (there's no product reason to let it be silently disabled while still
+    // configured, the way the admin flow's extra toggle supports).
+    googleCustomerLoginEnabled: isGoogleOAuthConfigured(),
     registrationOtpEnabled: cfg.registrationOtpEnabled,
   };
 }

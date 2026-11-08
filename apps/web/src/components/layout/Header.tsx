@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState, type FormEvent, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { autocompleteSuggestions } from '../../api/search.api';
@@ -14,6 +14,17 @@ import { ThemeToggle } from './ThemeToggle';
 
 const AUTOCOMPLETE_MIN_LENGTH = 2;
 const AUTOCOMPLETE_DEBOUNCE_MS = 400;
+
+// Cycling search placeholder — matches Brintoncare's rotating search hints.
+// Module-level (not recreated per render) so the cycling effect's
+// dependency array stays stable.
+const SEARCH_PLACEHOLDERS = [
+  'Search medicines, health products & more',
+  'Search for Pain Relief',
+  'Search for Vitamins & Supplements',
+  'Search for Skin Care',
+  'Search for Wellness Essentials',
+];
 
 const NAV_LINKS = [
   { to: '/products', label: 'Products' },
@@ -55,6 +66,20 @@ function SearchInput({ compact = false }: { compact?: boolean }) {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const debounced = useDebounce(searchValue.trim(), AUTOCOMPLETE_DEBOUNCE_MS);
   const shouldSuggest = isOpen && debounced.length >= AUTOCOMPLETE_MIN_LENGTH;
+
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const placeholderTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    // Only cycle when the input is empty (no user text)
+    if (searchValue) return;
+    placeholderTimerRef.current = setInterval(() => {
+      setPlaceholderIdx((i) => (i + 1) % SEARCH_PLACEHOLDERS.length);
+    }, 3000);
+    return () => {
+      if (placeholderTimerRef.current) clearInterval(placeholderTimerRef.current);
+    };
+  }, [searchValue]);
 
   const {
     data: suggestions,
@@ -143,7 +168,7 @@ function SearchInput({ compact = false }: { compact?: boolean }) {
           onChange={(e) => setSearchValue(e.target.value)}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search medicines, health products & more"
+          placeholder={SEARCH_PLACEHOLDERS[placeholderIdx]}
           aria-label="Search medicines, health products & more"
           aria-autocomplete="list"
           aria-activedescendant={highlightedIndex >= 0 ? `search-suggestion-${highlightedIndex}` : undefined}
@@ -270,14 +295,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-ink">
+    <header className="sticky top-0 z-30 border-b border-pale-sage bg-white dark:border-night-border dark:bg-night-surface">
       <div className="mx-auto flex max-w-[1920px] items-center gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <button
           type="button"
           onClick={() => setMobileNavOpen((o) => !o)}
           aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileNavOpen}
-          className="rounded-md p-1.5 text-white/90 hover:bg-white/10 lg:hidden"
+          className="rounded-md p-1.5 text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated lg:hidden"
         >
           <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
             {mobileNavOpen ? (
@@ -298,20 +323,21 @@ export function Header() {
           aria-label="BRENTIS HEALTHCARE — home"
           className="flex flex-shrink-0 items-center gap-2"
         >
-          {/* Text wordmark, not a cropped logo image — newLogo.jpeg is a square,
-              flat-background hero mark (see docs/BRENTIS_DESIGN_SYSTEM.md §11
-              in the analysis doc) that distorts badly at header height; this
-              small heart accent echoes the logo's own heart-on-the-"i" detail
-              without relying on a crop of an asset that isn't header-ready. */}
-          <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true">
-            <path d="M10 17.3 8.6 16c-4-3.6-6.6-6-6.6-9A4 4 0 0 1 9.5 4.6l.5.6.5-.6A4 4 0 0 1 18.2 7c0 3-2.6 5.4-6.6 9l-1.4 1.3Z" />
-          </svg>
+          {/* Real brand mark (newLogo.jpeg) — pre-cropped server-side to a
+              clean square (logo-mark.png) so it sits in the header at icon
+              scale without the source hero graphic's wide aspect ratio
+              distorting. */}
+          <img
+            src="/logo-mark.png"
+            alt=""
+            className="h-9 w-9 flex-shrink-0 rounded-xl object-cover"
+          />
           {/* "BRENTIS HEALTHCARE" set in full doesn't fit next to the hamburger
               + search/cart/account icon cluster below ~400px (verified via
               browser QA — it pushed "Sign in" off-screen, causing real
               horizontal overflow) — "HEALTHCARE" drops below `sm` (640px) so
               the header never overflows on small phones. */}
-          <span className="font-brentis-display text-lg font-semibold tracking-tight text-white sm:text-xl">
+          <span className="font-brentis-display text-lg font-semibold tracking-tight text-ink dark:text-night-text sm:text-xl">
             BRENTIS<span className="hidden text-primary sm:inline"> HEALTHCARE</span>
           </span>
         </Link>
@@ -321,7 +347,7 @@ export function Header() {
           <SearchInput />
         </div>
 
-        <nav className="ml-2 hidden items-center gap-5 text-sm font-medium text-white/85 lg:flex">
+        <nav className="ml-2 hidden items-center gap-5 text-sm font-medium text-ink/80 dark:text-night-muted lg:flex">
           {NAV_LINKS.map((link) => (
             <Link key={link.to} to={link.to} className="whitespace-nowrap transition-colors hover:text-accent">
               {link.label}
@@ -333,16 +359,16 @@ export function Header() {
           {isStaffRole(user?.role) && (
             <Link
               to="/admin/dashboard"
-              className="hidden rounded-md bg-white/10 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-white/20 sm:block sm:px-3 sm:text-sm"
+              className="hidden rounded-md bg-deep-teal px-2.5 py-1.5 text-xs font-medium text-ink hover:bg-pale-sage dark:bg-night-elevated dark:text-night-text dark:hover:bg-night-border sm:block sm:px-3 sm:text-sm"
             >
               Control Panel
             </Link>
           )}
-          <ThemeToggle className="hover:!bg-white/10" />
+          <ThemeToggle />
           <Link
             to="/cart"
             aria-label="Cart"
-            className="relative rounded-md p-2 text-white/90 hover:bg-white/10"
+            className="relative rounded-md p-2 text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated"
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
               <path
@@ -360,13 +386,16 @@ export function Header() {
             )}
           </Link>
           {isAuthenticated ? (
-            <Link to={getProfilePath(user?.role)} className="flex items-center gap-2 rounded-md p-1 hover:bg-white/10">
+            <Link
+              to={getProfilePath(user?.role)}
+              className="flex items-center gap-2 rounded-md p-1 hover:bg-deep-teal dark:hover:bg-night-elevated"
+            >
               <Avatar name={user?.name ?? '?'} size="sm" />
             </Link>
           ) : (
             <Link
               to="/login"
-              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-white hover:bg-white/10 sm:px-3"
+              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated sm:px-3"
             >
               Sign in
             </Link>
@@ -383,14 +412,14 @@ export function Header() {
       </div>
 
       {mobileNavOpen && (
-        <nav className="border-t border-white/10 px-4 py-2 lg:hidden">
+        <nav className="border-t border-pale-sage px-4 py-2 dark:border-night-border lg:hidden">
           <ul className="flex flex-col">
             {NAV_LINKS.map((link) => (
               <li key={link.to}>
                 <Link
                   to={link.to}
                   onClick={() => setMobileNavOpen(false)}
-                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-white/90 hover:bg-white/10"
+                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-ink hover:bg-deep-teal dark:text-night-text dark:hover:bg-night-elevated"
                 >
                   {link.label}
                 </Link>
@@ -401,7 +430,7 @@ export function Header() {
                 <Link
                   to="/admin/dashboard"
                   onClick={() => setMobileNavOpen(false)}
-                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-accent hover:bg-white/10"
+                  className="block rounded-md px-2 py-2.5 text-sm font-medium text-accent hover:bg-deep-teal dark:hover:bg-night-elevated"
                 >
                   Control Panel
                 </Link>

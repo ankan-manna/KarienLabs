@@ -4,6 +4,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { Spinner } from '../components/common/Spinner';
 import { useAuth } from '../context/AuthContext';
+import { getProfilePath } from '../utils/account-path';
 
 interface ProtectedRouteProps {
   requiredRole?: Role[];
@@ -25,6 +26,17 @@ export function ProtectedRoute({ requiredRole, requiredPermission }: ProtectedRo
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+  }
+
+  // A password set by someone other than the account holder (an admin's temp
+  // password for a new staff account, an admin-initiated reset, or a
+  // Super-Admin recovery script run) must be changed before anything else —
+  // checked ahead of the role/permission gates below so it applies
+  // regardless of which route was requested. The profile page itself is
+  // exempted so the redirect target is actually reachable.
+  const profilePath = getProfilePath(user.role);
+  if (user.mustChangePassword && location.pathname !== profilePath) {
+    return <Navigate to={profilePath} replace state={{ forcedPasswordChange: true }} />;
   }
 
   if (requiredRole && !isSuperAdmin && !requiredRole.includes(user.role)) {

@@ -283,7 +283,7 @@ export default function ProductListPage() {
             value={priceMin}
             onChange={(e) => { setPriceMin(e.target.value); setPage(1); }}
           />
-          <span className="text-gray-400">–</span>
+          <span className="text-gray-400 dark:text-night-muted">–</span>
           <Input
             type="number"
             min={0}
@@ -364,7 +364,7 @@ export default function ProductListPage() {
               className="inline-flex items-center gap-1.5 rounded-full border border-pale-sage bg-white px-3 py-1 text-xs font-medium text-ink hover:border-accent dark:border-night-border dark:bg-night-surface dark:text-night-text"
             >
               {chip.label}
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-gray-400" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-gray-400 dark:text-night-muted" aria-hidden="true">
                 <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </button>

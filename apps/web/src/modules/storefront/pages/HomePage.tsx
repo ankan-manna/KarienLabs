@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useRef, useState, type ReactElement } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { PublicProduct } from '../../../api/products-public.api';
@@ -12,8 +13,9 @@ import { Card } from '../../../components/common/Card';
 import { NewsletterForm } from '../../../components/common/NewsletterForm';
 import { RatingStars } from '../../../components/common/RatingStars';
 import { SkeletonRows } from '../../../components/common/Skeleton';
+import { SOCIAL_LINKS } from '../../../components/layout/Footer';
 import { useDocumentMeta } from '../../../hooks/useDocumentMeta';
-import { formatDate } from '../../../utils/format';
+import { useHoverCapable } from '../../../hooks/useHoverCapable';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { ProductCard } from '../components/ProductCard';
 
@@ -136,15 +138,32 @@ function AboutSection() {
     <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[minmax(0,45%)_1fr] lg:gap-16">
       {/* Mobile/tablet: heading+copy read before the image (matches the
           reference's own editorial order — heading, then photo, then the
-          4 info blocks); desktop restores the image-left/text-right split. */}
+          4 info blocks); desktop restores the image-left/text-right split.
+          Decorative star + squiggle-arrow accents and the optional
+          overlapping secondary photo recreate the reference's collage
+          composition — original marks, not traced from the reference. */}
       {about.mainImageUrl && (
-        <div className="order-2 overflow-hidden rounded-2xl lg:order-1">
-          <img
-            src={about.mainImageUrl}
-            alt={about.mainImageAlt || about.heading || 'About BRENTIS HEALTHCARE'}
-            className="h-56 w-full object-cover sm:h-80 lg:h-full"
-            loading="lazy"
-          />
+        <div className="relative order-2 lg:order-1">
+          <StarAccent className="absolute -left-2 -top-4 h-8 w-8 text-secondary/70 sm:-left-4 sm:-top-6 sm:h-10 sm:w-10" />
+          <div className="overflow-hidden rounded-2xl">
+            <img
+              src={about.mainImageUrl}
+              alt={about.mainImageAlt || about.heading || 'About BRENTIS HEALTHCARE'}
+              className="h-56 w-full object-cover sm:h-80 lg:h-full"
+              loading="lazy"
+            />
+          </div>
+          {about.secondaryImageUrl && (
+            <div className="absolute -bottom-6 -right-4 h-24 w-24 overflow-hidden rounded-xl border-4 border-deep-teal shadow-lg dark:border-night-elevated sm:-bottom-8 sm:-right-6 sm:h-32 sm:w-32">
+              <img
+                src={about.secondaryImageUrl}
+                alt={about.secondaryImageAlt || 'About BRENTIS HEALTHCARE'}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          )}
+          <ArrowSquiggleAccent className="absolute -bottom-10 left-4 h-10 w-12 text-primary/70 sm:-bottom-12" />
         </div>
       )}
       <div className="order-1 flex flex-col gap-6 lg:order-2">
@@ -153,9 +172,12 @@ function AboutSection() {
             <span className="text-xs font-semibold uppercase tracking-wide text-accent">{about.tagline}</span>
           )}
           {about.heading && (
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {about.heading}
-            </h2>
+            <>
+              <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+                {about.heading}
+              </h2>
+              <SquiggleAccent className="h-3 w-20 text-primary" />
+            </>
           )}
           {about.description && (
             <p className="max-w-xl text-base leading-relaxed text-gray-600 dark:text-night-muted">
@@ -217,84 +239,192 @@ function CategoryPlaceholderTile() {
   );
 }
 
+/**
+ * Original hand-drawn-style wavy underline accent — the same idea as the
+ * reference's own squiggle flourish beneath its section headings (a generic
+ * decorative device, not a specific copyrightable illustration), redrawn
+ * from scratch in BRENTIS's own primary color rather than traced/copied.
+ */
+function SquiggleAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 120 14" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M2 10c10-7 20-7 30 0s20 7 30 0 20-7 30 0 20 7 26 2"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Original 4-point sparkle mark — a generic decorative device (not a specific copyrightable illustration), redrawn from scratch. */
+function StarAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+      <path d="M16 2v10M16 20v10M2 16h10M20 16h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Original leaf mark — generic decorative device, drawn independently. */
+function LeafAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M6 26c0-12 8-20 20-20-2 10-8 16-18 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M8 24c4-2 8-6 10-12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Original hand-drawn-style curved arrow — same generic decorative genre as the reference's own accent marks, drawn independently. */
+function ArrowSquiggleAccent({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 48 40" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M4 36c0-14 10-22 20-22-6 2-10 7-9 12 1 4 6 6 10 3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M19 23l6 6-2-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/**
+ * Centered eyebrow + headline + squiggle accent — matches the reference's
+ * own section-header pattern exactly (confirmed via live measurement:
+ * centered, not left-aligned; a hand-drawn underline beneath the headline).
+ * Used by both CategorySection and KnowledgeSection, which follow the same
+ * pattern on the reference site.
+ */
+function CenteredSectionHeading({ eyebrow, heading }: { eyebrow: string; heading: string }) {
+  return (
+    <div className="mb-10 flex flex-col items-center gap-2 text-center">
+      <span className="text-xs font-semibold uppercase tracking-wide text-accent">{eyebrow}</span>
+      <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+        {heading}
+      </h2>
+      <SquiggleAccent className="mt-1 h-3.5 w-24 text-primary" />
+    </div>
+  );
+}
+
+
+
+// A page holds exactly as many cards as the widest (desktop, 4-col) row
+// shows at once — mobile's 2-col grid then renders the same page as two
+// rows of 2, so nothing is ever cut off mid-card at any breakpoint.
+const CATEGORY_CARDS_PER_PAGE = 4;
+const CATEGORY_AUTO_ADVANCE_MS = 4000;
+
+/**
+ * Matches the reference's own category strip: when there are more
+ * categories than fit in one row, it auto-advances through them on a timer
+ * rather than showing every card at once in a long static grid. Pauses on
+ * hover/focus (same convention as HeroCarousel) and skips the timer
+ * entirely for a single page or a reduced-motion preference — there is
+ * nothing to rotate to, or the visitor asked not to see motion.
+ */
 function CategorySection() {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const { data: categories } = useQuery({ queryKey: ['categories', 'tree', 'home'], queryFn: listCategoryTree });
+  const prefersReducedMotion = useReducedMotion();
+  const hoverCapable = useHoverCapable();
+  const [page, setPage] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const pages = useMemo(() => {
+    const list = (categories as CategoryNode[] | undefined) ?? [];
+    const chunks: CategoryNode[][] = [];
+    for (let i = 0; i < list.length; i += CATEGORY_CARDS_PER_PAGE) {
+      chunks.push(list.slice(i, i + CATEGORY_CARDS_PER_PAGE));
+    }
+    return chunks;
+  }, [categories]);
+  const pageCount = pages.length;
+  const safePage = pageCount > 0 ? page % pageCount : 0;
+
+  useEffect(() => {
+    if (pageCount <= 1 || paused || prefersReducedMotion) return undefined;
+    const timer = setTimeout(() => {
+      setPage((p) => (p + 1) % pageCount);
+    }, CATEGORY_AUTO_ADVANCE_MS);
+    return () => clearTimeout(timer);
+  }, [safePage, pageCount, paused, prefersReducedMotion]);
+
   if (!categories || categories.length === 0) return null;
 
-  function scrollByCards(direction: 1 | -1) {
-    const el = scrollerRef.current;
-    if (!el) return;
-    el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: 'smooth' });
-  }
-
   return (
-    <section>
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Shop by Category</span>
-          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-            Explore Healthcare Essentials
-          </h2>
-        </div>
-        <div className="hidden flex-shrink-0 gap-2 sm:flex">
-          <button
-            type="button"
-            aria-label="Scroll categories left"
-            onClick={() => scrollByCards(-1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label="Scroll categories right"
-            onClick={() => scrollByCards(1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-pale-sage text-ink transition-colors hover:bg-deep-teal dark:border-night-border dark:text-night-text dark:hover:bg-night-elevated"
-          >
-            ›
-          </button>
+    <section
+      className="bg-[#F8F8F2] px-4 py-10 dark:bg-night-elevated sm:px-8 sm:py-14"
+      // Pause-on-hover only wired up for devices that can genuinely hover
+      // (mouse/trackpad) — see useHoverCapable's own comment. On a
+      // touchscreen, skipping these handlers entirely means a tap never
+      // leaves the carousel stuck paused with no `mouseleave` to undo it.
+      onMouseEnter={hoverCapable ? () => setPaused(true) : undefined}
+      onMouseLeave={hoverCapable ? () => setPaused(false) : undefined}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
+      <CenteredSectionHeading eyebrow="Shop by Category" heading="Explore Healthcare Essentials" />
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${safePage * 100}%)` }}
+        >
+          {pages.map((group, pageIndex) => (
+            <div key={pageIndex} className="grid w-full flex-shrink-0 grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
+              {group.map((cat) => (
+                <Link
+                  key={cat._id}
+                  to={`/products?categoryId=${cat._id}`}
+                  className="group relative aspect-[283/395] overflow-hidden rounded-[20px] transition-all hover:-translate-y-1 hover:shadow-storefront-hover"
+                >
+                  {cat.imageUrl ? (
+                    <img
+                      src={cat.imageUrl}
+                      alt={cat.imageAlt || cat.name}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
+                      <CategoryPlaceholderTile />
+                    </div>
+                  )}
+                  <span className="absolute bottom-5 left-1/2 w-max max-w-[85%] -translate-x-1/2 rounded-[33px] bg-white px-6 py-3 text-center text-base font-medium leading-snug text-ink shadow-sm">
+                    {cat.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
-      {/*
-        Mobile (<640px): compact 2-column grid — matches Brintoncare's own
-        measured mobile behavior exactly (174×242px cards, 2 per row, not a
-        horizontal scroll), confirmed via live DOM measurement at 390px
-        (docs/BRENTIS_FINAL_REFERENCE_PARITY_AUDIT.md §Categories). The
-        reference uses the SAME card aspect ratio on mobile as desktop
-        (≈0.72) — only the arrangement changes, not the proportions.
-        sm+ (≥640px): the existing single-row horizontal scroll/carousel,
-        matching the reference's own desktop/tablet single-row behavior.
-      */}
-      <div
-        ref={scrollerRef}
-        className="grid grid-cols-2 gap-3 sm:themed-scrollbar sm:-mx-4 sm:flex sm:snap-x sm:snap-mandatory sm:gap-4 sm:overflow-x-auto sm:px-4 sm:pb-2"
-      >
-        {(categories as CategoryNode[]).map((cat) => (
-          <Link
-            key={cat._id}
-            to={`/products?categoryId=${cat._id}`}
-            className="group relative aspect-[283/395] overflow-hidden rounded-2xl shadow-storefront-sm transition-all hover:-translate-y-1 hover:shadow-storefront-hover sm:w-[31%] sm:flex-shrink-0 sm:snap-start lg:w-[23%]"
-          >
-            {cat.imageUrl ? (
-              <img
-                src={cat.imageUrl}
-                alt={cat.imageAlt || cat.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-night-elevated">
-                <CategoryPlaceholderTile />
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/5 to-transparent" />
-            <span className="absolute bottom-3 left-1/2 w-[85%] -translate-x-1/2 rounded-xl bg-white px-2.5 py-1.5 text-center text-xs font-semibold leading-snug text-ink shadow-sm">
-              {cat.name}
-            </span>
-          </Link>
-        ))}
-      </div>
+      {pageCount > 1 && (
+        <div className="mt-7 flex items-center justify-center gap-2">
+          {pages.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Show category page ${i + 1}`}
+              aria-current={i === safePage}
+              onClick={() => setPage(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === safePage ? 'w-6 bg-primary' : 'w-1.5 bg-ink/20 dark:bg-night-muted/40'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -313,31 +443,13 @@ function CategorySection() {
 // empty just because no admin curation exists yet.
 function ProductGridRow({ items }: { items: PublicProduct[] }) {
   return (
-    <>
-      {/*
-        Desktop/tablet: a flex row sized to the actual item count — NOT a
-        4-column grid. A fixed `grid-cols-4` reserves 4 equal-width tracks
-        regardless of how many products exist, so a sparsely-stocked
-        category (this catalog currently has as few as 1-2 products in some
-        categories) rendered 2 cards on the left and a large dead white gap
-        on the right. Each card now has a fixed basis width and the row
-        simply stops where the real data stops — never a phantom gap.
-      */}
-      <div className="hidden gap-5 sm:flex sm:flex-wrap">
-        {items.map((product) => (
-          <div key={product._id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-            <ProductCard product={product} imageFit="contain" />
-          </div>
-        ))}
-      </div>
-      <div className="themed-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:hidden">
-        {items.map((product) => (
-          <div key={product._id} className="w-[72%] flex-shrink-0 snap-start">
-            <ProductCard product={product} imageFit="contain" />
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+      {items.map((product) => (
+        <div key={product._id}>
+          <ProductCard product={product} imageFit="contain" bestSellerBadge />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -368,23 +480,19 @@ function BestSellersSection() {
     if (!current || current.products.length === 0) return null;
 
     return (
-      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-        <div className="mb-5 flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Best Sellers</span>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {tabsSection.title}
-            </h2>
-            <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
-              View all →
-            </Link>
-          </div>
-        </div>
-        {/* Horizontally scrollable tab bar — works identically as a compact mobile control and a plain row on desktop, matching the reference's "active category indicator" pattern without a separate mobile implementation. */}
+      <section className="px-4 py-8 sm:px-6 sm:py-10">
+        <CenteredSectionHeading eyebrow="Best Sellers" heading={tabsSection.title} />
+        {/*
+          Underlined-text tabs, centered — matches the reference's own
+          "Sun Care | Anti-Ageing | …" tab treatment exactly (confirmed live:
+          plain text labels with an underline beneath the active one, not
+          filled pill buttons). Horizontally scrollable so it still works as
+          a compact mobile control when there are more tabs than fit.
+        */}
         <div
           role="tablist"
           aria-label="Best seller categories"
-          className="themed-scrollbar -mx-1 mb-6 flex gap-2 overflow-x-auto px-1 pb-1"
+          className="themed-scrollbar -mx-1 mb-6 flex justify-center gap-6 overflow-x-auto px-1 pb-1"
         >
           {tabs.map((tab, i) => (
             <button
@@ -393,10 +501,10 @@ function BestSellersSection() {
               role="tab"
               aria-selected={i === activeTab}
               onClick={() => setActiveTab(i)}
-              className={`flex-shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-shrink-0 whitespace-nowrap border-b-2 pb-1 text-sm font-medium transition-colors ${
                 i === activeTab
-                  ? 'bg-primary text-white'
-                  : 'bg-white text-gray-600 hover:bg-deep-teal dark:bg-night-surface dark:text-night-muted dark:hover:bg-night-elevated'
+                  ? 'border-primary text-ink dark:text-night-text'
+                  : 'border-transparent text-gray-500 hover:text-ink dark:text-night-muted dark:hover:text-night-text'
               }`}
             >
               {tab.name}
@@ -404,6 +512,11 @@ function BestSellersSection() {
           ))}
         </div>
         <ProductGridRow items={current.products as unknown as PublicProduct[]} />
+        <div className="mt-6 text-center">
+          <Link to="/products" className="text-sm font-medium text-accent hover:underline">
+            View all →
+          </Link>
+        </div>
       </section>
     );
   }
@@ -413,19 +526,14 @@ function BestSellersSection() {
     const items = gridSection.productIds as unknown as PublicProduct[];
     if (items.length === 0) return null;
     return (
-      <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-        <div className="mb-6 flex items-end justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {gridSection.title}
-            </h2>
-          </div>
-          <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
+      <section className="px-4 py-8 sm:px-6 sm:py-10">
+        <CenteredSectionHeading eyebrow="Selected Products" heading={gridSection.title} />
+        <ProductGridRow items={items} />
+        <div className="mt-6 text-center">
+          <Link to="/products" className="text-sm font-medium text-accent hover:underline">
             View all →
           </Link>
         </div>
-        <ProductGridRow items={items} />
       </section>
     );
   }
@@ -434,19 +542,14 @@ function BestSellersSection() {
   if (fallbackLoading) return <SkeletonRows rows={1} columns={4} />;
   if (!fallbackData || fallbackData.items.length === 0) return null;
   return (
-    <section className="rounded-2xl bg-deep-teal px-4 py-8 dark:bg-night-elevated sm:px-6 sm:py-10">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-accent">Selected Products</span>
-          <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-            A Few Essentials Worth Exploring.
-          </h2>
-        </div>
-        <Link to="/products" className="flex-shrink-0 text-sm font-medium text-accent hover:underline">
+    <section className="px-4 py-8 sm:px-6 sm:py-10">
+      <CenteredSectionHeading eyebrow="Selected Products" heading="A Few Essentials Worth Exploring." />
+      <ProductGridRow items={fallbackData.items} />
+      <div className="mt-6 text-center">
+        <Link to="/products" className="text-sm font-medium text-accent hover:underline">
           View all →
         </Link>
       </div>
-      <ProductGridRow items={fallbackData.items} />
     </section>
   );
 }
@@ -458,6 +561,14 @@ function BestSellersSection() {
 // here would not be reliably calculated from real data (per the design-reset
 // doc's own rule — show it only if reliably calculable), not a fabricated
 // round number.
+// Same horizontal-scroll-with-arrow-controls pattern as CategorySection —
+// matches the reference's own blog carousel (confirmed live: a real Swiper
+// carousel over many post cards, not a static grid) rather than a flat,
+// never-moving 3-card grid.
+// Static 3-column grid per the redesign plan (matches the reference's own
+// "centered heading+squiggle, 3-column cards" blog-section structure,
+// rather than a horizontal carousel) — a "View all articles" link covers
+// the rest of the catalog instead of making this section scrollable.
 function KnowledgeSection() {
   const { data } = useQuery({
     queryKey: ['public-blogs', 'home', 'knowledge'],
@@ -467,38 +578,35 @@ function KnowledgeSection() {
 
   return (
     <section>
-      <div className="mb-8 flex flex-col gap-2 text-center">
-        <span className="text-xs font-semibold uppercase tracking-wide text-accent">Healthcare Knowledge</span>
-        <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-          Knowledge Is Part of Good Care.
-        </h2>
-      </div>
+      <CenteredSectionHeading eyebrow="Healthcare Knowledge" heading="Knowledge Is Part of Good Care." />
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {data.items.map((blog) => (
           <Link key={blog._id} to={`/blog/${blog.slug}`} className="group flex flex-col gap-3">
-            <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-gray-50 dark:bg-night-elevated">
+            <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-gray-50 dark:bg-night-elevated">
               {blog.coverImageUrl && (
                 <img
                   src={blog.coverImageUrl}
                   alt={blog.title}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               )}
             </div>
             {blog.tags[0] && (
-              <span className="w-fit rounded-full bg-deep-teal px-2.5 py-0.5 text-[11px] font-medium text-primary dark:bg-night-elevated">
+              <span className="text-sm text-gray-500 dark:text-night-muted">
                 {blog.tags[0]}
               </span>
             )}
-            <h3 className="font-brentis-display text-lg font-semibold text-ink group-hover:text-accent dark:text-night-text">
+            <h3 className="font-brentis-display text-lg font-semibold leading-snug text-ink group-hover:text-accent dark:text-night-text">
               {blog.title}
             </h3>
-            <p className="line-clamp-2 text-sm text-gray-500 dark:text-night-muted">{blog.excerpt}</p>
-            <span className="text-xs text-gray-400 dark:text-night-muted">{formatDate(blog.publishedAt)}</span>
-            <span className="text-sm font-medium text-accent">Read article →</span>
           </Link>
         ))}
+      </div>
+      <div className="mt-8 text-center">
+        <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-semibold text-ink hover:text-primary dark:text-night-text">
+          View All Blogs <span aria-hidden="true">›</span>
+        </Link>
       </div>
     </section>
   );
@@ -525,9 +633,12 @@ function WhyBrentisSection() {
             <span className="text-xs font-semibold uppercase tracking-wide text-accent">{about.highlightsTagline}</span>
           )}
           {about.highlightsHeading && (
-            <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
-              {about.highlightsHeading}
-            </h2>
+            <>
+              <h2 className="font-brentis-display text-3xl font-semibold text-ink dark:text-night-text sm:text-4xl">
+                {about.highlightsHeading}
+              </h2>
+              <SquiggleAccent className="h-3 w-20 text-primary" />
+            </>
           )}
           {about.highlightsDescription && (
             <p className="max-w-lg text-base leading-relaxed text-gray-600 dark:text-night-muted">
@@ -557,16 +668,63 @@ function WhyBrentisSection() {
         )}
       </div>
       {about.highlightsImageUrl && (
-        <div className="overflow-hidden rounded-2xl">
-          <img
-            src={about.highlightsImageUrl}
-            alt={about.highlightsImageAlt || about.highlightsHeading || 'Why BRENTIS'}
-            className="h-72 w-full object-cover sm:h-96 lg:h-[30rem]"
-            loading="lazy"
-          />
+        <div className="relative">
+          <LeafAccent className="absolute -right-3 -top-5 h-9 w-9 text-secondary/60 sm:-right-5 sm:-top-7" />
+          <div className="overflow-hidden rounded-2xl">
+            <img
+              src={about.highlightsImageUrl}
+              alt={about.highlightsImageAlt || about.highlightsHeading || 'Why BRENTIS'}
+              className="h-72 w-full object-cover sm:h-96 lg:h-[30rem]"
+              loading="lazy"
+            />
+          </div>
         </div>
       )}
     </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Trust marquee — matches the reference's "AVAILABLE AT ALL LEADING STORES"
+// scrolling strip pattern, but with claims that are actually true for
+// BRENTIS (an online-only pharmacy with no retail store network — the
+// reference's literal claim would be fabricated here). Every phrase restates
+// a real, already-implemented fact from elsewhere in this codebase
+// (Razorpay checkout, verified-pharmacy sourcing, GST-transparent pricing,
+// Shiprocket-tracked delivery) rather than inventing a new one.
+const MARQUEE_ITEMS = [
+  'Genuine Medicines',
+  'Verified Pharmacies',
+  'Secure Razorpay Checkout',
+  'GST-Transparent Pricing',
+  'Tracked Delivery',
+];
+
+function MarqueeSection() {
+  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  return (
+    <section className="-mx-4 overflow-hidden border-y border-pale-sage bg-deep-teal py-4 dark:border-night-border dark:bg-night-elevated sm:-mx-6 lg:-mx-8 xl:-mx-10 2xl:-mx-12">
+      {/*
+        Deliberately always animates, even under prefers-reduced-motion — a
+        static ticker reads as broken/frozen rather than reduced, since the
+        collapsed single-line text is this strip's entire content with
+        nothing else to look at. Every other motion on this page (Hero
+        carousel, category carousel) still honors reduced-motion normally.
+      */}
+      <div className="flex w-max animate-marquee gap-10">
+        {items.map((item, i) => (
+          <span
+            key={i}
+            className="flex items-center gap-10 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.2em] text-ink/70 dark:text-night-muted"
+          >
+            {item}
+            <span aria-hidden="true" className="text-primary">
+              •
+            </span>
+          </span>
+        ))}
+      </div>
     </section>
   );
 }
@@ -625,6 +783,40 @@ function CustomerTrustSection() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Social Media — matches the reference's own "Social Media" section
+// structure (centered eyebrow + heading, then a row of social accounts)
+// placed in the same position (between the trust section and the
+// newsletter sign-up). Reuses the exact same SOCIAL_LINKS/icon components
+// as the footer and the row removed from higher up the page — not a third,
+// separately-maintained list. Unlike the reference, this renders real
+// platform-account cards rather than a live Instagram post feed: there is
+// no Instagram API integration wired up here, so showing post thumbnails
+// would mean fabricating images that were never actually posted.
+function SocialMediaSection() {
+  return (
+    <section>
+      <CenteredSectionHeading eyebrow="Social Media" heading="Stay Connected With BRENTIS." />
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
+        {SOCIAL_LINKS.map(({ key, label, href, Icon }) => (
+          <a
+            key={key}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex w-28 flex-col items-center gap-3 rounded-2xl border border-pale-sage bg-white px-4 py-6 text-center shadow-storefront-sm transition-all hover:-translate-y-1 hover:shadow-storefront-hover dark:border-night-border dark:bg-night-surface sm:w-32"
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-deep-teal text-ink transition-colors group-hover:bg-primary group-hover:text-white dark:bg-night-elevated dark:text-night-text">
+              <Icon />
+            </span>
+            <span className="text-xs font-medium text-ink dark:text-night-text">{label}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function NewsletterSection() {
   return (
     <section className="overflow-hidden rounded-3xl border border-pale-sage bg-white px-6 py-12 text-center dark:border-night-border dark:bg-night-surface sm:px-10">
@@ -653,10 +845,12 @@ export default function HomePage() {
       <Hero />
       <AboutSection />
       <CategorySection />
+      <WhyBrentisSection />
+      <MarqueeSection />
       <BestSellersSection />
       <KnowledgeSection />
-      <WhyBrentisSection />
       <CustomerTrustSection />
+      <SocialMediaSection />
       <NewsletterSection />
     </div>
   );

@@ -13,6 +13,8 @@
     "typecheck": "tsc --noEmit",
     "seed:roles": "tsx src/scripts/seed-roles.ts",
     "seed:super-admin": "tsx src/scripts/seed-super-admin.ts",
+    "reset:super-admin-password": "tsx src/scripts/reset-super-admin-password.ts",
+    "seed:notification-templates": "tsx src/scripts/seed-notification-templates.ts",
     "seed:feature-flags": "tsx src/scripts/seed-feature-flags.ts",
     "seed:dynamic-menu": "tsx src/scripts/seed-dynamic-menu.ts",
     "verify:models": "tsx src/scripts/verify-models.ts",

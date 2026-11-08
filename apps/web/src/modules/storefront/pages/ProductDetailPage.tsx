@@ -135,7 +135,7 @@ export default function ProductDetailPage() {
       />
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/*  (Product Image Management) Part 10/15/16 — Amazon-style
-            layout as a UX reference only (own KarienLabs styling, not their
+            layout as a UX reference only (own Brentis Healthcare styling, not their
             branding): a thumbnail rail beside the large image on desktop
             (`md:flex-row`, rail on the left), collapsing to a horizontal,
             swipeable thumbnail strip BELOW the large image on mobile
@@ -183,7 +183,7 @@ export default function ProductDetailPage() {
                 className="h-full w-full cursor-zoom-in object-contain"
               />
             ) : (
-              <span className="text-sm text-gray-400">No image available</span>
+              <span className="text-sm text-gray-400 dark:text-night-muted">No image available</span>
             )}
           </button>
         </div>
@@ -222,7 +222,7 @@ export default function ProductDetailPage() {
             </span>
             {discountPct > 0 && (
               <>
-                <span className="text-base text-gray-400 line-through">
+                <span className="text-base text-gray-400 line-through dark:text-night-muted">
                   {formatCurrency(product.mrp)}
                 </span>
                 <span className="rounded-full bg-secondary/10 px-2 py-0.5 text-sm font-semibold text-secondary">
@@ -305,7 +305,7 @@ export default function ProductDetailPage() {
             {product.brand && (
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Brand</dt>
-                <dd className="text-gray-500">
+                <dd className="text-gray-500 dark:text-night-muted">
                   <Link to={`/products?brandId=${product.brand._id}`} className="hover:text-accent hover:underline">
                     {product.brand.name}
                   </Link>
@@ -315,7 +315,7 @@ export default function ProductDetailPage() {
             {product.manufacturer && (
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Manufacturer</dt>
-                <dd className="text-gray-500">
+                <dd className="text-gray-500 dark:text-night-muted">
                   <Link
                     to={`/products?manufacturerId=${product.manufacturer._id}`}
                     className="hover:text-accent hover:underline"
@@ -328,25 +328,25 @@ export default function ProductDetailPage() {
             {product.medicine?.composition && (
               <div className="col-span-2">
                 <dt className="font-medium text-gray-700 dark:text-night-text">Composition</dt>
-                <dd className="text-gray-500">{product.medicine.composition}</dd>
+                <dd className="text-gray-500 dark:text-night-muted">{product.medicine.composition}</dd>
               </div>
             )}
             {product.medicine?.strength && (
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Strength</dt>
-                <dd className="text-gray-500">{product.medicine.strength}</dd>
+                <dd className="text-gray-500 dark:text-night-muted">{product.medicine.strength}</dd>
               </div>
             )}
             {product.medicine?.dosageForm && (
               <div>
                 <dt className="font-medium text-gray-700 dark:text-night-text">Form</dt>
-                <dd className="text-gray-500 capitalize">{product.medicine.dosageForm}</dd>
+                <dd className="text-gray-500 dark:text-night-muted capitalize">{product.medicine.dosageForm}</dd>
               </div>
             )}
             {product.medicine?.storageInstructions && (
               <div className="col-span-2">
                 <dt className="font-medium text-gray-700 dark:text-night-text">Storage</dt>
-                <dd className="text-gray-500">{product.medicine.storageInstructions}</dd>
+                <dd className="text-gray-500 dark:text-night-muted">{product.medicine.storageInstructions}</dd>
               </div>
             )}
           </dl>

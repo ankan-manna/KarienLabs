@@ -25,8 +25,18 @@ export function BlogImageFields() {
           preset="cms_media"
           folder="blog"
           value={coverImageUrl}
-          onUploaded={(asset) => setValue('coverImageUrl', asset.url, { shouldDirty: true })}
-          onRemove={coverImageUrl ? () => setValue('coverImageUrl', '', { shouldDirty: true }) : undefined}
+          onUploaded={(asset) => {
+            setValue('coverImageUrl', asset.url, { shouldDirty: true });
+            setValue('coverImagePublicId', asset.publicId, { shouldDirty: true });
+          }}
+          onRemove={
+            coverImageUrl
+              ? () => {
+                  setValue('coverImageUrl', '', { shouldDirty: true });
+                  setValue('coverImagePublicId', null, { shouldDirty: true });
+                }
+              : undefined
+          }
         />
       </div>
 

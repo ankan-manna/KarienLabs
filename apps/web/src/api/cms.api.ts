@@ -16,7 +16,7 @@ export interface Banner {
   ctaText: string;
   secondaryCtaText: string;
   secondaryCtaLink: string;
-  placement: 'hero' | 'category' | 'checkout';
+  placement: 'hero' | 'category' | 'checkout' | 'offer';
   order: number;
   startsAt: string | null;
   endsAt: string | null;
@@ -67,6 +67,7 @@ export interface Blog {
   excerpt: string;
   content: string;
   coverImageUrl: string;
+  coverImagePublicId: string | null;
   isPublished: boolean;
   publishedAt: string | null;
   tags: string[];

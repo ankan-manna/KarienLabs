@@ -61,7 +61,7 @@ export default function BlogDetailPage() {
           <img
             src={blog.coverImageUrl}
             alt={blog.title}
-            className="mb-6 w-full rounded-xl object-cover shadow-storefront-md"
+            className="mb-6 h-56 w-full rounded-xl object-cover shadow-storefront-md sm:h-80 lg:h-96"
           />
         )}
         <h1 className="font-brentis-display text-2xl font-semibold text-ink dark:text-night-text sm:text-3xl">
@@ -81,7 +81,7 @@ export default function BlogDetailPage() {
           </div>
         )}
         <div
-          className="mt-6 text-sm leading-relaxed text-gray-700 [&_a]:text-accent [&_a]:underline [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-brentis-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_h2]:dark:text-night-text [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3 dark:text-gray-300"
+          className="mt-6 text-sm leading-relaxed text-gray-700 [&_a]:text-accent [&_a]:underline [&_h2]:mt-6 [&_h2]:mb-2 [&_h2]:font-brentis-display [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-ink [&_h2]:dark:text-night-text [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3 [&_img]:my-4 [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl dark:text-gray-300"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content) }}
         />
       </article>

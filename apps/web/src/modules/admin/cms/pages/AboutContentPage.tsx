@@ -32,6 +32,9 @@ const EMPTY_FORM: Required<AboutContent> = {
   mainImageUrl: '',
   mainImagePublicId: null,
   mainImageAlt: '',
+  secondaryImageUrl: '',
+  secondaryImagePublicId: null,
+  secondaryImageAlt: '',
   blocks: [],
   highlightsTagline: '',
   highlightsHeading: '',
@@ -174,6 +177,33 @@ export default function AboutContentPage() {
           label="Main image alt text"
           value={form.mainImageAlt}
           onChange={(e) => setForm({ ...form, mainImageAlt: e.target.value })}
+        />
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Secondary image (optional)
+          </label>
+          <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+            Shown as a smaller photo layered over a corner of the main image — an editorial
+            collage effect. Leave empty to show a single photo.
+          </p>
+          <ImageUpload
+            preset="cms_media"
+            folder="about"
+            value={form.secondaryImageUrl}
+            onUploaded={(asset) =>
+              setForm({ ...form, secondaryImageUrl: asset.url, secondaryImagePublicId: asset.publicId })
+            }
+            onRemove={
+              form.secondaryImageUrl
+                ? () => setForm({ ...form, secondaryImageUrl: '', secondaryImagePublicId: null })
+                : undefined
+            }
+          />
+        </div>
+        <Input
+          label="Secondary image alt text"
+          value={form.secondaryImageAlt}
+          onChange={(e) => setForm({ ...form, secondaryImageAlt: e.target.value })}
         />
         <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Value blocks</h3>
         <BlockListEditor blocks={form.blocks} onChange={(blocks) => setForm({ ...form, blocks })} />
