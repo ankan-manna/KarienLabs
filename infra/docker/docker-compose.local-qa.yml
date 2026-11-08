@@ -1,0 +1,110 @@
+# Local "does the production build actually work" QA stack — NOT staging,
+# NOT production. Uses the REAL production Dockerfiles (apps/api/Dockerfile,
+# apps/web/Dockerfile — compiled dist/, not tsx watch / vite dev server) and
+# the real nginx reverse-proxy image, so a pass here means the actual images
+# that would ship to EC2 build and boot correctly — just wired to a
+# throwaway local MongoDB instead of real MongoDB Atlas (no real-world
+# credentials are available/appropriate for an automated local smoke test;
+# swapping MONGO_URI in .env.local-qa for a real Atlas connection string is
+# the only change needed to point this same stack at Atlas instead).
+#
+# Deliberately does NOT reuse the root `.env` (that file is for the
+# `medcommerce-local`/day-to-day dev stack and may point at a different
+# Mongo/Redis host entirely) — copy .env.local-qa.example to
+# .env.local-qa first. Deliberately uses host ports that don't collide with
+# the existing local dev stack (nginx 8088, api 5001, web 8089, mongo 27018,
+# redis 6390) so both can run side by side.
+#
+# Usage (from repo root):
+#   cp .env.local-qa.example .env.local-qa          # first time only
+#   docker compose -f infra/docker/docker-compose.yml \
+#                   -f infra/docker/docker-compose.local-qa.yml \
+#                   --env-file .env.local-qa up --build
+#
+# Then: curl http://localhost:8088/health  and  open http://localhost:8088/
+
+name: medcommerce-local-qa
+
+services:
+  nginx:
+    volumes:
+      - ../nginx/conf.d/local-qa.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../nginx/error-pages:/usr/share/nginx/html/error-pages:ro
+    # `!override` (not a plain list) because Compose MERGES (concatenates)
+    # list-type fields like `ports` across `-f a -f b`, rather than
+    # replacing them — without this tag, the base file's "80:80" mapping
+    # stays active alongside this one and fails to bind if anything else
+    # (e.g. another local Compose project) is already using host port 80.
+    ports: !override
+      - "8088:80"
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    networks: [medcommerce]
+
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+      # No VITE_API_BASE_URL override — local-qa.conf serves api+web on the
+      # SAME origin (http://localhost:8088), so the Dockerfile's own default
+      # (/api/v1, a same-origin relative path) is exactly right here.
+    restart: unless-stopped
+    ports:
+      - "8089:80"
+    networks: [medcommerce]
+
+  api:
+    env_file:
+      - ../../.env.local-qa
+    environment:
+      NODE_ENV: production
+    ports:
+      - "5001:5000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    env_file:
+      - ../../.env.local-qa
+    environment:
+      NODE_ENV: production
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  redis:
+    ports:
+      - "6390:6379"
+
+  # Throwaway local Mongo — ONLY for this local-qa stack, so `api`/`worker`
+  # have something to boot against without needing real Atlas credentials
+  # on hand. Standalone (not a replica set) is enough to prove the images
+  # boot and serve traffic; multi-document transactional flows (e.g.
+  # quick-add-stock) need a replica set — use docker-compose.dev.yml's
+  # `mongo` (already configured as one) or real Atlas (always a replica
+  # set) for that kind of testing instead.
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    volumes:
+      - local-qa-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks: [medcommerce]
+
+volumes:
+  local-qa-mongo-data:

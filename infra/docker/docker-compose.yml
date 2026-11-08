@@ -40,6 +40,15 @@ services:
     restart: unless-stopped
     env_file:
       - ../../.env
+    # apps/api/Dockerfile's HEALTHCHECK curls its own HTTP server on :5000 —
+    # correct for the `api` service, but `worker` runs the exact same image
+    # with no HTTP server at all (it's a background BullMQ job processor),
+    # so that healthcheck always fails here. Without disabling it, `docker
+    # compose ps`/`docker ps` permanently shows this container as
+    # "unhealthy" even when it's working correctly, which is actively
+    # misleading for monitoring/alerting.
+    healthcheck:
+      disable: true
     depends_on:
       redis:
         condition: service_healthy

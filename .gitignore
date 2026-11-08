@@ -14,6 +14,7 @@ coverage/
 .env.*.local
 .env.staging
 .env.production
+.env.local-qa
 !.env.example
 !.env.*.example
 .DS_Store
