@@ -1,0 +1,99 @@
+# ============================================================================
+# Production TLS termination for the web (storefront/admin) subdomain —
+# mirrors infra/nginx/conf.d/ssl.conf (the api.<domain> equivalent) exactly,
+# just with web_upstream instead of api_upstream and no auth-specific rate
+# limit zone. Copy to conf.d/web.ssl.conf once a certificate exists at
+# infra/nginx/certs/live/<your-web-domain>/{fullchain,privkey}.pem (see
+# infra/scripts/init-letsencrypt.sh — run it once for EACH domain: the api
+# subdomain and this web domain are two separate Let's Encrypt certificates).
+#
+# This file intentionally does NOT replace web.default.conf: that file keeps
+# working standalone for plain HTTP (first boot, before a cert exists), and
+# this file adds the HTTPS listener + redirect on top without disturbing it.
+# ============================================================================
+
+# Replace www.clientlivedemo.shop / clientlivedemo.shop with your real domain(s) before use.
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name www.clientlivedemo.shop clientlivedemo.shop;
+
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+    default_type "text/plain";
+    try_files $uri =404;
+  }
+
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+
+  http2 on;
+
+  server_name www.clientlivedemo.shop;
+
+  ssl_certificate     /etc/nginx/certs/live/www.clientlivedemo.shop/fullchain.pem;
+  ssl_certificate_key /etc/nginx/certs/live/www.clientlivedemo.shop/privkey.pem;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 1d;
+
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Frame-Options "DENY" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+  add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+
+  error_page 404 /error-pages/404.html;
+  error_page 500 502 503 504 /error-pages/50x.html;
+  location ^~ /error-pages/ {
+    root /usr/share/nginx/html;
+    internal;
+  }
+
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+    default_type "text/plain";
+    try_files $uri =404;
+  }
+
+  location / {
+    proxy_pass http://web_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+  }
+}
+
+# Apex domain (clientlivedemo.shop, no www) — plain 301 redirect to the www
+# host above rather than serving the same app twice under two origins
+# (avoids split cookies/CORS/SEO-duplicate-content). Needs its own
+# certificate too (both names can go on ONE cert — see
+# infra/scripts/init-letsencrypt.sh's `-d` flag, pass it twice: once per
+# domain, or request a single SAN cert covering both in one run).
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+  http2 on;
+  server_name clientlivedemo.shop;
+
+  ssl_certificate     /etc/nginx/certs/live/clientlivedemo.shop/fullchain.pem;
+  ssl_certificate_key /etc/nginx/certs/live/clientlivedemo.shop/privkey.pem;
+  ssl_protocols TLSv1.2 TLSv1.3;
+
+  location / {
+    return 301 https://www.clientlivedemo.shop$request_uri;
+  }
+}

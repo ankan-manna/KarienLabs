@@ -15,7 +15,9 @@ services:
   nginx:
     volumes:
       - ../nginx/certs:/etc/nginx/certs:ro
-      - ../nginx/conf.d/ssl.conf:/etc/nginx/conf.d/ssl.conf:ro # only present once init-letsencrypt.sh has run and you've copied ssl.conf.example -> ssl.conf
+      - ../nginx/conf.d/ssl.conf:/etc/nginx/conf.d/ssl.conf:ro # only present once init-letsencrypt.sh has run and you've copied ssl.conf.example -> ssl.conf (api.<domain>)
+      - ../nginx/conf.d/web.default.conf:/etc/nginx/conf.d/web.default.conf:ro # www.<domain> — plain HTTP, works before a cert exists
+      - ../nginx/conf.d/web.ssl.conf:/etc/nginx/conf.d/web.ssl.conf:ro # only present once you've run init-letsencrypt.sh for the web domain and copied web.ssl.conf.example -> web.ssl.conf
       - ../nginx/certbot-webroot:/var/www/certbot:ro
       # Bind-mounted (not just the json-file driver) so Fail2Ban, which runs
       # directly on the host, can tail these — see infra/security/jail.local.
@@ -23,6 +25,11 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
     logging: *default-logging
     deploy:
       resources:
@@ -30,10 +37,50 @@ services:
           cpus: "0.5"
           memory: 256M
 
+  # Storefront/Admin static build — apps/web/Dockerfile's "runtime" stage
+  # (nginx:alpine serving the Vite production build + conf.d/spa.conf's SPA
+  # fallback). Reverse-proxied by the main `nginx` service above via
+  # web.default.conf/web.ssl.conf's `web_upstream` (www.<domain>), the same
+  # pattern `api` already uses for api.<domain> — this service was previously
+  # built (apps/web/Dockerfile exists and is exercised by local dev's
+  # Dockerfile.dev-based variant) but never wired into the production stack,
+  # leaving the frontend with no deployment path of its own. Only defined
+  # here, not in the base docker-compose.yml, so local dev (which runs the
+  # Vite dev server directly via docker-compose.dev.yml's own `web:` entry)
+  # is completely unaffected.
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+      args:
+        # Browser-facing base URL for API calls — same subdomain split as
+        # API_BASE_URL/CORS_ORIGIN in .env.production, baked in at build
+        # time (Vite inlines import.meta.env.* into the static bundle, so
+        # this can't be an ordinary runtime env var — see apps/web/Dockerfile).
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://api.clientlivedemo.shop/api/v1}
+        VITE_GA_MEASUREMENT_ID: ${VITE_GA_MEASUREMENT_ID:-}
+    restart: unless-stopped
+    logging: *default-logging
+    deploy:
+      replicas: 1 # raise to 2 once traffic actually justifies it — see the deployment guide's sizing section
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    networks: [medcommerce]
+
   api:
     logging: *default-logging
     deploy:
-      replicas: 2
+      # 1 replica is the right default for ~100 users/day (see the
+      # deployment guide's sizing section) — raise to 2 once sustained
+      # traffic/CPU actually justifies it; a single t3.medium doesn't have
+      # headroom to run 2 full API replicas plus worker/web/redis/nginx
+      # comfortably (was previously 2, over-provisioned for this traffic).
+      replicas: 1
       resources:
         limits:
           cpus: "1"
